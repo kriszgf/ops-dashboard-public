@@ -1,0 +1,191 @@
+{
+ "HU": {
+  "status": "Obsidian csatlakoztatható",
+  "refresh": "Frissítés",
+  "checked": "ellenőrizve",
+  "excerpts": "beágyazott kivonat",
+  "setup": "Beállítás",
+  "steps": [
+   "Telepítsd az Obsidiant (obsidian.md) azon a gépen, ahol olvasni szeretnél.",
+   "Nyisd meg a(z) „{v}” vaultot (Open folder as vault). A vault most itt van: {h}.",
+   "Másik gépen: szinkronizáld a mappát (Syncthing, SMB-megosztás vagy Obsidian Sync), és ugyanezzel a vaultnévvel nyisd meg.",
+   "Nyomd meg a Frissítés gombot. A „Megnyitás Obsidianben” kivonatot mutat, az „Obsidian app” link megnyitja a jegyzetet."
+  ],
+  "excerpt": "csak olvasható kivonat (első sorok, pillanatkép)",
+  "hostOnly": "Csak itt működik: {h} (ott van a vault)",
+  "copyPath": "Útvonal másolása",
+  "copied": "Útvonal másolva",
+  "appLink": "Megnyitás az Obsidian appban",
+  "titleOnly": "Személyes emlékjegyzet – csak a cím látható.",
+  "noEx": "Nincs beágyazott kivonat ehhez a jegyzethez.",
+  "readme": ""
+ },
+ "EN": {
+  "status": "Obsidian is connectable",
+  "refresh": "Refresh",
+  "checked": "checked",
+  "excerpts": "embedded excerpts",
+  "setup": "Setup",
+  "steps": [
+   "Install Obsidian (obsidian.md) on the machine where you want to read.",
+   "Open the “{v}” vault (Open folder as vault). The vault currently lives on: {h}.",
+   "On another machine: sync the folder (Syncthing, an SMB share or Obsidian Sync) and open it with the same vault name.",
+   "Press Refresh. “Open in Obsidian” shows an excerpt; the “Obsidian app” link opens the note."
+  ],
+  "excerpt": "read-only excerpt (first lines, snapshot)",
+  "hostOnly": "Works only on: {h} (where the vault is)",
+  "copyPath": "Copy path",
+  "copied": "Path copied",
+  "appLink": "Open in the Obsidian app",
+  "titleOnly": "Personal memory note – title only.",
+  "noEx": "No embedded excerpt for this note.",
+  "readme": ""
+ },
+ "DE": {
+  "status": "Obsidian ist verbindbar",
+  "refresh": "Aktualisieren",
+  "checked": "geprüft",
+  "excerpts": "eingebettete Auszüge",
+  "setup": "Einrichtung",
+  "steps": [
+   "Installiere Obsidian (obsidian.md) auf dem Gerät, auf dem du lesen willst.",
+   "Öffne den Vault „{v}“ (Open folder as vault). Der Vault liegt derzeit auf: {h}.",
+   "Auf einem anderen Gerät: synchronisiere den Ordner (Syncthing, SMB-Freigabe oder Obsidian Sync) und öffne ihn mit demselben Vault-Namen.",
+   "Drücke Aktualisieren. „In Obsidian öffnen“ zeigt einen Auszug; der Link „Obsidian-App“ öffnet die Notiz."
+  ],
+  "excerpt": "schreibgeschützter Auszug (erste Zeilen, Momentaufnahme)",
+  "hostOnly": "Funktioniert nur auf: {h} (dort liegt der Vault)",
+  "copyPath": "Pfad kopieren",
+  "copied": "Pfad kopiert",
+  "appLink": "In der Obsidian-App öffnen",
+  "titleOnly": "Persönliche Erinnerungsnotiz – nur der Titel.",
+  "noEx": "Kein eingebetteter Auszug für diese Notiz.",
+  "readme": ""
+ },
+ "FR": {
+  "status": "Obsidian est connectable",
+  "refresh": "Actualiser",
+  "checked": "vérifié",
+  "excerpts": "extraits intégrés",
+  "setup": "Configuration",
+  "steps": [
+   "Installez Obsidian (obsidian.md) sur la machine où vous voulez lire.",
+   "Ouvrez le coffre « {v} » (Open folder as vault). Le coffre se trouve actuellement sur : {h}.",
+   "Sur une autre machine : synchronisez le dossier (Syncthing, partage SMB ou Obsidian Sync) et ouvrez-le avec le même nom de coffre.",
+   "Appuyez sur Actualiser. « Ouvrir dans Obsidian » affiche un extrait ; le lien « app Obsidian » ouvre la note."
+  ],
+  "excerpt": "extrait en lecture seule (premières lignes, instantané)",
+  "hostOnly": "Fonctionne uniquement sur : {h} (où se trouve le coffre)",
+  "copyPath": "Copier le chemin",
+  "copied": "Chemin copié",
+  "appLink": "Ouvrir dans l’app Obsidian",
+  "titleOnly": "Note de souvenir personnelle – titre seulement.",
+  "noEx": "Aucun extrait intégré pour cette note.",
+  "readme": ""
+ },
+ "PT": {
+  "status": "O Obsidian pode ser ligado",
+  "refresh": "Atualizar",
+  "checked": "verificado",
+  "excerpts": "excertos incorporados",
+  "setup": "Configuração",
+  "steps": [
+   "Instale o Obsidian (obsidian.md) no computador onde quer ler.",
+   "Abra o cofre “{v}” (Open folder as vault). O cofre está atualmente em: {h}.",
+   "Noutro computador: sincronize a pasta (Syncthing, partilha SMB ou Obsidian Sync) e abra-a com o mesmo nome de cofre.",
+   "Prima Atualizar. “Abrir no Obsidian” mostra um excerto; a ligação “app Obsidian” abre a nota."
+  ],
+  "excerpt": "excerto só de leitura (primeiras linhas, instantâneo)",
+  "hostOnly": "Só funciona em: {h} (onde está o cofre)",
+  "copyPath": "Copiar caminho",
+  "copied": "Caminho copiado",
+  "appLink": "Abrir na app Obsidian",
+  "titleOnly": "Nota de memória pessoal – só o título.",
+  "noEx": "Sem excerto incorporado para esta nota.",
+  "readme": ""
+ },
+ "IT": {
+  "status": "Obsidian è collegabile",
+  "refresh": "Aggiorna",
+  "checked": "verificato",
+  "excerpts": "estratti incorporati",
+  "setup": "Configurazione",
+  "steps": [
+   "Installa Obsidian (obsidian.md) sul computer dove vuoi leggere.",
+   "Apri il vault “{v}” (Open folder as vault). Il vault ora si trova su: {h}.",
+   "Su un altro computer: sincronizza la cartella (Syncthing, condivisione SMB o Obsidian Sync) e aprila con lo stesso nome di vault.",
+   "Premi Aggiorna. “Apri in Obsidian” mostra un estratto; il link “app Obsidian” apre la nota."
+  ],
+  "excerpt": "estratto di sola lettura (prime righe, istantanea)",
+  "hostOnly": "Funziona solo su: {h} (dove si trova il vault)",
+  "copyPath": "Copia percorso",
+  "copied": "Percorso copiato",
+  "appLink": "Apri nell’app Obsidian",
+  "titleOnly": "Nota personale di ricordi – solo il titolo.",
+  "noEx": "Nessun estratto incorporato per questa nota.",
+  "readme": ""
+ },
+ "ZH": {
+  "status": "Obsidian 可连接",
+  "refresh": "刷新",
+  "checked": "已检查",
+  "excerpts": "条内嵌摘录",
+  "setup": "设置",
+  "steps": [
+   "在你想阅读的电脑上安装 Obsidian（obsidian.md）。",
+   "打开“{v}”库（Open folder as vault）。该库目前位于：{h}。",
+   "在其他电脑上：同步该文件夹（Syncthing、SMB 共享或 Obsidian Sync），并用相同的库名打开。",
+   "点击“刷新”。“在 Obsidian 中打开”显示摘录；“Obsidian 应用”链接打开笔记。"
+  ],
+  "excerpt": "只读摘录（前几行，快照）",
+  "hostOnly": "仅在此设备上可用：{h}（库所在位置）",
+  "copyPath": "复制路径",
+  "copied": "路径已复制",
+  "appLink": "在 Obsidian 应用中打开",
+  "titleOnly": "个人记忆笔记 – 仅显示标题。",
+  "noEx": "此笔记没有内嵌摘录。",
+  "readme": ""
+ },
+ "JA": {
+  "status": "Obsidian に接続できます",
+  "refresh": "更新",
+  "checked": "確認済み",
+  "excerpts": "件の埋め込み抜粋",
+  "setup": "セットアップ",
+  "steps": [
+   "読みたいコンピューターに Obsidian（obsidian.md）をインストールします。",
+   "「{v}」ボールトを開きます（Open folder as vault）。ボールトの現在の場所：{h}。",
+   "別のコンピューターでは、フォルダーを同期し（Syncthing、SMB 共有、Obsidian Sync）、同じボールト名で開きます。",
+   "「更新」を押します。「Obsidian で開く」は抜粋を表示し、「Obsidian アプリ」リンクはノートを開きます。"
+  ],
+  "excerpt": "読み取り専用の抜粋（冒頭の数行、スナップショット）",
+  "hostOnly": "動作するのはここだけ：{h}（ボールトの場所）",
+  "copyPath": "パスをコピー",
+  "copied": "パスをコピーしました",
+  "appLink": "Obsidian アプリで開く",
+  "titleOnly": "個人的な記憶ノート – タイトルのみ。",
+  "noEx": "このノートには埋め込み抜粋がありません。",
+  "readme": ""
+ },
+ "ES": {
+  "status": "Obsidian se puede conectar",
+  "refresh": "Actualizar",
+  "checked": "comprobado",
+  "excerpts": "extractos incrustados",
+  "setup": "Configuración",
+  "steps": [
+   "Instala Obsidian (obsidian.md) en el equipo donde quieras leer.",
+   "Abre el vault “{v}” (Open folder as vault). El vault está ahora en: {h}.",
+   "En otro equipo: sincroniza la carpeta (Syncthing, recurso SMB u Obsidian Sync) y ábrela con el mismo nombre de vault.",
+   "Pulsa Actualizar. “Abrir en Obsidian” muestra un extracto; el enlace “app Obsidian” abre la nota."
+  ],
+  "excerpt": "extracto de solo lectura (primeras líneas, instantánea)",
+  "hostOnly": "Solo funciona en: {h} (donde está el vault)",
+  "copyPath": "Copiar ruta",
+  "copied": "Ruta copiada",
+  "appLink": "Abrir en la app Obsidian",
+  "titleOnly": "Nota personal de recuerdos – solo el título.",
+  "noEx": "No hay extracto incrustado para esta nota.",
+  "readme": ""
+ }
+}

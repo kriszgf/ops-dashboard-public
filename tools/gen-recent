@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""gen-recent: turn `vault-read --json recent` output into the dashboard's
+"Recently saved" data, so the list is generated from the real vault state at refresh
+time instead of being hardcoded. Read-only on the vault; writes only the target JSON.
+
+  vault-read --json recent --hours 168 > recent.json
+  tools/gen-recent recent.json data/sample-processes.json --limit 42
+"""
+import json, sys, argparse, urllib.parse
+from datetime import datetime
+
+import os
+
+DEFAULT_SECTIONS = [("Memories/", "mem"), ("Knowledge/Press/", "press"), ("Knowledge/Lessons/", "lessons"),
+                    ("Knowledge/Projects/", "proj"), ("Knowledge/Decisions/", "proj"), ("Knowledge/Agents/", "agents")]
+DEFAULT_TITLE_ONLY = ["mem"]
+
+def load_cfg():
+    """Folder map from $OPS_CONFIG, else config.local.json (git-ignored), else config.example.json, else defaults."""
+    here = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    cands = [os.environ["OPS_CONFIG"]] if os.environ.get("OPS_CONFIG") else [
+        os.path.join(os.getcwd(), "config.local.json"), os.path.join(here, "config.local.json"), os.path.join(here, "config.example.json")]
+    for p in cands:
+        if os.path.isfile(p):
+            v = json.load(open(p, encoding="utf-8")).get("vault", {})
+            secs = [(x["prefix"], x["kind"]) for x in v.get("sections", [])] or DEFAULT_SECTIONS
+            return secs, v.get("titleOnlyKinds", DEFAULT_TITLE_ONLY)
+    return DEFAULT_SECTIONS, DEFAULT_TITLE_ONLY
+
+SECTIONS, TITLE_ONLY = load_cfg()
+
+def section(path):
+    for pre, k in SECTIONS:
+        if path.startswith(pre): return k
+    return "index"
+
+def short(ts): return ts[5:16].replace("T", " ") if ts else ""
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="gen-recent"); ap.add_argument("recent_json"); ap.add_argument("target_json")
+    ap.add_argument("--limit", type=int, default=42); ap.add_argument("--skip", action="append", default=["_backup", "/_archive", ".bak-"])
+    ap.add_argument("--alias", action="append", default=[], help="WRITER=Display name, e.g. manifest:run1=Bot A")
+    ap.add_argument("--keep-desc", help="existing notes JSON ([title,sec,added,changed,desc,by,path] rows) whose descriptions are reused by path")
+    a = ap.parse_args(argv)
+    items = [x for x in json.load(open(a.recent_json, encoding="utf-8")) if not any(s in x["path"] for s in a.skip)]
+    alias = dict(x.split("=", 1) for x in a.alias)
+    keep = {r[6]: r[4] for r in json.load(open(a.keep_desc, encoding="utf-8"))} if a.keep_desc else {}
+    notes = []
+    for x in items[: a.limit]:
+        sec = section(x["path"]); enc = urllib.parse.quote(x["path"][:-3] if x["path"].endswith(".md") else x["path"], safe="")
+        desc = "M" if sec in TITLE_ONLY else keep.get(enc, "P")  # memories: title only, never content
+        notes.append([x["title"], sec, short(x.get("created") or x["modified"]), short(x["modified"]), desc,
+                      alias.get(x["by"], x["by"]) if x["by"] else "U", enc])
+    tgt = json.load(open(a.target_json, encoding="utf-8"))
+    tgt["obsidianNotes"] = notes; tgt["obsidianRecentTotal"] = len(items)
+    tgt["snapshot"] = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M (generated)")
+    with open(a.target_json, "w", encoding="utf-8") as f: json.dump(tgt, f, ensure_ascii=False, indent=2); f.write("\n")
+    print(f"gen-recent: {len(notes)} of {len(items)} notes written to {a.target_json}")
+
+if __name__ == "__main__": main()

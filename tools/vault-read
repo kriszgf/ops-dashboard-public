@@ -1,0 +1,429 @@
+#!/usr/bin/env python3
+"""vault-read: CLI for an Obsidian vault (Python 3 stdlib only).
+
+Vault path: VAULT_PATH env var, or VAULT_PATH=... in a .env file next to this
+script or in the current directory. Read commands (search, read, list, tags, count, recent, audit) never write. Write commands
+(create, append, pending, approve) only create new notes or append to existing
+ones; there is no delete, overwrite or rename. Every write is logged in
+_bot-writes/log.md (append-only) and _bot-writes/daily/YYYY-MM-DD.md.
+"""
+import json, os, re, sys, argparse, hashlib, secrets, tempfile, glob
+from datetime import datetime, timezone, timedelta
+
+VERSION = "2.0.0"
+WRITE_DIR = "_bot-writes"
+BOT_RE = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
+
+DEFAULT_EXCLUDES = [".obsidian", ".trash", ".git", "private", "secrets", "credentials"]
+
+def load_json_config():
+    """Optional JSON config: $OPS_CONFIG, else config.local.json (git-ignored) in the cwd or repo root."""
+    here = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    cands = [os.environ.get("OPS_CONFIG")] if os.environ.get("OPS_CONFIG") else [os.path.join(os.getcwd(), "config.local.json"), os.path.join(here, "config.local.json")]
+    for p in cands:
+        if p and os.path.isfile(p):
+            with open(p, encoding="utf-8") as f: return json.load(f)
+    return {}
+SECRET_RE = re.compile(r"(?i)(password|passwd|jelsz[oó]|secret|token|api[_-]?key|private[_ -]?key|"
+    r"seed phrase|mnemonic|bearer\s|BEGIN [A-Z ]*PRIVATE KEY|xprv|sk-[A-Za-z0-9]{16,}|"
+    r"gh[pousr]_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16})")
+
+def die(msg, code=2):
+    print(f"vault-read: {msg}", file=sys.stderr); sys.exit(code)
+
+def load_env_file(path):
+    vals = {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line: continue
+                k, v = line.split("=", 1)
+                vals[k.strip()] = v.strip().strip('"').strip("'")
+    except OSError:
+        pass
+    return vals
+
+def config():
+    env = {}
+    for p in (os.path.join(os.path.dirname(os.path.realpath(__file__)), ".env"), os.path.join(os.getcwd(), ".env")):
+        for k, v in load_env_file(p).items(): env.setdefault(k, v)
+    vault = os.environ.get("VAULT_PATH") or env.get("VAULT_PATH")
+    if not vault: die("VAULT_PATH is not set (env or .env)")
+    vault = os.path.realpath(os.path.expanduser(vault))
+    if not os.path.isdir(vault): die("VAULT_PATH is not a directory")
+    extra = os.environ.get("VAULT_EXCLUDE") or env.get("VAULT_EXCLUDE") or ""
+    cfg_ex = load_json_config().get("vault", {}).get("excludes", [])
+    excl = [e.strip().lower() for e in DEFAULT_EXCLUDES + list(cfg_ex) + extra.split(",") if e.strip()]
+    return vault, excl
+
+def writes_enabled():
+    env = {}
+    for p in (os.path.join(os.path.dirname(os.path.realpath(__file__)), ".env"), os.path.join(os.getcwd(), ".env")):
+        for k, v in load_env_file(p).items(): env.setdefault(k, v)
+    val = os.environ.get("VAULT_WRITE_ENABLED")
+    if val is None: val = env.get("VAULT_WRITE_ENABLED", "0")
+    return str(val).strip() == "1"
+
+def is_excluded(rel, excl):
+    for seg in rel.replace("\\", "/").split("/"):
+        s = seg.lower(); stem = os.path.splitext(s)[0]
+        for e in excl:
+            if s == e or stem == e or e in s: return True
+    return False
+
+def inside(vault, p):
+    rp = os.path.realpath(p)
+    return rp == vault or rp.startswith(vault + os.sep)
+
+def safe_path(vault, excl, rel):
+    if os.path.isabs(rel) or ".." in rel.replace("\\", "/").split("/"): die("path traversal blocked")
+    full = os.path.join(vault, rel)
+    if not inside(vault, full): die("path outside vault blocked (symlink?)")
+    if is_excluded(rel, excl): die("path is excluded")
+    return full
+
+def iter_notes(vault, excl, sub=""):
+    base = safe_path(vault, excl, sub) if sub else vault
+    for root, dirs, files in os.walk(base, followlinks=False):
+        relroot = os.path.relpath(root, vault)
+        relroot = "" if relroot == "." else relroot
+        dirs[:] = sorted(d for d in dirs if not is_excluded(os.path.join(relroot, d), excl)
+                         and inside(vault, os.path.join(root, d)) and not os.path.islink(os.path.join(root, d)))
+        for fn in sorted(files):
+            if not fn.lower().endswith(".md"): continue
+            rel = os.path.join(relroot, fn)
+            full = os.path.join(root, fn)
+            if is_excluded(rel, excl) or not inside(vault, full): continue
+            yield rel, full
+
+def read_text(full):
+    with open(full, "r", encoding="utf-8", errors="replace") as f:
+        return f.read()
+
+def redact(text):
+    return "\n".join("[REDACTED: possible secret]" if SECRET_RE.search(l) else l for l in text.splitlines())
+
+def title_of(rel, text):
+    for l in text.splitlines():
+        if l.startswith("# "): return l[2:].strip()
+    return os.path.splitext(os.path.basename(rel))[0]
+
+def tags_of(text):
+    t = set(m.lower() for m in re.findall(r"(?<![\w&/])#([\w/-]+)", text))
+    m = re.match(r"^---\n(.*?)\n---", text, re.S)
+    if m:
+        fm = m.group(1); mm = re.search(r"(?m)^tags:\s*(.*)$", fm)
+        if mm:
+            inline = mm.group(1).strip().strip("[]")
+            t.update(x.strip().strip("'\"#").lower() for x in inline.split(",") if x.strip())
+            after = fm[mm.end():]
+            for line in after.splitlines():
+                lm = re.match(r"^\s*-\s*(.+)$", line)
+                if not lm: break
+                t.add(lm.group(1).strip().strip("'\"#").lower())
+    return sorted(x for x in t if x)
+
+def out(args, data, text_fn):
+    if args.json: print(json.dumps(data, ensure_ascii=False, indent=2))
+    else: text_fn(data)
+
+
+# ---------------- recent + attribution (v1.7.0, read-only) ----------------
+ATTR_WINDOW = 600  # seconds: a log/manifest entry within 10 min of the mtime attributes the change
+
+def fmt_ts(t): return datetime.fromtimestamp(t).astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+
+def birth_of(st): return getattr(st, "st_birthtime", None)
+
+def frontmatter_writer(text):
+    m = re.match(r"^---\n(.*?)\n---", text, re.S)
+    if not m: return None
+    for key in ("bot", "written_by", "source"):
+        mm = re.search(rf"(?m)^{key}:\s*(.+)$", m.group(1))
+        if mm: return mm.group(1).strip().strip("'\"")
+    return None
+
+def load_write_log(vault):
+    """_bot-writes/log.md -> {path: [(epoch, bot, cmd)]}"""
+    res = {}; p = os.path.join(vault, WRITE_DIR, "log.md")
+    if not os.path.isfile(p) or os.path.islink(p): return res
+    for l in open(p, encoding="utf-8", errors="replace"):
+        parts = l.rstrip("\n").split(" | ")
+        if len(parts) < 4 or not parts[0].startswith("- "): continue
+        try: t = datetime.strptime(parts[0][2:], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc).timestamp()
+        except ValueError: continue
+        res.setdefault(parts[3], []).append((t, parts[1][4:], parts[2]))
+    return res
+
+def manifest_dirs():
+    env = {}
+    for p in (os.path.join(os.path.dirname(os.path.realpath(__file__)), ".env"), os.path.join(os.getcwd(), ".env")):
+        for k, v in load_env_file(p).items(): env.setdefault(k, v)
+    raw = os.environ.get("VAULT_MANIFEST_DIRS") or env.get("VAULT_MANIFEST_DIRS") or ""
+    return [os.path.realpath(os.path.expanduser(x.strip())) for x in raw.split(",") if x.strip()]
+
+def load_manifests():
+    """Change manifests written by out-of-band jobs: <dir>/<run>/CHANGES.txt, one path per line
+    (optional 'NEW ' prefix; optional header lines 'BOT: name' / 'JOB: name').
+    -> {path: [(epoch, writer, run)]}"""
+    res = {}
+    for d in manifest_dirs():
+        for f in glob.glob(os.path.join(d, "*", "CHANGES.txt")):
+            run = os.path.basename(os.path.dirname(f)); t = os.stat(f).st_mtime; bot = job = None; paths = []
+            for l in open(f, encoding="utf-8", errors="replace"):
+                l = l.strip()
+                if not l: continue
+                if l.upper().startswith("BOT:"): bot = l[4:].strip(); continue
+                if l.upper().startswith("JOB:"): job = l[4:].strip(); continue
+                paths.append(l[4:] if l.startswith("NEW ") else l)
+            who = bot or (f"job:{job}" if job else f"manifest:{run}")
+            for p in paths: res.setdefault(p, []).append((t, who, run))
+        # v1.7.2: per-run write-log.md next to CHANGES.txt: '- <time> | <bot> | <action> | <path>' (bot may be 'BOT: x')
+        for f in glob.glob(os.path.join(d, "*", "write-log.md")):
+            run = os.path.basename(os.path.dirname(f)); t = os.stat(f).st_mtime
+            for l in open(f, encoding="utf-8", errors="replace"):
+                parts = [x.strip() for x in l.strip().lstrip("-* ").split("|")]
+                if len(parts) < 3: continue
+                who = re.sub(r"(?i)^bot:\s*", "", parts[1]); path = parts[-1].strip("`")
+                if who and path: res.setdefault(path, []).append((t, who, run + "/write-log.md"))
+    return res
+
+def load_approved():
+    """v1.7.2: approved attribution lists OUTSIDE the vault (VAULT_APPROVED_LIST, comma-separated JSON files).
+    Entry applies only while the file mtime equals entry mtime (+- tolerance). -> {path: [(mtime, writer, status, tol)]}"""
+    env = {}
+    for p in (os.path.join(os.path.dirname(os.path.realpath(__file__)), ".env"), os.path.join(os.getcwd(), ".env")):
+        for k, v in load_env_file(p).items(): env.setdefault(k, v)
+    raw = os.environ.get("VAULT_APPROVED_LIST") or env.get("VAULT_APPROVED_LIST") or ""; res = {}
+    for f in [os.path.expanduser(x.strip()) for x in raw.split(",") if x.strip()]:
+        try: d = json.load(open(f, encoding="utf-8"))
+        except (OSError, ValueError): die(f"cannot read approved list {os.path.basename(f)}")
+        tol = float(d.get("tolerance_seconds", 2))
+        for e in d.get("entries", []):
+            res.setdefault(e["path"], []).append((float(e["mtime"]), e.get("writer") or "UNKNOWN", e.get("status", "approved"), tol))
+    return res
+
+def attribute(rel, mtime, text, wlog, mans, appr=None):
+    for t, bot, cmd in wlog.get(rel, []):
+        if abs(t - mtime) <= ATTR_WINDOW: return {"by": bot, "via": "write-log", "detail": cmd}
+    for t, who, run in mans.get(rel, []):
+        if abs(t - mtime) <= ATTR_WINDOW: return {"by": who, "via": "manifest", "detail": run}
+    fm = frontmatter_writer(text)
+    if fm: return {"by": fm, "via": "frontmatter", "detail": None}
+    for t, who, status, tol in (appr or {}).get(rel, []):
+        if abs(t - mtime) <= tol: return {"by": who, "via": "approved-list", "detail": status}
+    return {"by": None, "via": None, "detail": None}
+
+def recent_items(vault, excl, since, limit=None):
+    wlog = load_write_log(vault); mans = load_manifests(); appr = load_approved(); items = []
+    for rel, full in iter_notes(vault, excl):
+        if rel.replace("\\", "/").split("/")[0] == WRITE_DIR: continue
+        st = os.stat(full)
+        if st.st_mtime < since: continue
+        text = read_text(full); b = birth_of(st)
+        items.append({"path": rel, "title": title_of(rel, text), "modified": fmt_ts(st.st_mtime),
+                      "created": fmt_ts(b) if b else None, "new": bool(b and b >= since), "size": st.st_size,
+                      "_m": st.st_mtime, **attribute(rel, st.st_mtime, text, wlog, mans, appr)})
+    items.sort(key=lambda x: (-x["_m"], x["path"]))
+    for x in items: x.pop("_m")
+    return items[:limit] if limit else items
+
+def since_of(args):
+    if args.since:
+        try: dt = datetime.fromisoformat(args.since)
+        except ValueError: die("invalid --since (use ISO, e.g. 2026-10-27T08:00)")
+        return (dt if dt.tzinfo else dt.astimezone()).timestamp()
+    return (datetime.now(timezone.utc) - timedelta(hours=args.hours)).timestamp()
+
+
+# ---------------- write mode (v1.6.0) ----------------
+def now_iso(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+def check_bot(bot):
+    if not bot: die("--bot <name> is required for every write")
+    if not BOT_RE.match(bot): die("invalid --bot name (allowed: letters, digits, _ . -)")
+
+def write_target(vault, excl, rel):
+    rel = rel.replace("\\", "/")
+    if not rel.lower().endswith(".md"): die("only .md notes can be written")
+    if "|" in rel or "\n" in rel: die("invalid characters in path")
+    segs = [x for x in rel.split("/") if x]
+    if segs and segs[0] == WRITE_DIR and not (len(segs) > 2 and segs[1] == "test"):
+        die("writing into the bot-writes area is not allowed (except _bot-writes/test/)")
+    full = safe_path(vault, excl, rel)
+    # reject any symlink component (also dangling ones) on the way down
+    cur = vault
+    for seg in segs:
+        cur = os.path.join(cur, seg)
+        if os.path.islink(cur): die("symlink in path blocked")
+    return rel, full
+
+def atomic_new(full, data):
+    """Create a new file atomically; fails if it already exists (no overwrite)."""
+    d = os.path.dirname(full)
+    fd, tmp = tempfile.mkstemp(dir=d, prefix=".vr-tmp-")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f: f.write(data); f.flush(); os.fsync(f.fileno())
+        os.link(tmp, full)  # atomic, raises FileExistsError if present
+    except FileExistsError:
+        die("file already exists (create never overwrites)", 1)
+    finally:
+        try: os.unlink(tmp)
+        except OSError: pass
+
+def atomic_replace_own(full, data):
+    """Only for files the tool itself owns (daily summary)."""
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(full), prefix=".vr-tmp-")
+    with os.fdopen(fd, "w", encoding="utf-8") as f: f.write(data); f.flush(); os.fsync(f.fileno())
+    os.replace(tmp, full)
+
+def own_dir(vault, *parts):
+    p = os.path.join(vault, WRITE_DIR, *parts)
+    os.makedirs(p, exist_ok=True)
+    if not inside(vault, p) or any(os.path.islink(os.path.join(vault, *([WRITE_DIR] + list(parts))[:i+1])) for i in range(len(parts)+1)):
+        die("bot-writes directory is a symlink; refusing")
+    return p
+
+def append_line(path, line):
+    with open(path, "a", encoding="utf-8") as f: f.write(line); f.flush(); os.fsync(f.fileno())
+
+def log_write(vault, bot, cmd, rel, text):
+    ts = now_iso(); h = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    first = " ".join(text[:200].split()).replace("|", "/")
+    d = own_dir(vault); logp = os.path.join(d, "log.md")
+    if not os.path.exists(logp): append_line(logp, "# Bot writes log (append-only)\n\n")
+    append_line(logp, f"- {ts} | bot={bot} | {cmd} | {rel} | sha256={h} | {first}\n")
+    day = ts[:10]; per = {}
+    with open(logp, "r", encoding="utf-8") as f:
+        for l in f:
+            parts = l.rstrip("\n").split(" | ")
+            if len(parts) >= 4 and parts[0].startswith("- " + day):
+                per.setdefault(parts[1][4:], []).append(f"{parts[2]} {parts[3]}")
+    lines = [f"# Bot writes {day}", "", f"Total: {sum(len(v) for v in per.values())}", ""]
+    for b in sorted(per):
+        lines.append(f"## {b} ({len(per[b])})")
+        lines += [f"- {x}" for x in per[b]]; lines.append("")
+    atomic_replace_own(os.path.join(own_dir(vault, "daily"), f"{day}.md"), "\n".join(lines))
+    return {"time": ts, "sha256": h}
+
+def get_text(args):
+    t = args.text if args.text is not None else sys.stdin.read()
+    if not t.strip(): die("empty text (use --text or stdin)")
+    t = redact(t) + ("\n" if not t.endswith("\n") else "")
+    if getattr(args, "stamp", False) and args.cmd == "create" and not t.startswith("---\n"):
+        t = f"---\nbot: {args.bot}\nwritten: {now_iso()}\nsource: vault-read\n---\n" + t
+    return t
+
+def do_write(vault, excl, cmd, rel, text, bot, logcmd=None):
+    rel, full = write_target(vault, excl, rel)
+    if cmd == "create":
+        parent = os.path.dirname(full); os.makedirs(parent, exist_ok=True)
+        write_target(vault, excl, rel)  # re-check after mkdir
+        if os.path.lexists(full): die("file already exists (create never overwrites)", 1)
+        atomic_new(full, text)
+    else:
+        if os.path.islink(full) or not os.path.isfile(full): die("note not found (append needs an existing note)", 1)
+        with open(full, "a", encoding="utf-8") as f:
+            f.write(text if text.startswith("\n") else "\n" + text); f.flush(); os.fsync(f.fileno())
+    meta = log_write(vault, bot, logcmd or cmd, rel, text)
+    return {"ok": True, "command": cmd, "path": rel, "bot": bot, **meta}
+
+def write_main(args, vault, excl):
+    if args.cmd in ("create", "append"):
+        check_bot(args.bot); text = get_text(args)
+        if args.pending:
+            rel, _ = write_target(vault, excl, args.path)
+            pid = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S") + "-" + secrets.token_hex(3)
+            rec = {"id": pid, "time": now_iso(), "bot": args.bot, "command": args.cmd, "path": rel, "text": text}
+            atomic_new(os.path.join(own_dir(vault, "pending"), pid + ".json"), json.dumps(rec, ensure_ascii=False, indent=2))
+            meta = log_write(vault, args.bot, "pending-" + args.cmd, rel, text)
+            return {"ok": True, "pending": True, "id": pid, "path": rel, **meta}
+        return do_write(vault, excl, args.cmd, args.path, text, args.bot)
+    if args.cmd == "pending":
+        d = os.path.join(vault, WRITE_DIR, "pending"); items = []
+        if os.path.isdir(d) and not os.path.islink(d):
+            for fn in sorted(os.listdir(d)):
+                if fn.endswith(".json"):
+                    r = json.load(open(os.path.join(d, fn), encoding="utf-8"))
+                    items.append({k: r[k] for k in ("id", "time", "bot", "command", "path")} | {"preview": r["text"][:200]})
+        return items
+    if args.cmd == "approve":
+        if not re.match(r"^[0-9]{14}-[0-9a-f]{6}$", args.id): die("invalid pending id")
+        d = own_dir(vault, "pending"); p = os.path.join(d, args.id + ".json")
+        if not os.path.isfile(p): die("pending id not found", 1)
+        r = json.load(open(p, encoding="utf-8"))
+        res = do_write(vault, excl, r["command"], r["path"], r["text"], r["bot"], logcmd="approve-" + r["command"])
+        os.rename(p, os.path.join(own_dir(vault, "pending", "applied"), args.id + ".json"))
+        return res | {"approved": args.id}
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="vault-read", description="Obsidian vault reader with logged create/append")
+    ap.add_argument("--json", action="store_true", help="JSON output")
+    ap.add_argument("--version", action="version", version=f"vault-read {VERSION}")
+    sp = ap.add_subparsers(dest="cmd", required=True)
+    s = sp.add_parser("search"); s.add_argument("keywords", nargs="+"); s.add_argument("--limit", type=int, default=20)
+    r = sp.add_parser("read"); r.add_argument("path")
+    l = sp.add_parser("list"); l.add_argument("subdir", nargs="?", default="")
+    t = sp.add_parser("tags"); t.add_argument("tag")
+    sp.add_parser("count")
+    for name in ("recent", "audit"):
+        x = sp.add_parser(name, help="read-only: notes changed since --since/--hours, with writer attribution")
+        x.add_argument("--since"); x.add_argument("--hours", type=float, default=24.0); x.add_argument("--limit", type=int, default=0)
+    for name in ("create", "append"):
+        w = sp.add_parser(name); w.add_argument("path"); w.add_argument("--bot"); w.add_argument("--text")
+        w.add_argument("--pending", action="store_true")
+        w.add_argument("--stamp", action="store_true", help="create: add bot/written/source frontmatter")
+    pd = sp.add_parser("pending"); pd.add_argument("action", choices=["list"])
+    apv = sp.add_parser("approve", help="OWNER ONLY: apply a pending write"); apv.add_argument("id")
+    args, rest = ap.parse_known_args(argv)
+    if "--json" in rest: args.json = True; rest.remove("--json")
+    if rest: ap.error("unrecognized arguments: " + " ".join(rest))
+    if args.cmd in ("create", "append", "approve") and not writes_enabled():
+        die("writes are disabled (set VAULT_WRITE_ENABLED=1)", 3)
+    vault, excl = config()
+    if args.cmd in ("create", "append", "pending", "approve"):
+        res = write_main(args, vault, excl)
+        out(args, res, lambda d: print(json.dumps(d, ensure_ascii=False)))
+        return
+
+    if args.cmd == "search":
+        kws = [k.lower() for k in args.keywords]; hits = []
+        for rel, full in iter_notes(vault, excl):
+            text = redact(read_text(full)); low = text.lower()
+            if all(k in low or k in rel.lower() for k in kws):
+                i = max(0, min((low.find(k) for k in kws if k in low), default=0))
+                snip = " ".join(text[max(0, i-60): i+100].split())
+                hits.append({"path": rel, "title": title_of(rel, text), "snippet": snip})
+                if len(hits) >= args.limit: break
+        out(args, hits, lambda d: [print(f"{h['path']}\n  {h['title']}\n  {h['snippet']}") for h in d])
+    elif args.cmd == "read":
+        full = safe_path(vault, excl, args.path)
+        if not os.path.isfile(full): die("note not found", 1)
+        text = redact(read_text(full))
+        out(args, {"path": args.path, "title": title_of(args.path, text), "content": text}, lambda d: print(d["content"]))
+    elif args.cmd == "list":
+        items = [rel for rel, _ in iter_notes(vault, excl, args.subdir)]
+        out(args, items, lambda d: [print(x) for x in d])
+    elif args.cmd == "tags":
+        want = args.tag.lstrip("#").lower(); items = []
+        for rel, full in iter_notes(vault, excl):
+            text = read_text(full)
+            if want in tags_of(text): items.append({"path": rel, "title": title_of(rel, text)})
+        out(args, items, lambda d: [print(f"{x['path']}  {x['title']}") for x in d])
+    elif args.cmd == "recent":
+        items = recent_items(vault, excl, since_of(args), args.limit or None)
+        out(args, items, lambda d: [print(f"{x['modified']}  {x['path']}  by={x['by'] or 'UNATTRIBUTED'}") for x in d])
+    elif args.cmd == "audit":
+        items = recent_items(vault, excl, since_of(args))
+        bad = [x for x in items if not x["by"]]
+        unk = [x["path"] for x in items if x["by"] == "UNKNOWN" and x["via"] == "approved-list"]
+        res = {"changed": len(items), "attributed": len(items) - len(bad), "unknown_accepted": len(unk), "unattributed": [x["path"] for x in bad], "ok": not bad}
+        out(args, res, lambda d: print(f"{'PASS' if d['ok'] else 'FAIL'}: {d['attributed']}/{d['changed']} attributed" + "".join(f"\n  UNATTRIBUTED {p}" for p in d["unattributed"])))
+        if bad: sys.exit(1)
+    elif args.cmd == "count":
+        n = sum(1 for _ in iter_notes(vault, excl))
+        out(args, {"notes": n}, lambda d: print(d["notes"]))
+
+if __name__ == "__main__":
+    main()

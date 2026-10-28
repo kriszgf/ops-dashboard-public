@@ -1,0 +1,62 @@
+{
+ "EN": {
+  "saver": "Cost saver – bot stopper",
+  "saverCap": "Non-core (extended) processes per the category proposal. Buttons only copy a message for the Coordinator to the clipboard; no network calls. State comes from the PAUSED list in the code.",
+  "stopSel": "Stop selected",
+  "restartSel": "Restart selected",
+  "stopBtn": "Stop",
+  "restartBtn": "Restart",
+  "running": "running",
+  "paused": "paused",
+  "copiedShort": "Copied – paste it into the Coordinator chat",
+  "proposal": "proposal",
+  "cat_core": "Core",
+  "cat_sales": "Sales",
+  "cat_ext": "Extended"
+ },
+ "DE": {
+  "saver": "Kostensparer – Bot-Stopp",
+  "saverCap": "Nicht-Kern-Prozesse (erweitert) laut Kategorievorschlag. Die Schaltflächen kopieren nur eine Nachricht für den Coordinator in die Zwischenablage; keine Netzwerkaufrufe. Der Status stammt aus der PAUSED-Liste im Code.",
+  "stopSel": "Ausgewählte stoppen",
+  "restartSel": "Ausgewählte neu starten",
+  "stopBtn": "Stoppen",
+  "restartBtn": "Neu starten",
+  "running": "läuft",
+  "paused": "pausiert",
+  "copiedShort": "Kopiert – in den Coordinator-Chat einfügen",
+  "proposal": "Vorschlag",
+  "cat_core": "Kern",
+  "cat_sales": "Vertrieb",
+  "cat_ext": "Erweitert"
+ },
+ "FR": {
+  "saver": "Économies – arrêt des bots",
+  "saverCap": "Processus non essentiels (étendus) selon la proposition de catégories. Les boutons copient seulement un message pour le Coordinator dans le presse-papiers ; aucun appel réseau. L’état vient de la liste PAUSED du code.",
+  "stopSel": "Arrêter la sélection",
+  "restartSel": "Redémarrer la sélection",
+  "stopBtn": "Arrêter",
+  "restartBtn": "Redémarrer",
+  "running": "en cours",
+  "paused": "en pause",
+  "copiedShort": "Copié – collez-le dans le chat du Coordinator",
+  "proposal": "proposition",
+  "cat_core": "Essentiel",
+  "cat_sales": "Ventes",
+  "cat_ext": "Étendu"
+ },
+ "PT": {
+  "saver": "Poupança – paragem de bots",
+  "saverCap": "Processos não essenciais (estendidos) segundo a proposta de categorias. Os botões apenas copiam uma mensagem para o Coordinator para a área de transferência; sem chamadas de rede. O estado vem da lista PAUSED no código.",
+  "stopSel": "Parar selecionados",
+  "restartSel": "Reiniciar selecionados",
+  "stopBtn": "Parar",
+  "restartBtn": "Reiniciar",
+  "running": "em execução",
+  "paused": "em pausa",
+  "copiedShort": "Copiado – cole no chat do Coordinator",
+  "proposal": "proposta",
+  "cat_core": "Essencial",
+  "cat_sales": "Vendas",
+  "cat_ext": "Estendido"
+ }
+}

@@ -1,0 +1,15 @@
+{
+"readmeBtn":["README","README","README","README","README","README","说明","README","README"],
+"partial":["","","","","","Traduzione parziale, automatica – nomi dei processi e testi di esempio in inglese · in attesa di revisione italiana","部分机器翻译 – 流程名称和示例文本为英文","一部機械翻訳 – プロセス名とサンプルテキストは英語","Traducción parcial automática – nombres de procesos y textos de ejemplo en inglés"],
+"obsP":["Médiumnapló: {n} (küldések, válaszok, tanulságok dátummal).","Outlet log: {n} (sends, replies, lessons with dates).","Medienprotokoll: {n} (Sendungen, Antworten, Erkenntnisse mit Datum).","Journal du média : {n} (envois, réponses, leçons datées).","Registo do meio: {n} (envios, respostas, lições com datas).","Registro della testata: {n} (invii, risposte, lezioni con date).","媒体日志：{n}（发送、回复、经验，附日期）。","媒体ログ：{n}（送信、返信、学び、日付付き）。","Registro del medio: {n} (envíos, respuestas, lecciones con fechas)."],
+"obsM":["Személyes emlékjegyzet (csak cím).","Personal memory note (title only).","Persönliche Erinnerungsnotiz (nur Titel).","Note de mémoire personnelle (titre seul).","Nota de memória pessoal (só título).","Nota di memoria personale (solo titolo).","个人记忆笔记（仅标题）。","個人メモ（タイトルのみ）。","Nota de memoria personal (solo título)."],
+"close2":["Bezárás","Close","Schließen","Fermer","Fechar","Chiudi","关闭","閉じる","Cerrar"],
+"dataLang":["A mintaadatok szövegei (időpont, megjegyzés) angolul vannak.","Sample-data texts (schedule, notes) are in English.","Texte der Beispieldaten (Zeitplan, Notizen) sind auf Englisch.","Les textes des données d’exemple (planning, notes) sont en anglais.","Os textos dos dados de exemplo (horário, notas) estão em inglês.","I testi dei dati di esempio (orari, note) sono in inglese.","示例数据文本（时间、备注）为英文。","サンプルデータのテキスト（予定、メモ）は英語です。","Los textos de los datos de ejemplo (horario, notas) están en inglés."],
+"more":["Több","More","Mehr","Plus","Mais","Altro","更多","詳細","Más"],
+"less":["Kevesebb","Less","Weniger","Moins","Menos","Meno","收起","閉じる","Menos"],
+"pWhat":["Mi ez","What it is","Was es ist","Ce que c’est","O que é","Che cos’è","是什么","概要","Qué es"],
+"pWhy":["Miért","Why","Warum","Pourquoi","Porquê","Perché","为什么","理由","Por qué"],
+"pStatus":["Állapot","Status","Status","Statut","Estado","Stato","状态","状態","Estado"],
+"pNext":["Következő lépés","Next step","Nächster Schritt","Prochaine étape","Próximo passo","Prossimo passo","下一步","次のステップ","Siguiente paso"],
+"projHead":["Projektek (példa)","Projects (example)","Projekte (Beispiel)","Projets (exemple)","Projetos (exemplo)","Progetti (esempio)","项目（示例）","プロジェクト（サンプル）","Proyectos (ejemplo)"]
+}

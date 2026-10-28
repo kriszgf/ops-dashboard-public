@@ -1,0 +1,8 @@
+{
+ "_comment": "EXAMPLE DATA ONLY – fictional projects. Replace with your own; never commit real data.",
+ "projects": [
+  { "id": "demo-a", "name": "Example Project Alpha", "summary": "Sample newsletter pipeline.", "what": "A fictional pipeline that turns sample notes into a weekly newsletter draft.", "why": "Shows how a multi-step content process can be tracked on one card.", "status": "Active – sample runs complete without errors.", "next": "Add a review step before the draft is marked ready." },
+  { "id": "demo-b", "name": "Example Project Beta", "summary": "Sample backup check.", "what": "A fictional nightly job that checks whether an example backup finished.", "why": "Demonstrates how a failing or stuck job is surfaced to the reader.", "status": "Paused – waiting on a sample configuration change.", "next": "Set a time limit so the job fails with an error instead of hanging." },
+  { "id": "demo-c", "name": "Example Project Gamma", "summary": "Sample translation workflow.", "what": "A fictional workflow that keeps example UI strings in several languages in sync.", "why": "Illustrates a project with several dependent steps and owners.", "status": "Planned – not started.", "next": "Define the list of sample languages and the review rule." }
+ ]
+}

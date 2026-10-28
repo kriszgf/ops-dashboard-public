@@ -1,0 +1,42 @@
+{
+  "_comment": "Copy to config.local.json (git-ignored) and adjust. Never commit config.local.json.",
+  "vault": {
+    "excludes": [
+      "example-private-folder"
+    ],
+    "sections": [
+      {
+        "prefix": "Memories/",
+        "kind": "mem"
+      },
+      {
+        "prefix": "Knowledge/Press/",
+        "kind": "press"
+      },
+      {
+        "prefix": "Knowledge/Lessons/",
+        "kind": "lessons"
+      },
+      {
+        "prefix": "Knowledge/Projects/",
+        "kind": "proj"
+      },
+      {
+        "prefix": "Knowledge/Decisions/",
+        "kind": "proj"
+      },
+      {
+        "prefix": "Knowledge/Agents/",
+        "kind": "agents"
+      }
+    ],
+    "titleOnlyKinds": [
+      "mem"
+    ]
+  },
+  "leakScan": {
+    "terms": [
+      "example-private-term"
+    ]
+  }
+}

@@ -1,0 +1,469 @@
+{
+ "_comment": "EXAMPLE DATA ONLY – fictional processes, bots and notes.",
+ "snapshot": "2026-01-01 08:00 (sample)",
+ "processes": [
+  [
+   "p01",
+   "Napi minta-riport",
+   "Daily sample report",
+   "Täglicher Beispielbericht",
+   "Rapport quotidien d’exemple",
+   "Relatório diário de exemplo",
+   "aktív",
+   "daily 08:00",
+   "Bot A",
+   [
+    "Coordinator"
+   ],
+   "10-26 08:00",
+   "OK",
+   "",
+   "Rendszer",
+   [
+    8
+   ]
+  ],
+  [
+   "p02",
+   "Heti trendgyűjtés",
+   "Weekly trend scan",
+   "Wöchentlicher Trend-Scan",
+   "Veille hebdo des tendances",
+   "Análise semanal de tendências",
+   "aktív",
+   "Monday 10:00",
+   "Coordinator",
+   [],
+   "10-26 10:04",
+   "OK",
+   "",
+   "Projekt",
+   []
+  ],
+  [
+   "p03",
+   "Kimenő levelek",
+   "Outbound mail",
+   "Ausgehende Mails",
+   "Courriels sortants",
+   "E-mails de saída",
+   "aktív",
+   "every 3 hours",
+   "Mail Bot",
+   [
+    "Coordinator"
+   ],
+   "10-27 07:13",
+   "OK",
+   "2 bounces (sample)",
+   "Outreach",
+   [
+    0,
+    3,
+    6,
+    9,
+    12,
+    15,
+    18,
+    21
+   ]
+  ],
+  [
+   "p04",
+   "Értékesítési státusz",
+   "Sales status",
+   "Verkaufsstatus",
+   "Statut des ventes",
+   "Estado de vendas",
+   "aktív",
+   "daily 07:00",
+   "Sales Bot",
+   [],
+   "10-27 07:00",
+   "OK",
+   "",
+   "Kiadás",
+   [
+    7
+   ]
+  ],
+  [
+   "p05",
+   "Közzététel (vázlat)",
+   "Publishing (draft)",
+   "Veröffentlichung (Entwurf)",
+   "Publication (brouillon)",
+   "Publicação (rascunho)",
+   "blokkolt",
+   "–",
+   "Sales Bot",
+   [
+    "Editor Bot"
+   ],
+   "10-27 06:53",
+   "blokkolt",
+   "Awaiting approval (sample)",
+   "Kiadás",
+   []
+  ],
+  [
+   "p06",
+   "Social posztolás",
+   "Social posting",
+   "Social-Posts",
+   "Publication sociale",
+   "Publicação social",
+   "aktív",
+   "11:15 and 19:15",
+   "Poster Device",
+   [],
+   "10-26 19:15",
+   "OK",
+   "",
+   "Social",
+   [
+    11.25,
+    19.25
+   ]
+  ],
+  [
+   "p07",
+   "Rang-figyelés",
+   "Rank watch",
+   "Ranking-Beobachtung",
+   "Suivi du classement",
+   "Monitorização de ranking",
+   "aktív",
+   "daily 10:00",
+   "Coordinator",
+   [
+    "Bot B"
+   ],
+   "10-15 20:09",
+   "elavult",
+   "Does not start (sample error)",
+   "Social",
+   [
+    10
+   ]
+  ],
+  [
+   "p08",
+   "Jegyzet-karbantartás",
+   "Notes upkeep",
+   "Notizpflege",
+   "Entretien des notes",
+   "Manutenção de notas",
+   "aktív",
+   "daily 21:30",
+   "Ops Bot",
+   [
+    "Coordinator"
+   ],
+   "10-26",
+   "OK",
+   "",
+   "Rendszer",
+   [
+    21.5
+   ]
+  ],
+  [
+   "p09",
+   "Hírcsatorna-figyelés",
+   "Feed scan",
+   "Nachrichtenbeobachtung",
+   "Veille d’actualités",
+   "Monitorização de notícias",
+   "aktív",
+   "08:00 / 20:00",
+   "Feed Bot",
+   [],
+   "10-26 20:00",
+   "OK",
+   "",
+   "Rendszer",
+   [
+    8,
+    20
+   ]
+  ],
+  [
+   "p10",
+   "Számla-emlékeztető",
+   "Bill reminder",
+   "Rechnungserinnerung",
+   "Rappel de factures",
+   "Lembrete de faturas",
+   "inaktív",
+   "–",
+   "Finance Bot",
+   [],
+   "10-10 (stopped)",
+   "OK",
+   "",
+   "Rendszer",
+   []
+  ],
+  [
+   "p11",
+   "Postafiók-triázs",
+   "Inbox triage",
+   "Posteingangs-Triage",
+   "Tri de la boîte",
+   "Triagem da caixa",
+   "szünetel",
+   "–",
+   "Inbox Bot",
+   [],
+   "10-08",
+   "OK",
+   "",
+   "Rendszer",
+   []
+  ],
+  [
+   "p12",
+   "Hírlevél-vázlat",
+   "Newsletter draft",
+   "Newsletter-Entwurf",
+   "Brouillon de newsletter",
+   "Rascunho de newsletter",
+   "igény szerint",
+   "on request",
+   "Writer Bot",
+   [],
+   "10-23",
+   "OK",
+   "",
+   "Projekt",
+   []
+  ],
+  [
+   "p13",
+   "Utánkövetés",
+   "Follow-up",
+   "Nachfassen",
+   "Relance",
+   "Seguimento",
+   "csak tervezett",
+   "Wednesday 10:00",
+   "Mail Bot",
+   [],
+   "–",
+   "OK",
+   "No routine",
+   "Outreach",
+   []
+  ]
+ ],
+ "categories": {
+  "p01": "core",
+  "p02": "ext",
+  "p03": "core",
+  "p04": "sales",
+  "p05": "core",
+  "p06": "sales",
+  "p07": "ext",
+  "p08": "core",
+  "p09": "ext",
+  "p10": "core",
+  "p11": "core",
+  "p12": "ext",
+  "p13": "core"
+ },
+ "paused": [
+  "p10",
+  "p11"
+ ],
+ "details": {
+  "p01": [
+   "Sample instruction for the Daily sample report process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p02": [
+   "Sample instruction for the Weekly trend scan process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p03": [
+   "Sample instruction for the Outbound mail process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p04": [
+   "Sample instruction for the Sales status process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p05": [
+   "Sample instruction for the Publishing (draft) process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p06": [
+   "Sample instruction for the Social posting process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p07": [
+   "Sample instruction for the Rank watch process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p08": [
+   "Sample instruction for the Notes upkeep process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "yes (writes)"
+  ],
+  "p09": [
+   "Sample instruction for the Feed scan process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p10": [
+   "Sample instruction for the Bill reminder process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p11": [
+   "Sample instruction for the Inbox triage process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p12": [
+   "Sample instruction for the Newsletter draft process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ],
+  "p13": [
+   "Sample instruction for the Follow-up process (EXAMPLE).",
+   "Sample condition: needs the owner's approval.",
+   "Sample numbers: 3 runs, 0 errors.",
+   "no",
+   "no"
+  ]
+ },
+ "unknown": {
+  "p01": [],
+  "p02": [],
+  "p03": [],
+  "p04": [],
+  "p05": [],
+  "p06": [],
+  "p07": [],
+  "p08": [],
+  "p09": [],
+  "p10": [],
+  "p11": [],
+  "p12": [],
+  "p13": []
+ },
+ "unknownDetails": {
+  "p13": [
+   "cmd",
+   "cond",
+   "does",
+   "art",
+   "obs"
+  ]
+ },
+ "marks": {
+  "Coordinator": {
+   "shape": "pumpkin",
+   "color": "warm"
+  }
+ },
+ "devices": [
+  "Poster Device"
+ ],
+ "obsidianNotes": [
+  [
+   "Index for bots",
+   "index",
+   "10-24 09:41",
+   "10-26 21:36",
+   "Sample index note.",
+   "U",
+   "Notes%2FIndex"
+  ],
+  [
+   "Sample memory",
+   "mem",
+   "10-26 21:38",
+   "10-26 21:38",
+   "M",
+   "U",
+   "Notes%2FMemories%2FSample"
+  ],
+  [
+   "Outlet A",
+   "press",
+   "10-26 21:37",
+   "10-26 21:37",
+   "P",
+   "G",
+   "Notes%2FOutlets%2FOutlet%20A"
+  ],
+  [
+   "Lessons",
+   "lessons",
+   "10-23 06:32",
+   "10-26 21:36",
+   "Sample lessons.",
+   "U",
+   "Notes%2FLessons"
+  ],
+  [
+   "Project X",
+   "proj",
+   "10-22 13:52",
+   "10-26 21:36",
+   "Sample project note.",
+   "G",
+   "Notes%2FProjects%2FProject%20X"
+  ],
+  [
+   "Agent note",
+   "agents",
+   "10-26 23:11",
+   "10-26 23:11",
+   "Sample agent note.",
+   "Ops Bot",
+   "Notes%2FAgents%2FNote"
+  ]
+ ],
+ "obsidianBots": [
+  "Ops Bot",
+  "Coordinator"
+ ],
+ "obsidianProcs": {
+  "p08": "w",
+  "p03": "r"
+ }
+}

@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## [2.0.3] - 2026-10-29
+### Changed
+- Simplest layout: the front page shows only the project cards in a grid. Clicking a project opens the existing process view (cards, graph, controls, Obsidian Notes, language and theme unchanged) with a "Back to projects" control. Sample processes have no project link, so every project shows all processes.
+- Tests: grid shown, process view hidden until click, opens on click, Back returns.
+
 ## [2.0.2] - 2026-10-29
 ### Changed
 - Projects section now renders above the process cards; regression test asserts the order.

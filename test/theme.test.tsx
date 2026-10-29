@@ -17,7 +17,7 @@ describe("theme", () => {
   }
   it("dark is actually dark", () => { expect(lum(THEMES.dark.bg.base)).toBeLessThan(0.02); expect(lum(THEMES.light.bg.base)).toBeGreaterThan(0.9); });
   it("toggle applies vars and persists", () => {
-    const { container } = render(<App />);
+    const { container } = render(<App />); fireEvent.click(container.querySelector('[data-testid^="project-"]')!);
     const btn = [...container.querySelectorAll("button")].find(b => /^(Dark|Sötét)/i.test(b.textContent || ""))!;
     expect(btn).toBeTruthy(); fireEvent.click(btn);
     expect(document.documentElement.dataset.theme).toBe("dark");

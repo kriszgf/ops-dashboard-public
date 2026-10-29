@@ -8,7 +8,7 @@ import extraFill from "./i18n/extra-fill.json";
 import newKeys from "./i18n/new-keys.json";
 import obsUi from "./i18n/obsidian-ui.json";
 import { OBS_CFG, OBS_EX, obsLink } from "./obsidian-adapter";
-import { Projects } from "./Projects";
+import { Projects, PROJECTS } from "./Projects";
 import rmEN from "../README.md?raw";
 import rmHU from "../docs/README.hu.md?raw";
 import rmDE from "../docs/README.de.md?raw";
@@ -198,6 +198,7 @@ export default function App() {
   const [obsSec, setObsSec] = useState<string>("ALL");
   const [catF, setCatF] = useState<string>("ALL");
   const [toast, setToast] = useState<string>("");
+  const [proj, setProj] = useState<string | null>(null);
   const [picked, setPicked] = useState<string[]>([]);
   const [openCmd, setOpenCmd] = useState<string[]>([]);
   const [mode, setModeRaw] = useState<"auto" | "light" | "dark">(loadMode);
@@ -428,6 +429,14 @@ export default function App() {
   return (
     <Page title="" width="full"><div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
       <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
+      {proj === null ? (
+      <div data-testid="projects-view">
+        <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere" }}>{t("title")}</h1>
+        <Section heading={t("projHead")}><Projects onOpen={setProj} l={{ more: t("more"), less: t("less"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projHead") }} /></Section>
+      </div>
+      ) : (
+      <div data-testid="process-view">
+      <div style={{ marginBottom: 8 }}><Button label={lang === "HU" ? "← Vissza a projektekhez" : "← Back to projects"} onClick={() => setProj(null)} /> <strong style={{ marginLeft: 8 }}>{(PROJECTS.find(x => x.id === proj) || { name: proj }).name}</strong></div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", rowGap: 8 }}>
         <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: 8 }}>{t("title")}</h1>
         <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
@@ -808,7 +817,6 @@ export default function App() {
         </div>
       </Section>
 
-      <Section heading={t("projHead")}><Projects l={{ more: t("more"), less: t("less"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projHead") }} /></Section>
       <Section heading={t("cards")}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
           <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
@@ -866,6 +874,8 @@ export default function App() {
         <Text>{t("gaps")}: {GAPS.join(", ")}.</Text>
         <Text>{t("shapeNote")}</Text>
       </Section>
+      </div>
+      )}
       <footer data-testid="app-version" style={{ marginTop: 16, fontSize: 12, color: th.text.tertiary, textAlign: "center" }}>ops-dashboard v{__APP_VERSION__} · CHANGELOG.md</footer>
       </div>
       {toast !== "" && <div role="status" style={{ position: "fixed", left: 16, right: 16, bottom: 16, zIndex: 10000, margin: "0 auto", maxWidth: 560, background: th.bg.elevated, color: th.text.primary, border: `1px solid ${th.border.strong}`, borderRadius: th.radius.md, padding: "10px 14px", overflowWrap: "anywhere", userSelect: "text" }}>{toast}</div>}

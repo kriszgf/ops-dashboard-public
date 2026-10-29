@@ -1,4 +1,4 @@
-import { Page, Section, Grid, Properties, Status, Segmented, Select, Button, Text, Fragment, useTheme } from "./shim";
+import { Page, Section, Grid, Properties, Status, Segmented, Select, Button, Text, Fragment, useTheme, loadMode, saveMode, setCurrent } from "./shim";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { D, MARKS, DEVICES, UNK, CAT, PAUSED, DET, UNK2, OBS_SNAP, OBS_NOTES, OBS_TOTAL, OBS_BOTS, OBS_PROCS } from "./data";
 import type { P, ON } from "./data";
@@ -185,7 +185,6 @@ type N = { id: string; x: number; y: number; kind: "bot" | "proc"; p?: P; name: 
 type E = { id: string; a: string; b: string; dashed: boolean };
 
 export default function App() {
-  const th = useTheme();
   const [lang, setLang] = useState<L>("EN");
   const [docOpen, setDocOpen] = useState<boolean>(false);
   const [obsChecked, setObsChecked] = useState<string>(new Date().toTimeString().slice(0, 8));
@@ -201,7 +200,10 @@ export default function App() {
   const [toast, setToast] = useState<string>("");
   const [picked, setPicked] = useState<string[]>([]);
   const [openCmd, setOpenCmd] = useState<string[]>([]);
-  const [mode, setMode] = useState<"auto" | "light" | "dark">("auto");
+  const [mode, setModeRaw] = useState<"auto" | "light" | "dark">(loadMode);
+  const setMode = (m: "auto" | "light" | "dark") => { saveMode(m); setModeRaw(m); };
+  const th = useTheme(mode);
+  setCurrent(th);
   const [copyState, setCopyState] = useState<"" | "ok" | "fail">("");
   const [hoverEdge, setHoverEdge] = useState<string>("");
   const [tapEdge, setTapEdge] = useState<string>("");
@@ -246,9 +248,9 @@ export default function App() {
   }, []);
 
   // Page-level theme override: the kit only exposes the viewer's palette, so a non-matching choice inverts the rendered page (hue-preserving).
-  const tk: "light" | "dark" = mode === "auto" ? th.kind : mode;
-  const inv = tk !== th.kind;
-  const fx = { filter: "invert(1) hue-rotate(180deg)", background: th.bg.base };
+  const tk: "light" | "dark" = th.kind;
+  const inv = false;
+  const fx = {};
   const cat = th.dataviz.categorical;
   const colorOf = (p: P): string => {
     const pr = problemOf(p);
@@ -424,7 +426,7 @@ export default function App() {
   const swatch = (c: string, round: boolean) => <span style={{ display: "inline-block", width: 12, height: 12, borderRadius: round ? 6 : 2, background: c, marginRight: 6, verticalAlign: "middle" }} />;
 
   return (
-    <Page title="" width="full"><div style={{background:"#fff3cd",color:"#5c4400",padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
+    <Page title="" width="full"><div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
       <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", rowGap: 8 }}>
         <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: 8 }}>{t("title")}</h1>

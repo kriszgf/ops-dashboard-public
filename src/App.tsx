@@ -449,89 +449,7 @@ export default function App() {
   const overlay = { position: "absolute" as const, colorScheme: th.kind, background: th.bg.elevated, border: `1px solid ${th.border.default}`, borderRadius: th.radius.md, padding: "8px 12px", color: th.text.primary, fontSize: 16 };
   const swatch = (c: string, round: boolean) => <span style={{ display: "inline-block", width: 12, height: 12, borderRadius: round ? 6 : 2, background: c, marginRight: 6, verticalAlign: "middle" }} />;
 
-  return (
-    <Page title="" width="full">
-      <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
-      {proj === ALL ? (
-      <div data-testid="all-view">
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
-        <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
-        <h1 style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700 }}>{t("allProc")} ({D_ALL.length})</h1>
-        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
-        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
-        </div>
-        <AllProcesses items={D_ALL} name={nm} tx={tx} status={(p: P) => st(p[6])} onOpen={(id: string) => { setProj(projectKey(id) || NONPROJ); jump(id); }}
-          l={{ title: t("allProc"), name: t("apName"), label: t("apLabel"), type: t("apType"), timing: t("apTiming"), owner: t("apOwner"), status: t("status"), all: t("all"), nonProj: t("apNon"), related: t("apRel"), kinds: { sched: t("kSched"), pipeline: t("kPipe"), article: t("kArt"), bg: t("kBg") } }} />
-      </div>
-      ) : proj === null ? (
-      <div data-testid="projects-view">
-          <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}><Icon name="blocked" style={{ marginRight: 6 }} />EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
-        <div data-testid="front-topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
-        <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: "auto" }}>{t("projTitle")}</h1>
-        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
-        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
-        </div>
-        <div style={{ margin: "12px 0" }}><Button onClick={() => setProj(ALL)}><span data-testid="all-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="summary" />{t("allProc")}</span></Button></div>
-        <Projects t={t} onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), guideTitle: t("gTitle"), guide: ["g1", "g2", "g3", "g4", "g5"].map(t), emptyTitle: t("pEmptyT"), empty: t("pEmpty"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata"), notused: t("pst_notused") } }} />
-        <NonProjectPanel items={nonProject(D_ALL)} title={t("nonProj")} name={nm} status={(p: P) => st(p[6])} tx={tx} onOpen={(id: string) => { setProj(NONPROJ); jump(id); }} pipe={PIPE_ID ? D_ALL.find((p: P) => p[0] === PIPE_ID) : undefined} pipeProject={PROJECT_OF[PIPE_ID]} pipeTag={t("pipeTag")} piped={PIPELINES[PIPE_ID] ?? []} onOpenPipe={() => { setProj(PROJECT_OF[PIPE_ID] || ALL); jump(PIPE_ID); }} onOpenAll={() => setProj(NONPROJ)} />
-      </div>
-      ) : (
-      <div data-testid="process-view">
-      <div data-testid="topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8, fontSize: 16 }}>
-        <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
-        <h1 data-testid="project-title" style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700, overflowWrap: "anywhere" }}>{proj === NONPROJ ? t("nonProj") : (PROJECTS.find(x => x.id === proj) || { name: proj }).name}</h1>
-        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
-        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
-      </div>
-      {proj === NONPROJ && <NonProjectPanel items={nonProject(D_ALL)} title={t("nonProj")} name={nm} status={(p: P) => st(p[6])} tx={tx} onOpen={(id: string) => jump(id)} pipe={PIPE_ID ? D_ALL.find((p: P) => p[0] === PIPE_ID) : undefined} pipeProject={PROJECT_OF[PIPE_ID]} pipeTag={t("pipeTag")} piped={PIPELINES[PIPE_ID] ?? []} onOpenPipe={() => { setProj(PROJECT_OF[PIPE_ID] || ALL); jump(PIPE_ID); }} />}
-      {D.length === 0 && <div data-testid="no-processes" style={{ color: th.text.secondary, margin: "8px 0" }}>{lang === "HU" ? "Ehhez a projekthez még nincs folyamat." : "No processes for this project yet."}</div>}
-      <Section heading={t("cards")}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
-          <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
-          <span style={{ fontSize: 16, color: th.text.secondary }}>{t("proposal")}</span>
-        </div>
-        <Segmented options={[{ value: "ALL", label: t("all"), count: D.length }, ...STATUSES.map((s: string) => ({ value: s, label: st(s), count: D.filter((p: P) => p[6] === s).length }))]} value={filter} onChange={setFilter} />
-        <Grid columns={3}>
-          {shown.map((p: P) => (
-            <div key={p[0]} id={"card-" + p[0]} style={{ borderRadius: th.radius.lg, outline: flash === p[0] ? `3px solid ${th.text.accent}` : "3px solid transparent", outlineOffset: 2, color: th.text.primary, background: flash === p[0] ? th.fill.accentSubtle : "transparent" }}>
-              <Section heading={nm(p)}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  {markIcon(p[8], 34)}
-                  <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{tx(p[8])}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 16, color: th.text.primary, alignItems: "center" }}>
-                  {[
-                    { label: t("status"), value: <Status tone={p[6] === "aktív" ? "success" : p[6] === "blokkolt" ? "warning" : p[6] === "csak tervezett" ? "accent" : "neutral"}>{st(p[6])}</Status> },
-                    { label: t("problem"), value: <Status tone={problemOf(p) === "OK" ? "success" : problemOf(p) === "leállítva" ? "danger" : "warning"}>{st(problemOf(p))}</Status> },
-                    { label: t("ws"), value: WS[p[13]][li] },
-                    { label: t("schedule"), value: tx(p[7]) },
-                    ...(p[9].length ? [{ label: t("linked"), value: p[9].map(tx).join(", ") }] : []),
-                    { label: t("last"), value: tx(p[10]) },
-                    ...(p[12] ? [{ label: t("note"), value: tx(p[12]) }] : []),
-                  ].map((r: { label: string; value: any }, i: number) => (
-                    <Fragment key={i}><span style={{ color: th.text.secondary }}>{r.label}</span><span style={{ overflowWrap: "anywhere" }}>{r.value}</span></Fragment>
-                  ))}
-                </div>
-                <div style={{ marginTop: 6, color: th.text.primary, fontSize: 16 }}>
-                  <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 16, color: th.text.secondary }}>({t("ownerSum")})</span></div>
-                  {(DET[p[0]] ?? [])[0] ? (
-                    <div>
-                      <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{tx(DET[p[0]][0])}{DET[p[0]][1] ? " — " + tx(DET[p[0]][1]) : ""}</div>
-                      <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 16 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
-                    </div>
-                  ) : <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 6 }}>
-                  <span style={{ fontSize: 16, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.secondary }}>{t("cat_" + CAT[p[0]])} · {t("proposal")}</span>
-                  {isPaused(p) && <span style={{ fontSize: 16, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.tertiary }}>{t("paused")}</span>}
-                  {isPaused(p) ? <Button label={t("restartBtn")} onClick={() => copyTxt(actText("restart", [p[0]], lang === "HU"), t("copiedShort"))} /> : CAT[p[0]] !== "core" && <Button label={t("stopBtn")} onClick={() => copyTxt(actText("stop", [p[0]], lang === "HU"), t("copiedShort"))} />}
-                </div>
-              </Section>
-            </div>
-          ))}
-        </Grid>
-      </Section>
-
+  const viewBlock = (<>
       <Section heading={t("view")}>
         <Segmented options={[{ value: "clock", label: t("clock") }, { value: "net", label: t("net") }, { value: "metro", label: t("metro") }]} value={view} onChange={(v: string) => { setView(v); setFocus(""); setTapEdge(""); }} />
       </Section>
@@ -823,6 +741,92 @@ export default function App() {
           </div>
         </div>
       )}
+  </>);
+  return (
+    <Page title="" width="full">
+      <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
+      {proj === ALL ? (
+      <div data-testid="all-view">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
+        <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
+        <h1 style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700 }}>{t("allProc")} ({D_ALL.length})</h1>
+        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
+        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
+        </div>
+        <div data-testid="global-net">{viewBlock}</div>
+        <AllProcesses items={D_ALL} name={nm} tx={tx} status={(p: P) => st(p[6])} onOpen={(id: string) => { setProj(projectKey(id) || NONPROJ); jump(id); }}
+          l={{ title: t("allProc"), name: t("apName"), label: t("apLabel"), type: t("apType"), timing: t("apTiming"), owner: t("apOwner"), status: t("status"), all: t("all"), nonProj: t("apNon"), related: t("apRel"), kinds: { sched: t("kSched"), pipeline: t("kPipe"), article: t("kArt"), bg: t("kBg") } }} />
+      </div>
+      ) : proj === null ? (
+      <div data-testid="projects-view">
+          <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}><Icon name="blocked" style={{ marginRight: 6 }} />EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
+        <div data-testid="front-topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
+        <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: "auto" }}>{t("projTitle")}</h1>
+        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
+        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
+        </div>
+        <div style={{ margin: "12px 0" }}><Button onClick={() => setProj(ALL)}><span data-testid="all-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="summary" />{t("allProc")}</span></Button></div>
+        <Projects t={t} onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), guideTitle: t("gTitle"), guide: ["g1", "g2", "g3", "g4", "g5"].map(t), emptyTitle: t("pEmptyT"), empty: t("pEmpty"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata"), notused: t("pst_notused") } }} />
+        <NonProjectPanel items={nonProject(D_ALL)} title={t("nonProj")} name={nm} status={(p: P) => st(p[6])} tx={tx} onOpen={(id: string) => { setProj(NONPROJ); jump(id); }} pipe={PIPE_ID ? D_ALL.find((p: P) => p[0] === PIPE_ID) : undefined} pipeProject={PROJECT_OF[PIPE_ID]} pipeTag={t("pipeTag")} piped={PIPELINES[PIPE_ID] ?? []} onOpenPipe={() => { setProj(PROJECT_OF[PIPE_ID] || ALL); jump(PIPE_ID); }} onOpenAll={() => setProj(NONPROJ)} />
+      </div>
+      ) : (
+      <div data-testid="process-view">
+      <div data-testid="topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8, fontSize: 16 }}>
+        <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
+        <h1 data-testid="project-title" style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700, overflowWrap: "anywhere" }}>{proj === NONPROJ ? t("nonProj") : (PROJECTS.find(x => x.id === proj) || { name: proj }).name}</h1>
+        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
+        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
+      </div>
+      {proj === NONPROJ && <NonProjectPanel items={nonProject(D_ALL)} title={t("nonProj")} name={nm} status={(p: P) => st(p[6])} tx={tx} onOpen={(id: string) => jump(id)} pipe={PIPE_ID ? D_ALL.find((p: P) => p[0] === PIPE_ID) : undefined} pipeProject={PROJECT_OF[PIPE_ID]} pipeTag={t("pipeTag")} piped={PIPELINES[PIPE_ID] ?? []} onOpenPipe={() => { setProj(PROJECT_OF[PIPE_ID] || ALL); jump(PIPE_ID); }} />}
+      {D.length === 0 && <div data-testid="no-processes" style={{ color: th.text.secondary, margin: "8px 0" }}>{lang === "HU" ? "Ehhez a projekthez még nincs folyamat." : "No processes for this project yet."}</div>}
+      <Section heading={t("cards")}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
+          <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
+          <span style={{ fontSize: 16, color: th.text.secondary }}>{t("proposal")}</span>
+        </div>
+        <Segmented options={[{ value: "ALL", label: t("all"), count: D.length }, ...STATUSES.map((s: string) => ({ value: s, label: st(s), count: D.filter((p: P) => p[6] === s).length }))]} value={filter} onChange={setFilter} />
+        <Grid columns={3}>
+          {shown.map((p: P) => (
+            <div key={p[0]} id={"card-" + p[0]} style={{ borderRadius: th.radius.lg, outline: flash === p[0] ? `3px solid ${th.text.accent}` : "3px solid transparent", outlineOffset: 2, color: th.text.primary, background: flash === p[0] ? th.fill.accentSubtle : "transparent" }}>
+              <Section heading={nm(p)}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  {markIcon(p[8], 34)}
+                  <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{tx(p[8])}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 16, color: th.text.primary, alignItems: "center" }}>
+                  {[
+                    { label: t("status"), value: <Status tone={p[6] === "aktív" ? "success" : p[6] === "blokkolt" ? "warning" : p[6] === "csak tervezett" ? "accent" : "neutral"}>{st(p[6])}</Status> },
+                    { label: t("problem"), value: <Status tone={problemOf(p) === "OK" ? "success" : problemOf(p) === "leállítva" ? "danger" : "warning"}>{st(problemOf(p))}</Status> },
+                    { label: t("ws"), value: WS[p[13]][li] },
+                    { label: t("schedule"), value: tx(p[7]) },
+                    ...(p[9].length ? [{ label: t("linked"), value: p[9].map(tx).join(", ") }] : []),
+                    { label: t("last"), value: tx(p[10]) },
+                    ...(p[12] ? [{ label: t("note"), value: tx(p[12]) }] : []),
+                  ].map((r: { label: string; value: any }, i: number) => (
+                    <Fragment key={i}><span style={{ color: th.text.secondary }}>{r.label}</span><span style={{ overflowWrap: "anywhere" }}>{r.value}</span></Fragment>
+                  ))}
+                </div>
+                <div style={{ marginTop: 6, color: th.text.primary, fontSize: 16 }}>
+                  <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 16, color: th.text.secondary }}>({t("ownerSum")})</span></div>
+                  {(DET[p[0]] ?? [])[0] ? (
+                    <div>
+                      <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{tx(DET[p[0]][0])}{DET[p[0]][1] ? " — " + tx(DET[p[0]][1]) : ""}</div>
+                      <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 16 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
+                    </div>
+                  ) : <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 6 }}>
+                  <span style={{ fontSize: 16, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.secondary }}>{t("cat_" + CAT[p[0]])} · {t("proposal")}</span>
+                  {isPaused(p) && <span style={{ fontSize: 16, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.tertiary }}>{t("paused")}</span>}
+                  {isPaused(p) ? <Button label={t("restartBtn")} onClick={() => copyTxt(actText("restart", [p[0]], lang === "HU"), t("copiedShort"))} /> : CAT[p[0]] !== "core" && <Button label={t("stopBtn")} onClick={() => copyTxt(actText("stop", [p[0]], lang === "HU"), t("copiedShort"))} />}
+                </div>
+              </Section>
+            </div>
+          ))}
+        </Grid>
+      </Section>
+
+      {viewBlock}
 
       <Section heading={t("obsTitle")} caption={t("resource")} collapsible defaultOpen={false}>
         <Properties items={[

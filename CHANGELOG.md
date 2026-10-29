@@ -4,6 +4,10 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## v2.0.10 (2026-10-29)
+- Restored the global, unfiltered bot–process network (24-hour clock / network / metro lines, with the Obsidian links) at the top of the All processes view (#/all); "network" is the default. It had only been reachable inside a single project since v2.0.3.
+- README screenshots refreshed (network view dark at the top, light in the Screenshots table). Sample data only.
+
 ## v2.0.9 (2026-10-29)
 - New "All processes" view (#/all): every process in one table (name, label, type, timing, owner bot, status) with label and type filter chips (scheduled / pipeline / article / background); rows open the process.
 - Non-project panel below the projects: processes not tied to any project, with a pipeline reference row on top; the card opens a dedicated non-project view.

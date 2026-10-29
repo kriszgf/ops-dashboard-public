@@ -1,6 +1,7 @@
 # Process Dashboard (example)
 
-<p align="center"><img src="docs/screenshots/dashboard-dark.png" alt="Ops Dashboard v2.0.9, dark mode, sample data" width="820"></p>
+<p align="center"><img src="docs/screenshots/dashboard-dark.png" alt="Ops Dashboard v2.0.10, dark mode, sample data" width="820"></p>
+<p align="center"><img src="docs/screenshots/network-dark.png" alt="Global bot–process network with Obsidian links, dark mode, sample data" width="820"></p>
 <p align="center"><img src="docs/screenshots/all-processes-dark.png" alt="All processes view, dark mode, sample data" width="820"></p>
 <p align="center"><img src="docs/screenshots/dashboard-dark-phone.png" alt="Phone view, dark mode" width="260"></p>
 
@@ -40,7 +41,7 @@ All shipped data is fictional. Never commit real names, emails, IPs, logs or key
 
 ## Controls
 
-The **All processes** view (`#/all`, button on the start page) lists every process in one table and filters it by label and type.
+The **All processes** view (`#/all`, button on the start page) shows the global bot–process network (with Obsidian links) on top and lists every process in one table, filterable by label and type.
 The **Non-project panel** below the projects collects processes that belong to no project and opens them in their own view.
 
 - Header: language picker (9 languages; ◐ = partial machine translation), theme (Auto / Light / Dark), README.
@@ -132,6 +133,7 @@ Generated with Playwright from the sample-data build (fictional data only, UI in
 | ![Full page](docs/screenshots/00-full-page.png) | The whole dashboard on one long page. |
 | ![Overview](docs/screenshots/01-overview.png) | Header with language picker, theme switch and README button, plus the stale/blocked banner and the Obsidian notes panel. |
 | ![Phone](docs/screenshots/02-phone.png) | The dashboard on a phone-sized screen (390 px). |
+| ![Network](docs/screenshots/network-light.png) | All processes view: the global bot–process network with Obsidian links, above the process table. |
 
 ## Vision
 

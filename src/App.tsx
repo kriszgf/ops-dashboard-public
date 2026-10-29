@@ -808,6 +808,7 @@ export default function App() {
         </div>
       </Section>
 
+      <Section heading={t("projHead")}><Projects l={{ more: t("more"), less: t("less"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projHead") }} /></Section>
       <Section heading={t("cards")}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
           <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
@@ -865,7 +866,6 @@ export default function App() {
         <Text>{t("gaps")}: {GAPS.join(", ")}.</Text>
         <Text>{t("shapeNote")}</Text>
       </Section>
-      <Section heading={t("projHead")}><Projects l={{ more: t("more"), less: t("less"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projHead") }} /></Section>
       <footer data-testid="app-version" style={{ marginTop: 16, fontSize: 12, color: th.text.tertiary, textAlign: "center" }}>ops-dashboard v{__APP_VERSION__} · CHANGELOG.md</footer>
       </div>
       {toast !== "" && <div role="status" style={{ position: "fixed", left: 16, right: 16, bottom: 16, zIndex: 10000, margin: "0 auto", maxWidth: 560, background: th.bg.elevated, color: th.text.primary, border: `1px solid ${th.border.strong}`, borderRadius: th.radius.md, padding: "10px 14px", overflowWrap: "anywhere", userSelect: "text" }}>{toast}</div>}

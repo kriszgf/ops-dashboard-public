@@ -94,7 +94,7 @@ describe("vault-read write mode", () => {
   it("--version prints the version and touches nothing", () => {
     const v = setup(); const before = snap(v);
     const r = spawnSync(PY, [CLI, "--version"], { env: { ...process.env, VAULT_PATH: "" }, encoding: "utf8" });
-    expect(r.status).toBe(0); expect(r.stdout.trim()).toBe("vault-read 2.0.1");
+    expect(r.status).toBe(0); expect(r.stdout.trim()).toBe("vault-read 2.0.2");
     expect(snap(v)).toEqual(before);
     rmSync(v, { recursive: true });
   });

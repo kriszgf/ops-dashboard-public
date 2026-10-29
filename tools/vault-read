@@ -10,7 +10,7 @@ _bot-writes/log.md (append-only) and _bot-writes/daily/YYYY-MM-DD.md.
 import json, os, re, sys, argparse, hashlib, secrets, tempfile, glob
 from datetime import datetime, timezone, timedelta
 
-VERSION = "2.0.1"
+VERSION = "2.0.2"
 WRITE_DIR = "_bot-writes"
 BOT_RE = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
 

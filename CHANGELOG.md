@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## [2.0.2] - 2026-10-29
+### Changed
+- Projects section now renders above the process cards; regression test asserts the order.
+- Personal-data rescan of tracked tree and built output.
+
 ## [2.0.1] - 2026-10-29
 ### Fixed
 - Dark mode: the page background was never set (body stayed white) and the manual toggle only CSS-inverted the page, so "Dark" could render light and unreadable. The theme is now chosen in one place (`useTheme(mode)`), applies real dark colors (bg #0f1115, surface #181b22, text #e6e8eb, muted #9aa3ad, borders #2a2f38) via CSS variables on `<html>`, defaults to the system preference and persists the Auto/Light/Dark choice in localStorage.

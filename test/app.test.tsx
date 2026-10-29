@@ -5,6 +5,12 @@ afterEach(cleanup);
 const cards = (c: HTMLElement) => c.querySelectorAll('[id^="card-"]').length;
 const catGroup = (c: HTMLElement) => [...c.querySelectorAll('[role="tablist"]')].find(g => g.querySelectorAll("button").length === 4 && [...g.querySelectorAll("button")].some(b => /core|alap|Kern/i.test(b.textContent || ""))) as HTMLElement;
 describe("dashboard", () => {
+  it("renders the Projects section before the process cards", () => {
+    const { container } = render(<App />);
+    const proj = container.querySelector('[data-testid^="project-"]'); const card = container.querySelector('[id^="card-"]');
+    expect(proj).toBeTruthy(); expect(card).toBeTruthy();
+    expect(proj!.compareDocumentPosition(card!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
   it("renders cards", () => { const { container } = render(<App />); expect(cards(container)).toBeGreaterThan(0); });
   it("category filter narrows cards", () => {
     const { container } = render(<App />); const all = cards(container); const g = catGroup(container); expect(g).toBeTruthy();

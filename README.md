@@ -1,6 +1,7 @@
 # Process Dashboard (example)
 
-<p align="center"><img src="docs/screenshots/dashboard-dark.png" alt="Ops Dashboard v2.0.8, dark mode, sample data" width="820"></p>
+<p align="center"><img src="docs/screenshots/dashboard-dark.png" alt="Ops Dashboard v2.0.9, dark mode, sample data" width="820"></p>
+<p align="center"><img src="docs/screenshots/all-processes-dark.png" alt="All processes view, dark mode, sample data" width="820"></p>
 <p align="center"><img src="docs/screenshots/dashboard-dark-phone.png" alt="Phone view, dark mode" width="260"></p>
 
 > **All data in this repository is fictional EXAMPLE data** (`data/sample-processes.json`). No real bots, people or systems are described.
@@ -38,6 +39,10 @@ npm start             # build, then serve dist/ on http://localhost:4173
 All shipped data is fictional. Never commit real names, emails, IPs, logs or keys.
 
 ## Controls
+
+The **All processes** view (`#/all`, button on the start page) lists every process in one table and filters it by label and type.
+The **Non-project panel** below the projects collects processes that belong to no project and opens them in their own view.
+
 - Header: language picker (9 languages; ◐ = partial machine translation), theme (Auto / Light / Dark), README.
 - Red and amber banners jump to the affected card.
 - Views: 24-hour clock, bot–process network, metro lines. Zoom, Fit, Full screen (Esc).

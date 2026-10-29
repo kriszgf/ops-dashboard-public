@@ -2,7 +2,7 @@
 // Thin 1.5px line / geometric style, drawn on a 24px grid; colour = currentColor.
 // No third-party icon set is bundled, so no extra licence notice is needed.
 import type { ReactNode } from "react";
-export type IconName = "active" | "paused" | "waiting" | "blocked" | "nodata" | "stopped" | "planned" | "decision" | "search" | "clock" | "cost" | "bot" | "pulse" | "arrow" | "back" | "chevron" | "guide" | "summary" | "live" | "offline";
+export type IconName = "active" | "paused" | "waiting" | "blocked" | "nodata" | "stopped" | "planned" | "decision" | "search" | "clock" | "cost" | "bot" | "pulse" | "arrow" | "back" | "chevron" | "guide" | "summary" | "live" | "offline" | "loose";
 const P: Record<IconName, ReactNode> = {
   active: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" /></>,
   paused: <><circle cx="12" cy="12" r="8.5" /><path d="M10 8.5v7M14 8.5v7" /></>,
@@ -23,6 +23,7 @@ const P: Record<IconName, ReactNode> = {
   guide: <><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h3.5" /></>,
   live: <><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none" /><path d="M8.2 8.2a5.4 5.4 0 0 0 0 7.6M15.8 8.2a5.4 5.4 0 0 1 0 7.6M5.4 5.4a9.3 9.3 0 0 0 0 13.2M18.6 5.4a9.3 9.3 0 0 1 0 13.2" /></>,
   offline: <><circle cx="12" cy="12" r="8.5" strokeDasharray="3 2.5" /><path d="M8.5 8.5l7 7" /></>,
+  loose: <><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" strokeDasharray="2 2" /><path d="M14 7h3.5a3 3 0 0 1 3 3" /></>,
   summary: <><path d="M4 18.5h16" /><path d="M7 15V11M12 15V6.5M17 15V9" /></>,
 };
 export function Icon({ name, size = 18, glow, title, style }: { name: IconName; size?: number; glow?: boolean; title?: string; style?: any }) {

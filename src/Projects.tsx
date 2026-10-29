@@ -1,6 +1,7 @@
 import { useState } from "react";
 import raw from "../data/sample-projects.json";
 import { Status } from "./shim";
+import { PROJECT_OF, type P } from "./data";
 import { Icon } from "./icons";
 import nk from "./i18n/new-keys.json";
 const EN_T = (k: string) => ((nk as any)[k]?.[1] ?? k) as string;
@@ -135,5 +136,30 @@ export function Projects({ items = PROJECTS, l = EN_LABELS, t = EN_T, onOpen, co
       </section>}
       </>}
     </div>
+  );
+}
+
+export const NONPROJ = "_nonproject";
+const PIDS = new Set(PROJECTS.map(p => p.id));
+export const nonProject = (ps: P[]) => ps.filter(p => !PIDS.has(PROJECT_OF[p[0]]));
+export function NonProjectPanel({ items, title, name, status, onOpen, onOpenAll, tx = (v: string) => v, pipe, pipeTag, piped = [], onOpenPipe, pipeProject }: { pipeProject?: string; tx?: (v: string) => string; pipe?: P; pipeTag?: string; piped?: string[]; onOpenPipe?: () => void; items: P[]; title: string; name: (p: P) => string; status: (p: P) => string; onOpen?: (id: string) => void; onOpenAll?: () => void }) {
+  if (items.length === 0) return null;
+  const amber = "rgb(214 158 46";
+  return (
+    <section data-testid="nonproject-panel" aria-labelledby="np-h" role={onOpenAll ? "button" : undefined} tabIndex={onOpenAll ? 0 : undefined} onClick={onOpenAll} onKeyDown={onOpenAll ? (e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onOpenAll(); } } : undefined} style={{ cursor: onOpenAll ? "pointer" : undefined,  border: `1px solid ${amber} / 0.38)`, borderRadius: 12, padding: "12px 16px", margin: "16px 0", background: `${amber} / 0.06)` }}>
+      <h2 id="np-h" style={{ ...meta, margin: "0 0 8px", fontSize: 18, color: "var(--text)" }}><span style={{ color: `${amber} / 0.9)`, display: "inline-flex" }}><Icon name="loose" size={20} /></span>{title} ({items.length})</h2>
+      <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 6 }}>
+        {pipe && <li><a data-testid="nonproject-pipe" href={href(pipeProject ?? "")} onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenPipe?.(); }}
+          style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px", alignItems: "center", padding: "8px 0", borderTop: `1px solid ${amber} / 0.18)`, color: "inherit", textDecoration: "none" }}>
+          <span style={{ ...meta }}><Icon name="arrow" size={16} /><strong>{name(pipe)}</strong></span>
+          <span data-testid="pipe-tag" style={{ fontSize: 14, border: "1px solid var(--border, #8884)", borderRadius: 999, padding: "0 8px", color: "var(--muted)" }}>{pipeTag}</span>
+          <span style={{ color: "var(--muted)" }}>{status(pipe)} · {tx(pipe[8])}</span>
+          <span style={{ ...meta, marginLeft: "auto", color: "var(--accent)" }}><Icon name="arrow" /></span></a></li>}
+        {items.map(p => <li key={p[0]}><a data-testid={`nonproject-${p[0]}`} href={href(NONPROJ)} onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpen?.(p[0]); }}
+          style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px", alignItems: "center", padding: "8px 0", borderTop: `1px solid ${amber} / 0.18)`, color: "inherit", textDecoration: "none" }}>
+          <strong style={{ paddingLeft: pipe && piped.includes(p[0]) ? 20 : 0 }}>{name(p)}</strong>{pipe && piped.includes(p[0]) && <span data-testid={`piped-${p[0]}`} style={{ color: "var(--muted)", fontSize: 14 }}>← {name(pipe)}</span>}<span style={{ color: "var(--muted)" }}>{status(p)} · {tx(p[8])}{p[10] && !["—", "–"].includes(p[10]) ? ` · ${tx(p[10])}` : ""}</span>
+          <span style={{ ...meta, marginLeft: "auto", color: "var(--accent)" }}><Icon name="arrow" /></span></a></li>)}
+      </ul>
+    </section>
   );
 }

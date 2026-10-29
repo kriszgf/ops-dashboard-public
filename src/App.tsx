@@ -1,6 +1,6 @@
 import { Page, Section, Grid, Properties, Status, Segmented, Select, Button, Text, Fragment, useTheme, loadMode, saveMode, setCurrent } from "./shim";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { D as D_ALL, PROJECT_OF, MARKS, DEVICES, UNK, CAT, PAUSED, DET, UNK2, OBS_SNAP, OBS_NOTES, OBS_TOTAL, OBS_BOTS, OBS_PROCS } from "./data";
+import { D as D_ALL, PROJECT_OF, MARKS, DEVICES, UNK, CAT, PAUSED, DET, UNK2, OBS_SNAP, OBS_NOTES, OBS_TOTAL, OBS_BOTS, OBS_PROCS, PIPELINES, procTx } from "./data";
 import type { P, ON } from "./data";
 import baseOv from "./i18n/base-overrides.json";
 import extraLangs from "./i18n/extra-langs.json";
@@ -8,7 +8,8 @@ import extraFill from "./i18n/extra-fill.json";
 import newKeys from "./i18n/new-keys.json";
 import obsUi from "./i18n/obsidian-ui.json";
 import { OBS_CFG, OBS_EX, obsLink } from "./obsidian-adapter";
-import { Projects, PROJECTS } from "./Projects";
+import { Projects, PROJECTS, NonProjectPanel, NONPROJ, nonProject } from "./Projects";
+import { AllProcesses, ALL, projectKey } from "./AllProcesses";
 import { Icon } from "./icons";
 import rmEN from "../README.md?raw";
 import rmHU from "../docs/README.hu.md?raw";
@@ -32,6 +33,20 @@ const PARTIAL: L[] = ["IT", "ZH", "JA", "ES"];
 const NAME_COL: Record<L, number> = { HU: 1, EN: 2, DE: 3, FR: 4, PT: 5, IT: 2, ZH: 2, JA: 2, ES: 2 };
 type Dict = Record<string, string[]>;
 const UI: Dict = {
+  pipeTag: ["pipeline", "pipeline", "Pipeline", "pipeline", "pipeline"],
+  allProc: ["Minden folyamat", "All processes", "Alle Prozesse", "Tous les processus", "Todos os processos"],
+  apName: ["Név", "Name", "Name", "Nom", "Nome"],
+  apLabel: ["Címke", "Label", "Label", "Étiquette", "Rótulo"],
+  apType: ["Típus", "Type", "Typ", "Type", "Tipo"],
+  apTiming: ["Időzítés", "Timing", "Zeitplan", "Calendrier", "Horário"],
+  apOwner: ["Felelős bot", "Owner bot", "Verantwortlicher Bot", "Bot responsable", "Bot responsável"],
+  apNon: ["nem projekt", "non-project", "projektlos", "hors projet", "sem projeto"],
+  apRel: ["{x} projekt", "{x} related", "{x}-bezogen", "lié à {x}", "relacionado a {x}"],
+  kSched: ["ütemezett", "scheduled", "geplant", "planifié", "agendado"],
+  kPipe: ["pipeline", "pipeline", "Pipeline", "pipeline", "pipeline"],
+  kArt: ["cikk", "article", "Artikel", "article", "artigo"],
+  kBg: ["háttér", "background", "Hintergrund", "arrière-plan", "segundo plano"],
+  nonProj: ["Projekthez nem kötött folyamatok", "Non-project related processes", "Nicht projektbezogene Prozesse", "Processus hors projet", "Processos não ligados a projetos"],
   title: ["Folyamat-dashboard", "Process dashboard", "Prozess-Dashboard", "Tableau de bord des processus", "Painel de processos"],
   summary: ["41 belső folyamat: állapot, ütemezés, botok. Adatok: (sample).", "41 internal processes: status, schedule, bots. Data as of (sample).", "41 interne Prozesse: Status, Zeitplan, Bots. Stand (sample).", "41 processus internes : statut, planning, bots. Données du (sample).", "41 processos internos: estado, agenda, bots. Dados de 2026-10-27 07:20 (locale)."],
   lang: ["Nyelv", "Language", "Sprache", "Langue", "Idioma"],
@@ -127,6 +142,7 @@ const UI: Dict = {
 };
 const ST: Dict = {
   "aktív": ["aktív", "active", "aktiv", "actif", "ativo"],
+  "nem indult": ["nem indult", "not started", "nicht begonnen", "pas commencé", "não iniciado"],
   "inaktív": ["inaktív", "inactive", "inaktiv", "inactif", "inativo"],
   "szünetel": ["szünetel", "paused", "pausiert", "en pause", "em pausa"],
   "blokkolt": ["blokkolt", "blocked", "blockiert", "bloqué", "bloqueado"],
@@ -143,6 +159,7 @@ const WS: Dict = {
   "Rendszer": ["Rendszer", "System", "System", "Système", "Sistema"],
   "Social": ["Social", "Social", "Social", "Réseaux sociaux", "Redes sociais"],
 };
+const PIPE_ID = Object.keys(PIPELINES)[0] ?? "";
 const WS_ORDER = ["Kiadás", "Outreach", "Projekt", "Rendszer", "Social"];
 const STATUSES = ["aktív", "szünetel", "inaktív", "blokkolt", "csak tervezett", "igény szerint"];
 
@@ -199,11 +216,11 @@ export default function App() {
   const [obsSec, setObsSec] = useState<string>("ALL");
   const [catF, setCatF] = useState<string>("ALL");
   const [toast, setToast] = useState<string>("");
-  const readHash = () => { const m = typeof location !== "undefined" ? location.hash.match(/^#\/project\/(.+)$/) : null; return m ? decodeURIComponent(m[1]) : null; };
+  const readHash = () => { if (typeof location !== "undefined" && location.hash === "#/all") return ALL; const m = typeof location !== "undefined" ? location.hash.match(/^#\/project\/(.+)$/) : null; return m ? decodeURIComponent(m[1]) : null; };
   const [proj, setProjS] = useState<string | null>(readHash);
-  const setProj = (id: string | null) => { setProjS(id); try { if (id) history.pushState(null, "", `#/project/${encodeURIComponent(id)}`); else history.pushState(null, "", location.pathname + location.search); } catch {} };
+  const setProj = (id: string | null) => { setProjS(id); try { if (id === ALL) history.pushState(null, "", "#/all"); else if (id) history.pushState(null, "", `#/project/${encodeURIComponent(id)}`); else history.pushState(null, "", location.pathname + location.search); } catch {} };
   useEffect(() => { const f = () => setProjS(readHash()); addEventListener("popstate", f); addEventListener("hashchange", f); return () => { removeEventListener("popstate", f); removeEventListener("hashchange", f); }; }, []);
-  const D: P[] = useMemo(() => (proj ? D_ALL.filter((p: P) => PROJECT_OF[p[0]] === proj) : D_ALL), [proj]);
+  const D: P[] = useMemo(() => (proj === ALL ? D_ALL : proj === NONPROJ ? nonProject(D_ALL) : proj ? D_ALL.filter((p: P) => PROJECT_OF[p[0]] === proj) : D_ALL), [proj]);
   const [picked, setPicked] = useState<string[]>([]);
   const [openCmd, setOpenCmd] = useState<string[]>([]);
   const [mode, setModeRaw] = useState<"auto" | "light" | "dark">(loadMode);
@@ -227,6 +244,7 @@ export default function App() {
   const t = (k: string) => UI[k][li];
   const st = (k: string) => (ST[k] ? ST[k][li] : k);
   const nm = (p: P): string => p[NAME_COL[lang]] as string;
+  const tx = (v: string): string => procTx(lang, v);
 
   useEffect(() => {
     const tick = () => {
@@ -328,10 +346,10 @@ export default function App() {
       const ROWS = 14;
       const H = ROWS * 92;
       sorted.forEach((p: P, i: number) => nodes.push({ id: p[0], x: 560 + Math.floor(i / ROWS) * 400, y: (i % ROWS) * 92, kind: "proc", p, name: nm(p) }));
-      botList.forEach((b: string, i: number) => nodes.push({ id: "b:" + b, x: 0, y: (i + 0.5) * (H / botList.length) - 46, kind: "bot", name: b }));
+      botList.forEach((b: string, i: number) => nodes.push({ id: "b:" + b, x: 0, y: (i + 0.5) * (H / botList.length) - 46, kind: "bot", name: tx(b) }));
     } else {
       const R1 = Math.max(380, procs.length * 70);
-      nodes.push({ id: "b:" + bot, x: 0, y: 0, kind: "bot", name: bot });
+      nodes.push({ id: "b:" + bot, x: 0, y: 0, kind: "bot", name: tx(bot) });
       procs.forEach((p: P, i: number) => {
         const a = (i / procs.length) * Math.PI * 2 - Math.PI / 2;
         nodes.push({ id: p[0], x: Math.cos(a) * R1, y: Math.sin(a) * R1, kind: "proc", p, name: nm(p) });
@@ -339,7 +357,7 @@ export default function App() {
       const others = Array.from(new Set(procs.flatMap((p: P) => [p[8], ...p[9]]).filter((b: string) => b !== bot)));
       others.forEach((b: string, i: number) => {
         const a = (i / Math.max(1, others.length)) * Math.PI * 2 - Math.PI / 2 + 0.35;
-        nodes.push({ id: "b:" + b, x: Math.cos(a) * (R1 + 320), y: Math.sin(a) * (R1 + 320), kind: "bot", name: b });
+        nodes.push({ id: "b:" + b, x: Math.cos(a) * (R1 + 320), y: Math.sin(a) * (R1 + 320), kind: "bot", name: tx(b) });
       });
     }
     procs.forEach((p: P) => [p[8], ...p[9]].forEach((b: string) => edges.push({ id: p[0] + "|" + b, a: "b:" + b, b: p[0], dashed: b !== p[8] })));
@@ -425,7 +443,7 @@ export default function App() {
   const fmtH = (h: number) => `${String(Math.floor(h)).padStart(2, "0")}:${String(Math.round((h % 1) * 60)).padStart(2, "0")}`;
   const bannerItem = (p: P, tone: "danger" | "warning") => (
     <button key={p[0]} onClick={() => jump(p[0])} style={{ display: "block", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: "4px 0", cursor: "pointer", color: tone === "danger" ? th.text.dangerDeep : th.text.warningDeep, font: "inherit", whiteSpace: "normal", overflowWrap: "anywhere" }}>
-      <strong>{nm(p)}</strong> — {st(problemOf(p))} · {t("last")}: {p[10]}{p[12] ? " · " + p[12] : ""}
+      <strong>{nm(p)}</strong> — {st(problemOf(p))} · {t("last")}: {tx(p[10])}{p[12] ? " · " + tx(p[12]) : ""}
     </button>
   );
   const overlay = { position: "absolute" as const, colorScheme: th.kind, background: th.bg.elevated, border: `1px solid ${th.border.default}`, borderRadius: th.radius.md, padding: "8px 12px", color: th.text.primary, fontSize: 16 };
@@ -434,7 +452,18 @@ export default function App() {
   return (
     <Page title="" width="full">
       <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
-      {proj === null ? (
+      {proj === ALL ? (
+      <div data-testid="all-view">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
+        <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
+        <h1 style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700 }}>{t("allProc")} ({D_ALL.length})</h1>
+        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
+        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
+        </div>
+        <AllProcesses items={D_ALL} name={nm} tx={tx} status={(p: P) => st(p[6])} onOpen={(id: string) => { setProj(projectKey(id) || NONPROJ); jump(id); }}
+          l={{ title: t("allProc"), name: t("apName"), label: t("apLabel"), type: t("apType"), timing: t("apTiming"), owner: t("apOwner"), status: t("status"), all: t("all"), nonProj: t("apNon"), related: t("apRel"), kinds: { sched: t("kSched"), pipeline: t("kPipe"), article: t("kArt"), bg: t("kBg") } }} />
+      </div>
+      ) : proj === null ? (
       <div data-testid="projects-view">
           <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}><Icon name="blocked" style={{ marginRight: 6 }} />EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
         <div data-testid="front-topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
@@ -442,16 +471,19 @@ export default function App() {
         <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
         <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
         </div>
+        <div style={{ margin: "12px 0" }}><Button onClick={() => setProj(ALL)}><span data-testid="all-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="summary" />{t("allProc")}</span></Button></div>
         <Projects t={t} onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), guideTitle: t("gTitle"), guide: ["g1", "g2", "g3", "g4", "g5"].map(t), emptyTitle: t("pEmptyT"), empty: t("pEmpty"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata"), notused: t("pst_notused") } }} />
+        <NonProjectPanel items={nonProject(D_ALL)} title={t("nonProj")} name={nm} status={(p: P) => st(p[6])} tx={tx} onOpen={(id: string) => { setProj(NONPROJ); jump(id); }} pipe={PIPE_ID ? D_ALL.find((p: P) => p[0] === PIPE_ID) : undefined} pipeProject={PROJECT_OF[PIPE_ID]} pipeTag={t("pipeTag")} piped={PIPELINES[PIPE_ID] ?? []} onOpenPipe={() => { setProj(PROJECT_OF[PIPE_ID] || ALL); jump(PIPE_ID); }} onOpenAll={() => setProj(NONPROJ)} />
       </div>
       ) : (
       <div data-testid="process-view">
       <div data-testid="topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8, fontSize: 16 }}>
         <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
-        <h1 data-testid="project-title" style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700, overflowWrap: "anywhere" }}>{(PROJECTS.find(x => x.id === proj) || { name: proj }).name}</h1>
+        <h1 data-testid="project-title" style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700, overflowWrap: "anywhere" }}>{proj === NONPROJ ? t("nonProj") : (PROJECTS.find(x => x.id === proj) || { name: proj }).name}</h1>
         <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
         <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
       </div>
+      {proj === NONPROJ && <NonProjectPanel items={nonProject(D_ALL)} title={t("nonProj")} name={nm} status={(p: P) => st(p[6])} tx={tx} onOpen={(id: string) => jump(id)} pipe={PIPE_ID ? D_ALL.find((p: P) => p[0] === PIPE_ID) : undefined} pipeProject={PROJECT_OF[PIPE_ID]} pipeTag={t("pipeTag")} piped={PIPELINES[PIPE_ID] ?? []} onOpenPipe={() => { setProj(PROJECT_OF[PIPE_ID] || ALL); jump(PIPE_ID); }} />}
       {D.length === 0 && <div data-testid="no-processes" style={{ color: th.text.secondary, margin: "8px 0" }}>{lang === "HU" ? "Ehhez a projekthez még nincs folyamat." : "No processes for this project yet."}</div>}
       <Section heading={t("cards")}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
@@ -465,17 +497,17 @@ export default function App() {
               <Section heading={nm(p)}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                   {markIcon(p[8], 34)}
-                  <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{p[8]}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
+                  <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{tx(p[8])}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 16, color: th.text.primary, alignItems: "center" }}>
                   {[
                     { label: t("status"), value: <Status tone={p[6] === "aktív" ? "success" : p[6] === "blokkolt" ? "warning" : p[6] === "csak tervezett" ? "accent" : "neutral"}>{st(p[6])}</Status> },
                     { label: t("problem"), value: <Status tone={problemOf(p) === "OK" ? "success" : problemOf(p) === "leállítva" ? "danger" : "warning"}>{st(problemOf(p))}</Status> },
                     { label: t("ws"), value: WS[p[13]][li] },
-                    { label: t("schedule"), value: p[7] },
-                    ...(p[9].length ? [{ label: t("linked"), value: p[9].join(", ") }] : []),
-                    { label: t("last"), value: p[10] },
-                    ...(p[12] ? [{ label: t("note"), value: p[12] }] : []),
+                    { label: t("schedule"), value: tx(p[7]) },
+                    ...(p[9].length ? [{ label: t("linked"), value: p[9].map(tx).join(", ") }] : []),
+                    { label: t("last"), value: tx(p[10]) },
+                    ...(p[12] ? [{ label: t("note"), value: tx(p[12]) }] : []),
                   ].map((r: { label: string; value: any }, i: number) => (
                     <Fragment key={i}><span style={{ color: th.text.secondary }}>{r.label}</span><span style={{ overflowWrap: "anywhere" }}>{r.value}</span></Fragment>
                   ))}
@@ -484,7 +516,7 @@ export default function App() {
                   <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 16, color: th.text.secondary }}>({t("ownerSum")})</span></div>
                   {(DET[p[0]] ?? [])[0] ? (
                     <div>
-                      <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{DET[p[0]][0]}{DET[p[0]][1] ? " — " + DET[p[0]][1] : ""}</div>
+                      <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{tx(DET[p[0]][0])}{DET[p[0]][1] ? " — " + tx(DET[p[0]][1]) : ""}</div>
                       <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 16 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
                     </div>
                   ) : <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}
@@ -498,7 +530,6 @@ export default function App() {
             </div>
           ))}
         </Grid>
-        <Text>{t("dataLang")}</Text>
       </Section>
 
       <Section heading={t("view")}>
@@ -550,7 +581,7 @@ export default function App() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
             <span style={{ fontWeight: 600, fontSize: 16, color: th.text.primary, marginRight: 8 }}>{view === "net" ? t("net") : t("metro")}</span>
             <div style={{ minWidth: 200 }}>
-              <Select options={[{ value: "ALL", label: t("allBots") }, ...BOTS.map((b: string) => ({ value: b, label: b }))]} value={bot} onChange={(v: string) => { setBot(v); setFocus(""); setTapEdge(""); }} />
+              <Select options={[{ value: "ALL", label: t("allBots") }, ...BOTS.map((b: string) => ({ value: b, label: tx(b) }))]} value={bot} onChange={(v: string) => { setBot(v); setFocus(""); setTapEdge(""); }} />
             </div>
             <Button label="−" onClick={() => zoomBy(0.8)} />
             <Button label="+" onClick={() => zoomBy(1.25)} />
@@ -696,7 +727,7 @@ export default function App() {
                         const lines = wrap(nm(p), 20);
                         return (
                           <g key={p[0]} style={{ cursor: "pointer" }} onClick={() => { setSel(p[0]); setCopyState(""); }} onPointerDown={(ev) => ev.stopPropagation()}>
-                            <title>{nm(p) + " · " + p[8] + " · " + st(p[6]) + " · " + st(problemOf(p))}</title>
+                            <title>{nm(p) + " · " + tx(p[8]) + " · " + st(p[6]) + " · " + st(problemOf(p))}</title>
                             <rect x={x - 130} y={y - 90} width={260} height={110 + lines.length * 24 + 30} fill="transparent" />
                             {markG(p[8], x, y - 58, 18, false)}
                             <circle cx={x} cy={y} r={14} fill={th.bg.elevated} stroke={colorOf(p)} strokeWidth={6} />
@@ -755,11 +786,11 @@ export default function App() {
                   {list.map((p: P) => (
                     <div key={p[0]} style={{ borderTop: `1px solid ${th.border.subtle}`, marginTop: 8, paddingTop: 8 }}>
                       {sel.startsWith("ws:") && <div style={{ fontWeight: 600, overflowWrap: "anywhere" }}>{nm(p)}</div>}
-                      <div style={{ overflowWrap: "anywhere" }}><strong>{t("schedule")}:</strong> {p[7]}</div>
+                      <div style={{ overflowWrap: "anywhere" }}><strong>{t("schedule")}:</strong> {tx(p[7])}</div>
                       <div><strong>{t("status")}:</strong> {st(p[6])} · {st(problemOf(p))}</div>
-                      <div style={{ overflowWrap: "anywhere" }}><strong>{t("last")}:</strong> {p[10]}</div>
-                      {p[12] && <div style={{ overflowWrap: "anywhere" }}><strong>{t("note")}:</strong> {p[12]}</div>}
-                      {["cmd", "cond", "does", "art", "obs"].map((f: string, k: number) => <div key={f} style={{ overflowWrap: "anywhere", marginTop: 2 }}><strong>{FIELD[f][li]}:</strong> {(DET[p[0]] ?? [])[k] || <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}</div>)}
+                      <div style={{ overflowWrap: "anywhere" }}><strong>{t("last")}:</strong> {tx(p[10])}</div>
+                      {p[12] && <div style={{ overflowWrap: "anywhere" }}><strong>{t("note")}:</strong> {tx(p[12])}</div>}
+                      {["cmd", "cond", "does", "art", "obs"].map((f: string, k: number) => <div key={f} style={{ overflowWrap: "anywhere", marginTop: 2 }}><strong>{FIELD[f][li]}:</strong> {tx((DET[p[0]] ?? [])[k]) || <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}</div>)}
                       <div style={{ marginTop: 6 }}><Button label={t("jumpCard")} onClick={() => jump(p[0])} /></div>
                     </div>
                   ))}
@@ -779,7 +810,7 @@ export default function App() {
               <div style={{ ...overlay, top: 10, right: 10, width: 300, maxHeight: mapH - 40, overflowY: "auto" }} onPointerDown={(ev) => ev.stopPropagation()}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                   {markIcon(focus, 34)}
-                  <strong style={{ fontSize: 16, overflowWrap: "anywhere" }}>{focus} — {t("procsOf")} ({focusProcs.length})</strong>
+                  <strong style={{ fontSize: 16, overflowWrap: "anywhere" }}>{tx(focus)} — {t("procsOf")} ({focusProcs.length})</strong>
                 </div>
                 {focusProcs.map((p: P) => (
                   <button key={p[0]} onClick={() => jump(p[0])} style={{ display: "flex", gap: 8, alignItems: "flex-start", width: "100%", background: "transparent", border: "none", padding: "6px 0", textAlign: "left", cursor: "pointer", color: th.text.primary, font: "inherit", fontSize: 16 }}>

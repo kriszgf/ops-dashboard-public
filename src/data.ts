@@ -4,6 +4,7 @@ export type P = [string, string, string, string, string, string, string, string,
 export type ON = [string, string, string, string, string, string, string];
 const r = raw as any;
 export const D: P[] = r.processes;
+export const PROJECT_OF: Record<string, string> = r.projectOf ?? {};
 export const CAT: Record<string, string> = r.categories;
 export const PAUSED: string[] = r.paused;
 export const DET: Record<string, string[]> = r.details;

@@ -4,6 +4,13 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## [2.0.4] - 2026-10-29
+### Changed
+- Project view: slim top row (Back to projects, project name, small language and theme toggles), then process cards, then the view (graph), then Obsidian Notes at the bottom, collapsed by default with a clear toggle. README, warning/alert blocks and other sections removed from the project view. Front page unchanged.
+- Each sample process now has a project id (`projectOf` in data/sample-processes.json); cards and graph show only that project's processes, with an empty-state line when there are none. The "show all when unlinked" fallback is gone.
+- Collapsible section headings are real buttons with aria-expanded.
+- Tests: order cards → graph → Obsidian, Obsidian collapses, no README/warning in project view, no process from another project.
+
 ## [2.0.3] - 2026-10-29
 ### Changed
 - Simplest layout: the front page shows only the project cards in a grid. Clicking a project opens the existing process view (cards, graph, controls, Obsidian Notes, language and theme unchanged) with a "Back to projects" control. Sample processes have no project link, so every project shows all processes.

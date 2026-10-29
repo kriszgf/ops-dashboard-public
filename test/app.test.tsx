@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect, afterEach } from "vitest";
 import { render, fireEvent, cleanup, act } from "@testing-library/react";
 import App from "../src/App";
@@ -28,17 +29,30 @@ describe("dashboard", () => {
     const counts = [1, 2, 3].map(i => { fireEvent.click(g.querySelectorAll("button")[i]); return cards(container); });
     expect(Math.min(...counts)).toBeLessThan(all);
   });
-  it("jump to card clears category filter", () => {
-    const { container } = openFirst(render(<App />)); const all = cards(container); const g = catGroup(container);
-    let i = 1; for (; i < 4; i++) { fireEvent.click(g.querySelectorAll("button")[i]); if (cards(container) < all) break; }
-    const visible = new Set([...container.querySelectorAll('[id^="card-"]')].map(e => e.id.slice(5)));
-    const target = [...container.querySelectorAll("button")].find(b => { const k = Object.keys(b).find(k => k.startsWith("__reactProps")); const fn = k && (b as any)[k].onClick; return fn && /jump\(/.test(fn.toString()); });
-    // find any jump target pointing at a hidden card via the banner/clock list
-    expect(target).toBeTruthy();
-    act(() => { fireEvent.click(target!); });
-    expect(g.querySelectorAll("button")[0].getAttribute("aria-pressed")).toBe("true");
-    expect(cards(container)).toBe(all);
-    void visible;
+  it("project view order: cards, then graph, then Obsidian (collapsed); no README or warning blocks", () => {
+    const { getByTestId } = openFirst(render(<App />)); const v = getByTestId("process-view");
+    const heads = [...v.querySelectorAll("h2,h3,button,summary")].map(e => e.textContent || "");
+    const iCards = heads.findIndex(h => /process cards|Folyamatkártyák|cards/i.test(h));
+    const card = v.querySelector('[id^="card-"]')!; const svg = v.querySelector("svg")!;
+    const obs = [...v.querySelectorAll("h2")].find(e => /Obsidian Notes/.test(e.textContent || ""))!;
+    expect(card && svg && obs).toBeTruthy(); void iCards;
+    expect(card.compareDocumentPosition(svg) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(svg.compareDocumentPosition(obs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(v.textContent).not.toMatch(/EXAMPLE DATA|README|Stale \/ blocked/);
+    expect(v.textContent).not.toContain("Vault location");
+    const toggle = obs.querySelector("button")!;
+    expect(toggle.getAttribute("aria-expanded")).toBe("false"); fireEvent.click(toggle); expect(toggle.getAttribute("aria-expanded")).toBe("true"); expect(v.textContent).toContain("Vault location");
+  });
+  it("project view shows only that project's processes", () => {
+    const data = JSON.parse(readFileSync("data/sample-processes.json", "utf8"));
+    for (const id of ["demo-a", "demo-b", "demo-c"]) {
+      const r = render(<App />); fireEvent.click(r.getByTestId(`project-${id}`));
+      const shown = [...r.container.querySelectorAll('[id^="card-"]')].map(e => e.id.slice(5));
+      expect(shown.length).toBeGreaterThan(0);
+      for (const pid of shown) expect(data.projectOf[pid]).toBe(id);
+      expect(shown.length).toBe(Object.values(data.projectOf).filter(x => x === id).length);
+      cleanup();
+    }
   });
   it("every button click runs without throwing", () => {
     const { container } = openFirst(render(<App />));

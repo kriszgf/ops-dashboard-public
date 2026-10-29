@@ -1,6 +1,6 @@
 import { Page, Section, Grid, Properties, Status, Segmented, Select, Button, Text, Fragment, useTheme, loadMode, saveMode, setCurrent } from "./shim";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { D, MARKS, DEVICES, UNK, CAT, PAUSED, DET, UNK2, OBS_SNAP, OBS_NOTES, OBS_TOTAL, OBS_BOTS, OBS_PROCS } from "./data";
+import { D as D_ALL, PROJECT_OF, MARKS, DEVICES, UNK, CAT, PAUSED, DET, UNK2, OBS_SNAP, OBS_NOTES, OBS_TOTAL, OBS_BOTS, OBS_PROCS } from "./data";
 import type { P, ON } from "./data";
 import baseOv from "./i18n/base-overrides.json";
 import extraLangs from "./i18n/extra-langs.json";
@@ -149,14 +149,14 @@ const isStopped = (p: P) => p[10].includes("stopped") || p[10].includes("leáll�
 // A deliberate pause/stop is NOT a problem: paused processes report "OK"; red is reserved for real errors.
 const pausedP = (p: P) => isStopped(p) || p[6] === "szünetel" || PAUSED.includes(p[0]);
 const problemOf = (p: P) => (pausedP(p) ? "OK" : p[11]);
-const ACTORS: string[] = Array.from(new Set(D.flatMap((p: P) => [p[8], ...p[9]]))).sort();
+const ACTORS: string[] = Array.from(new Set(D_ALL.flatMap((p: P) => [p[8], ...p[9]]))).sort();
 const BOTS: string[] = ACTORS.filter((b: string) => !DEVICES.includes(b));
 const GAPS = BOTS.filter((b: string) => !MARKS[b]);
 // Obsidian resource links (from registry + guest-article notes). w = writes, r = reads.
 // Fields still unknown per process (process-details-unknowns-2026-10-27.md).
 const FIELD: Dict = { cmd: ["parancs", "instruction", "Auftrag", "consigne", "instrução"], cond: ["feltételek / jóváhagyás", "conditions / approvals", "Bedingungen / Freigaben", "conditions / validations", "condições / aprovações"], does: ["mit csinál (számok)", "what it does (numbers)", "was es tut (Zahlen)", "ce qu’il fait (chiffres)", "o que faz (números)"], art: ["cikkírás", "article writing", "Artikelschreiben", "rédaction d’articles", "escrita de artigos"], obs: ["Obsidian", "Obsidian", "Obsidian", "Obsidian", "Obsidian"] };
 // Registry state: add a process id here when the Coordinator reports it paused (remove it on restart).
-const actText = (verb: "stop" | "restart", ids: string[], hu = false): string => (hu ? (verb === "stop" ? "Állítsd le: " : "Indítsd újra: ") : (verb === "stop" ? "Stop: " : "Restart: ")) + ids.map((id: string) => { const p = D.find((q: P) => q[0] === id); return p ? `${hu ? p[1] : p[2]} (${p[8]}/${id})` : id; }).join("; ");
+const actText = (verb: "stop" | "restart", ids: string[], hu = false): string => (hu ? (verb === "stop" ? "Állítsd le: " : "Indítsd újra: ") : (verb === "stop" ? "Stop: " : "Restart: ")) + ids.map((id: string) => { const p = D_ALL.find((q: P) => q[0] === id); return p ? `${hu ? p[1] : p[2]} (${p[8]}/${id})` : id; }).join("; ");
 const OBS_SEC: Dict = { mem: ["Memories", "Memories", "Memories", "Memories", "Memories"], press: ["Press médiumok", "Press outlets", "Presse-Medien", "Médias Press", "Meios Press"], lessons: ["Tanulságok / Playbookok", "Lessons / Playbooks", "Lektionen / Playbooks", "Leçons / Playbooks", "Lições / Playbooks"], proj: ["Projektek és döntések", "Projects & decisions", "Projekte & Entscheidungen", "Projets et décisions", "Projetos e decisões"], agents: ["Ügynök-jegyzetek", "Agent notes", "Agenten-Notizen", "Notes d’agents", "Notas de agentes"], index: ["Index és szabályok", "Index & rules", "Index & Regeln", "Index et règles", "Índice e regras"] };
 const FIELD_HU: Record<string, string> = { cmd: "parancs", cond: "feltételek/jóváhagyás", does: "mit csinál (számok)", art: "cikkírás", obs: "Obsidian" };
 
@@ -199,6 +199,7 @@ export default function App() {
   const [catF, setCatF] = useState<string>("ALL");
   const [toast, setToast] = useState<string>("");
   const [proj, setProj] = useState<string | null>(null);
+  const D: P[] = useMemo(() => (proj ? D_ALL.filter((p: P) => PROJECT_OF[p[0]] === proj) : D_ALL), [proj]);
   const [picked, setPicked] = useState<string[]>([]);
   const [openCmd, setOpenCmd] = useState<string[]>([]);
   const [mode, setModeRaw] = useState<"auto" | "light" | "dark">(loadMode);
@@ -313,7 +314,7 @@ export default function App() {
   };
 
   // ---------- graph models ----------
-  const procs = useMemo(() => D.filter((p: P) => p[0] !== "imagepack" && (bot === "ALL" || p[8] === bot || p[9].includes(bot))), [bot]);
+  const procs = useMemo(() => D.filter((p: P) => p[0] !== "imagepack" && (bot === "ALL" || p[8] === bot || p[9].includes(bot))), [bot, D]);
   const net = useMemo(() => {
     const nodes: N[] = [];
     const edges: E[] = [];
@@ -427,85 +428,69 @@ export default function App() {
   const swatch = (c: string, round: boolean) => <span style={{ display: "inline-block", width: 12, height: 12, borderRadius: round ? 6 : 2, background: c, marginRight: 6, verticalAlign: "middle" }} />;
 
   return (
-    <Page title="" width="full"><div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
+    <Page title="" width="full">
       <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
       {proj === null ? (
       <div data-testid="projects-view">
+          <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
         <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere" }}>{t("title")}</h1>
         <Section heading={t("projHead")}><Projects onOpen={setProj} l={{ more: t("more"), less: t("less"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projHead") }} /></Section>
       </div>
       ) : (
       <div data-testid="process-view">
-      <div style={{ marginBottom: 8 }}><Button label={lang === "HU" ? "← Vissza a projektekhez" : "← Back to projects"} onClick={() => setProj(null)} /> <strong style={{ marginLeft: 8 }}>{(PROJECTS.find(x => x.id === proj) || { name: proj }).name}</strong></div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", rowGap: 8 }}>
-        <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: 8 }}>{t("title")}</h1>
+      <div data-testid="topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8, fontSize: 13 }}>
+        <Button label={lang === "HU" ? "← Vissza a projektekhez" : "← Back to projects"} onClick={() => setProj(null)} />
+        <strong style={{ marginRight: "auto", overflowWrap: "anywhere" }}>{(PROJECTS.find(x => x.id === proj) || { name: proj }).name}</strong>
         <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
         <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
-        <Button label={t("readmeBtn")} onClick={() => setDocOpen(true)} />
       </div>
-      {PARTIAL.includes(lang) && <div data-testid="partial" style={{ color: th.text.warning, fontSize: 13, marginTop: 4 }}>◐ {t("partial")}</div>}
-      {docOpen && (
-        <div role="dialog" aria-label="README" onClick={() => setDocOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={(e) => e.stopPropagation()} style={{ background: th.bg.elevated, color: th.text.primary, maxWidth: 820, width: "92vw", maxHeight: "85vh", overflowY: "auto", borderRadius: th.radius.lg, padding: 20 }}>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}><Button label={t("close2")} onClick={() => setDocOpen(false)} /></div>
-            <pre data-testid="readme-body" style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", fontFamily: "inherit", fontSize: 14, lineHeight: 1.5 }}>{README[lang]}</pre>
-          </div>
+      {D.length === 0 && <div data-testid="no-processes" style={{ color: th.text.secondary, margin: "8px 0" }}>{lang === "HU" ? "Ehhez a projekthez még nincs folyamat." : "No processes for this project yet."}</div>}
+      <Section heading={t("cards")}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
+          <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
+          <span style={{ fontSize: 12, color: th.text.secondary }}>{t("proposal")}</span>
         </div>
-      )}
-      <div style={{ color: th.text.secondary, margin: "6px 0 10px" }}>{t("summary")}</div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12, color: th.text.primary, colorScheme: th.kind }}>
-        {reds.length > 0 && (
-          <div style={{ background: th.fill.dangerSubtle, border: `1px solid ${th.text.danger}`, borderRadius: th.radius.md, padding: "10px 14px" }}>
-            <div style={{ color: th.text.danger, fontWeight: 600 }}>⚠ {t("red")} · {t("asOf")} (sample)</div>
-            {reds.map((p: P) => bannerItem(p, "danger"))}
-          </div>
-        )}
-        {ambers.length > 0 && (
-          <div style={{ background: th.fill.warningSubtle, border: `1px solid ${th.text.warning}`, borderRadius: th.radius.md, padding: "10px 14px" }}>
-            <div style={{ color: th.text.warning, fontWeight: 600 }}>⚠ {t("amber")} · {t("asOf")} (sample)</div>
-            {ambers.map((p: P) => bannerItem(p, "warning"))}
-          </div>
-        )}
-      </div>
-
-      <Section heading={t("obsTitle")} caption={t("resource")}>
-        <Properties items={[
-          { label: t("obsVault"), value: t("obsVaultTxt") },
-          { label: t("obsLoc"), value: "~/Vault/Notes/ (" + OBS_CFG.vaultHost + ")" },
-          { label: t("obsOpen"), value: t("obsOpenTxt") },
-          { label: t("obsLast"), value: t("obsLastTxt") },
-          { label: t("obsUsers"), value: t("obsUsersTxt") },
-        ]} />
-        <div data-testid="obs-status" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 8 }}>
-          <span style={{ color: th.text.success }}>● {OX[lang].status}</span>
-          <span style={{ color: th.text.secondary, fontSize: 13 }}>{OX[lang].checked} {obsChecked} · {Object.keys(OBS_EX).length} {OX[lang].excerpts} · source: {OBS_CFG.source}</span>
-          <Button label={OX[lang].refresh} onClick={() => setObsChecked(new Date().toTimeString().slice(0, 8))} />
-          <Button label={OX[lang].setup} onClick={() => setObsSetup(!obsSetup)} />
-        </div>
-        {obsSetup && <ol data-testid="obs-setup" style={{ margin: "8px 0", paddingLeft: 20 }}>{OX[lang].steps.map((x: string, i: number) => <li key={i}>{x.replace("{v}", OBS_CFG.vaultName).replace("{h}", OBS_CFG.vaultHost)}</li>)}</ol>}
-        <div style={{ marginTop: 12, color: th.text.primary }}>
-          <div style={{ fontWeight: 600, fontSize: 16 }}>{t("obsRecent")}</div>
-          <div style={{ color: th.text.secondary, fontSize: 13, margin: "2px 0 8px" }}>{t("obsSnap")}: {OBS_SNAP} · {t("obsRecentCap").replace("{n}", String(OBS_NOTES.length)).replace("{t}", String(OBS_TOTAL))}</div>
-          <Segmented options={[{ value: "ALL", label: t("all"), count: OBS_NOTES.length }, ...Object.keys(OBS_SEC).map((k: string) => ({ value: k, label: OBS_SEC[k][li], count: OBS_NOTES.filter((n: ON) => n[1] === k).length }))]} value={obsSec} onChange={setObsSec} />
-          <div style={{ marginTop: 8, maxHeight: 420, overflowY: "auto", border: `1px solid ${th.border.subtle}`, borderRadius: th.radius.md }}>
-            {OBS_NOTES.filter((n: ON) => obsSec === "ALL" || n[1] === obsSec).map((n: ON, i: number) => (
-              <div key={n[6]} style={{ padding: "8px 12px", borderTop: i ? `1px solid ${th.border.subtle}` : "none" }}>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "baseline", justifyContent: "space-between" }}>
-                  <strong style={{ overflowWrap: "anywhere" }}>{n[0]}</strong>
-                  <span style={{ display: "flex", gap: 10, fontSize: 13 }}>
-                    <button data-testid="obs-ex" onClick={() => setObsEx(obsEx === n[6] ? "" : n[6])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>{t("obsOpenNote")}</button>
-                    <a data-testid="obs-app" href={obsLink(decodeURIComponent(n[6]))} target="_blank" rel="noopener noreferrer" style={{ color: th.text.accent }}>{OX[lang].appLink}</a>
-                    <button onClick={() => copyTxt(decodeURIComponent(n[6]), OX[lang].copied)} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>{OX[lang].copyPath}</button>
-                  </span>
+        <Segmented options={[{ value: "ALL", label: t("all"), count: D.length }, ...STATUSES.map((s: string) => ({ value: s, label: st(s), count: D.filter((p: P) => p[6] === s).length }))]} value={filter} onChange={setFilter} />
+        <Grid columns={3}>
+          {shown.map((p: P) => (
+            <div key={p[0]} id={"card-" + p[0]} style={{ borderRadius: th.radius.lg, outline: flash === p[0] ? `3px solid ${th.text.accent}` : "3px solid transparent", outlineOffset: 2, color: th.text.primary, background: flash === p[0] ? th.fill.accentSubtle : "transparent" }}>
+              <Section heading={nm(p)}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  {markIcon(p[8], 34)}
+                  <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{p[8]}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
                 </div>
-                <div style={{ fontSize: 13, color: th.text.secondary }}>{OBS_SEC[n[1]][li]} · {t("obsAdded")} {n[2]} · {t("obsChanged")} {n[3]}  · {t("obsBy")}: {n[5] === "U" ? t("unknown") : n[5] === "G" ? "bot (frontmatter)" : n[5]}</div>
-                <div style={{ fontSize: 14, overflowWrap: "anywhere" }}>{n[4] === "P" ? t("obsP").replace("{n}", n[0]) : n[4] === "M" ? t("obsM") : n[4]}</div>
-                {obsEx === n[6] && <div data-testid="obs-ex-body" style={{ marginTop: 6, padding: 8, background: th.fill.secondary, borderRadius: th.radius.md, fontSize: 13 }}><div style={{ color: th.text.secondary }}>{OX[lang].excerpt}</div><pre style={{ whiteSpace: "pre-wrap", margin: 0, fontFamily: "inherit" }}>{n[4] === "M" ? OX[lang].titleOnly : (OBS_EX[decodeURIComponent(n[6])] ?? OX[lang].noEx)}</pre></div>}
-              </div>
-            ))}
-          </div>
-        </div>
+                <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 14, color: th.text.primary, alignItems: "center" }}>
+                  {[
+                    { label: t("status"), value: <Status tone={p[6] === "aktív" ? "success" : p[6] === "blokkolt" ? "warning" : p[6] === "csak tervezett" ? "accent" : "neutral"}>{st(p[6])}</Status> },
+                    { label: t("problem"), value: <Status tone={problemOf(p) === "OK" ? "success" : problemOf(p) === "leállítva" ? "danger" : "warning"}>{st(problemOf(p))}</Status> },
+                    { label: t("ws"), value: WS[p[13]][li] },
+                    { label: t("schedule"), value: p[7] },
+                    ...(p[9].length ? [{ label: t("linked"), value: p[9].join(", ") }] : []),
+                    { label: t("last"), value: p[10] },
+                    ...(p[12] ? [{ label: t("note"), value: p[12] }] : []),
+                  ].map((r: { label: string; value: any }, i: number) => (
+                    <Fragment key={i}><span style={{ color: th.text.secondary }}>{r.label}</span><span style={{ overflowWrap: "anywhere" }}>{r.value}</span></Fragment>
+                  ))}
+                </div>
+                <div style={{ marginTop: 6, color: th.text.primary, fontSize: 14 }}>
+                  <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 12, color: th.text.secondary }}>({t("ownerSum")})</span></div>
+                  {(DET[p[0]] ?? [])[0] ? (
+                    <div>
+                      <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{DET[p[0]][0]}{DET[p[0]][1] ? " — " + DET[p[0]][1] : ""}</div>
+                      <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 13 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
+                    </div>
+                  ) : <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 6 }}>
+                  <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.secondary }}>{t("cat_" + CAT[p[0]])} · {t("proposal")}</span>
+                  {isPaused(p) && <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.tertiary }}>{t("paused")}</span>}
+                  {isPaused(p) ? <Button label={t("restartBtn")} onClick={() => copyTxt(actText("restart", [p[0]], lang === "HU"), t("copiedShort"))} /> : CAT[p[0]] !== "core" && <Button label={t("stopBtn")} onClick={() => copyTxt(actText("stop", [p[0]], lang === "HU"), t("copiedShort"))} />}
+                </div>
+              </Section>
+            </div>
+          ))}
+        </Grid>
+        <Text>{t("dataLang")}</Text>
       </Section>
 
       <Section heading={t("view")}>
@@ -800,79 +785,43 @@ export default function App() {
         </div>
       )}
 
-      <Section heading={t("saver")} caption={t("saverCap")}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
-          <Button label={t("stopSel")} variant="primary" onClick={() => { if (picked.length) copyTxt(actText("stop", picked, lang === "HU"), t("copiedShort")); }} />
-          <Button label={t("restartSel")} onClick={() => { if (picked.length) copyTxt(actText("restart", picked, lang === "HU"), t("copiedShort")); }} />
+      <Section heading={t("obsTitle")} caption={t("resource")} collapsible defaultOpen={false}>
+        <Properties items={[
+          { label: t("obsVault"), value: t("obsVaultTxt") },
+          { label: t("obsLoc"), value: "~/Vault/Notes/ (" + OBS_CFG.vaultHost + ")" },
+          { label: t("obsOpen"), value: t("obsOpenTxt") },
+          { label: t("obsLast"), value: t("obsLastTxt") },
+          { label: t("obsUsers"), value: t("obsUsersTxt") },
+        ]} />
+        <div data-testid="obs-status" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 8 }}>
+          <span style={{ color: th.text.success }}>● {OX[lang].status}</span>
+          <span style={{ color: th.text.secondary, fontSize: 13 }}>{OX[lang].checked} {obsChecked} · {Object.keys(OBS_EX).length} {OX[lang].excerpts} · source: {OBS_CFG.source}</span>
+          <Button label={OX[lang].refresh} onClick={() => setObsChecked(new Date().toTimeString().slice(0, 8))} />
+          <Button label={OX[lang].setup} onClick={() => setObsSetup(!obsSetup)} />
         </div>
-        <div style={{ border: `1px solid ${th.border.subtle}`, borderRadius: th.radius.md, color: th.text.primary }}>
-          {EXT.map((p: P, i: number) => (
-            <div key={p[0]} style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", padding: "6px 10px", borderTop: i ? `1px solid ${th.border.subtle}` : "none" }}>
-              <input type="checkbox" checked={picked.includes(p[0])} onChange={() => setPicked((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} aria-label={nm(p)} />
-              <span style={{ flex: "1 1 220px", overflowWrap: "anywhere" }}><strong>{nm(p)}</strong> · {p[8]}</span>
-              <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: isPaused(p) ? th.text.tertiary : th.text.success }}>{isPaused(p) ? t("paused") : t("running")}</span>
-              <Button label={isPaused(p) ? t("restartBtn") : t("stopBtn")} onClick={() => copyTxt(actText(isPaused(p) ? "restart" : "stop", [p[0]], lang === "HU"), t("copiedShort"))} />
-            </div>
-          ))}
+        {obsSetup && <ol data-testid="obs-setup" style={{ margin: "8px 0", paddingLeft: 20 }}>{OX[lang].steps.map((x: string, i: number) => <li key={i}>{x.replace("{v}", OBS_CFG.vaultName).replace("{h}", OBS_CFG.vaultHost)}</li>)}</ol>}
+        <div style={{ marginTop: 12, color: th.text.primary }}>
+          <div style={{ fontWeight: 600, fontSize: 16 }}>{t("obsRecent")}</div>
+          <div style={{ color: th.text.secondary, fontSize: 13, margin: "2px 0 8px" }}>{t("obsSnap")}: {OBS_SNAP} · {t("obsRecentCap").replace("{n}", String(OBS_NOTES.length)).replace("{t}", String(OBS_TOTAL))}</div>
+          <Segmented options={[{ value: "ALL", label: t("all"), count: OBS_NOTES.length }, ...Object.keys(OBS_SEC).map((k: string) => ({ value: k, label: OBS_SEC[k][li], count: OBS_NOTES.filter((n: ON) => n[1] === k).length }))]} value={obsSec} onChange={setObsSec} />
+          <div style={{ marginTop: 8, maxHeight: 420, overflowY: "auto", border: `1px solid ${th.border.subtle}`, borderRadius: th.radius.md }}>
+            {OBS_NOTES.filter((n: ON) => obsSec === "ALL" || n[1] === obsSec).map((n: ON, i: number) => (
+              <div key={n[6]} style={{ padding: "8px 12px", borderTop: i ? `1px solid ${th.border.subtle}` : "none" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "baseline", justifyContent: "space-between" }}>
+                  <strong style={{ overflowWrap: "anywhere" }}>{n[0]}</strong>
+                  <span style={{ display: "flex", gap: 10, fontSize: 13 }}>
+                    <button data-testid="obs-ex" onClick={() => setObsEx(obsEx === n[6] ? "" : n[6])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>{t("obsOpenNote")}</button>
+                    <a data-testid="obs-app" href={obsLink(decodeURIComponent(n[6]))} target="_blank" rel="noopener noreferrer" style={{ color: th.text.accent }}>{OX[lang].appLink}</a>
+                    <button onClick={() => copyTxt(decodeURIComponent(n[6]), OX[lang].copied)} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>{OX[lang].copyPath}</button>
+                  </span>
+                </div>
+                <div style={{ fontSize: 13, color: th.text.secondary }}>{OBS_SEC[n[1]][li]} · {t("obsAdded")} {n[2]} · {t("obsChanged")} {n[3]}  · {t("obsBy")}: {n[5] === "U" ? t("unknown") : n[5] === "G" ? "bot (frontmatter)" : n[5]}</div>
+                <div style={{ fontSize: 14, overflowWrap: "anywhere" }}>{n[4] === "P" ? t("obsP").replace("{n}", n[0]) : n[4] === "M" ? t("obsM") : n[4]}</div>
+                {obsEx === n[6] && <div data-testid="obs-ex-body" style={{ marginTop: 6, padding: 8, background: th.fill.secondary, borderRadius: th.radius.md, fontSize: 13 }}><div style={{ color: th.text.secondary }}>{OX[lang].excerpt}</div><pre style={{ whiteSpace: "pre-wrap", margin: 0, fontFamily: "inherit" }}>{n[4] === "M" ? OX[lang].titleOnly : (OBS_EX[decodeURIComponent(n[6])] ?? OX[lang].noEx)}</pre></div>}
+              </div>
+            ))}
+          </div>
         </div>
-      </Section>
-
-      <Section heading={t("cards")}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
-          <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
-          <span style={{ fontSize: 12, color: th.text.secondary }}>{t("proposal")}</span>
-        </div>
-        <Segmented options={[{ value: "ALL", label: t("all"), count: D.length }, ...STATUSES.map((s: string) => ({ value: s, label: st(s), count: D.filter((p: P) => p[6] === s).length }))]} value={filter} onChange={setFilter} />
-        <Grid columns={3}>
-          {shown.map((p: P) => (
-            <div key={p[0]} id={"card-" + p[0]} style={{ borderRadius: th.radius.lg, outline: flash === p[0] ? `3px solid ${th.text.accent}` : "3px solid transparent", outlineOffset: 2, color: th.text.primary, background: flash === p[0] ? th.fill.accentSubtle : "transparent" }}>
-              <Section heading={nm(p)}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  {markIcon(p[8], 34)}
-                  <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{p[8]}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 14, color: th.text.primary, alignItems: "center" }}>
-                  {[
-                    { label: t("status"), value: <Status tone={p[6] === "aktív" ? "success" : p[6] === "blokkolt" ? "warning" : p[6] === "csak tervezett" ? "accent" : "neutral"}>{st(p[6])}</Status> },
-                    { label: t("problem"), value: <Status tone={problemOf(p) === "OK" ? "success" : problemOf(p) === "leállítva" ? "danger" : "warning"}>{st(problemOf(p))}</Status> },
-                    { label: t("ws"), value: WS[p[13]][li] },
-                    { label: t("schedule"), value: p[7] },
-                    ...(p[9].length ? [{ label: t("linked"), value: p[9].join(", ") }] : []),
-                    { label: t("last"), value: p[10] },
-                    ...(p[12] ? [{ label: t("note"), value: p[12] }] : []),
-                  ].map((r: { label: string; value: any }, i: number) => (
-                    <Fragment key={i}><span style={{ color: th.text.secondary }}>{r.label}</span><span style={{ overflowWrap: "anywhere" }}>{r.value}</span></Fragment>
-                  ))}
-                </div>
-                <div style={{ marginTop: 6, color: th.text.primary, fontSize: 14 }}>
-                  <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 12, color: th.text.secondary }}>({t("ownerSum")})</span></div>
-                  {(DET[p[0]] ?? [])[0] ? (
-                    <div>
-                      <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{DET[p[0]][0]}{DET[p[0]][1] ? " — " + DET[p[0]][1] : ""}</div>
-                      <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 13 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
-                    </div>
-                  ) : <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 6 }}>
-                  <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.secondary }}>{t("cat_" + CAT[p[0]])} · {t("proposal")}</span>
-                  {isPaused(p) && <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.tertiary }}>{t("paused")}</span>}
-                  {isPaused(p) ? <Button label={t("restartBtn")} onClick={() => copyTxt(actText("restart", [p[0]], lang === "HU"), t("copiedShort"))} /> : CAT[p[0]] !== "core" && <Button label={t("stopBtn")} onClick={() => copyTxt(actText("stop", [p[0]], lang === "HU"), t("copiedShort"))} />}
-                </div>
-              </Section>
-            </div>
-          ))}
-        </Grid>
-        <Text>{t("dataLang")}</Text>
-      </Section>
-
-      <Section heading={t("marks")} collapsible defaultOpen={false}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-          {BOTS.map((b: string) => (
-            <div key={b} style={{ display: "flex", alignItems: "center", gap: 6 }}>{markIcon(b, 30)}<span style={{ color: th.text.secondary }}>{b}</span></div>
-          ))}
-        </div>
-        <Text>{t("gaps")}: {GAPS.join(", ")}.</Text>
-        <Text>{t("shapeNote")}</Text>
       </Section>
       </div>
       )}

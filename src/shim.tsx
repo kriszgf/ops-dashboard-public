@@ -26,7 +26,7 @@ export const Fragment = React.Fragment;
 export const Page = ({ children }: any) => <main style={{ fontFamily: "system-ui, sans-serif", padding: 16, background: "var(--bg)", color: "var(--text)", minHeight: "100vh", boxSizing: "border-box" }}>{children}</main>;
 export const Section = ({ heading, caption, children, collapsible, defaultOpen = true }: any) => {
   const [open, setOpen] = useState(defaultOpen);
-  return <section style={{ margin: "16px 0" }}><h2 style={{ fontSize: 18, margin: "4px 0", cursor: collapsible ? "pointer" : undefined }} onClick={() => collapsible && setOpen(!open)}>{collapsible ? (open ? "▾ " : "▸ ") : ""}{heading}</h2>{caption && <div style={{ fontSize: 13, opacity: 0.8 }}>{caption}</div>}{(!collapsible || open) && children}</section>;
+  return <section style={{ margin: "16px 0" }}><h2 style={{ fontSize: 18, margin: "4px 0" }}>{collapsible ? <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} style={{ font: "inherit", fontWeight: 700, background: "none", border: "none", padding: 0, color: "inherit", cursor: "pointer" }}>{open ? "▾ " : "▸ "}{heading}</button> : heading}</h2>{caption && <div style={{ fontSize: 13, opacity: 0.8 }}>{caption}</div>}{(!collapsible || open) && children}</section>;
 };
 export const Grid = ({ columns = 2, children }: any) => <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns}, minmax(0,1fr))`, gap: 12 }}>{children}</div>;
 export const Properties = ({ items }: any) => <dl style={{ display: "grid", gridTemplateColumns: "max-content 1fr", gap: "4px 12px" }}>{items.map((it: any, i: number) => <React.Fragment key={i}><dt style={{ fontWeight: 600 }}>{it.label}</dt><dd style={{ margin: 0 }}>{it.value}</dd></React.Fragment>)}</dl>;

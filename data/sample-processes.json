@@ -465,5 +465,20 @@
  "obsidianProcs": {
   "p08": "w",
   "p03": "r"
+ },
+ "projectOf": {
+  "p01": "demo-a",
+  "p02": "demo-b",
+  "p03": "demo-c",
+  "p04": "demo-a",
+  "p05": "demo-b",
+  "p06": "demo-c",
+  "p07": "demo-a",
+  "p08": "demo-b",
+  "p09": "demo-c",
+  "p10": "demo-a",
+  "p11": "demo-b",
+  "p12": "demo-c",
+  "p13": "demo-a"
  }
 }

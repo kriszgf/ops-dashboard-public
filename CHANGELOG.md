@@ -4,15 +4,18 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## v2.0.11 (2026-10-29)
+- Status guard: a process marked running is never shown as paused, even if it is still listed in the paused registry. New tests in test/status-guard.test.tsx.
+
 ## v2.0.10 (2026-10-29)
 - Restored the global, unfiltered bot–process network (24-hour clock / network / metro lines, with the Obsidian links) at the top of the All processes view (#/all); "network" is the default. It had only been reachable inside a single project since v2.0.3.
 - README screenshots refreshed (network view dark at the top, light in the Screenshots table). Sample data only.
 
 ## v2.0.9 (2026-10-29)
-- New "All processes" view (#/all): every process in one table (name, label, type, timing, owner bot, status) with label and type filter chips (scheduled / pipeline / article / background); rows open the process.
+- New "All processes" view (#/all): every process in one table (name, label, type, timing, owner bot, status) with label and type filter chips (scheduled / pipeline / process / background); rows open the process.
 - Non-project panel below the projects: processes not tied to any project, with a pipeline reference row on top; the card opens a dedicated non-project view.
 - Free-text process fields (timing, notes, last run, owner labels, detail texts) are translated into HU, EN, DE, FR and PT via the `texts` map in data/sample-processes.json; optional `kinds` and `pipelines` fields set the process type and the pipeline reference.
-- Sample data only: added Example Pipeline, Example Article One and Example Article Two. New tests in test/v209.test.tsx.
+- Sample data only: added Example Pipeline and two example processes. New tests in test/v209.test.tsx.
 
 ## v2.0.8 (2026-10-29)
 - Visible last-active line on every project card ("unknown" when missing), owner shown likewise.

@@ -165,7 +165,8 @@ const STATUSES = ["aktív", "szünetel", "inaktív", "blokkolt", "csak tervezett
 
 const isStopped = (p: P) => p[10].includes("stopped") || p[10].includes("leállítva");
 // A deliberate pause/stop is NOT a problem: paused processes report "OK"; red is reserved for real errors.
-const pausedP = (p: P) => isStopped(p) || p[6] === "szünetel" || PAUSED.includes(p[0]);
+// Guard: a running ("aktív") process is never rendered as paused, whatever the registry says.
+export const pausedP = (p: P) => p[6] !== "aktív" && (isStopped(p) || p[6] === "szünetel" || PAUSED.includes(p[0]));
 const problemOf = (p: P) => (pausedP(p) ? "OK" : p[11]);
 const ACTORS: string[] = Array.from(new Set(D_ALL.flatMap((p: P) => [p[8], ...p[9]]))).sort();
 const BOTS: string[] = ACTORS.filter((b: string) => !DEVICES.includes(b));

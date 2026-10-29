@@ -1,5 +1,4 @@
-{
-"readmeBtn":["README","README","README","README","README","README","说明","README","README"],
+{"readmeBtn":["README","README","README","README","README","README","说明","README","README"],
 "partial":["","","","","","Traduzione parziale, automatica – nomi dei processi e testi di esempio in inglese · in attesa di revisione italiana","部分机器翻译 – 流程名称和示例文本为英文","一部機械翻訳 – プロセス名とサンプルテキストは英語","Traducción parcial automática – nombres de procesos y textos de ejemplo en inglés"],
 "obsP":["Médiumnapló: {n} (küldések, válaszok, tanulságok dátummal).","Outlet log: {n} (sends, replies, lessons with dates).","Medienprotokoll: {n} (Sendungen, Antworten, Erkenntnisse mit Datum).","Journal du média : {n} (envois, réponses, leçons datées).","Registo do meio: {n} (envios, respostas, lições com datas).","Registro della testata: {n} (invii, risposte, lezioni con date).","媒体日志：{n}（发送、回复、经验，附日期）。","媒体ログ：{n}（送信、返信、学び、日付付き）。","Registro del medio: {n} (envíos, respuestas, lecciones con fechas)."],
 "obsM":["Személyes emlékjegyzet (csak cím).","Personal memory note (title only).","Persönliche Erinnerungsnotiz (nur Titel).","Note de mémoire personnelle (titre seul).","Nota de memória pessoal (só título).","Nota di memoria personale (solo titolo).","个人记忆笔记（仅标题）。","個人メモ（タイトルのみ）。","Nota de memoria personal (solo título)."],
@@ -11,5 +10,22 @@
 "pWhy":["Miért","Why","Warum","Pourquoi","Porquê","Perché","为什么","理由","Por qué"],
 "pStatus":["Állapot","Status","Status","Statut","Estado","Stato","状态","状態","Estado"],
 "pNext":["Következő lépés","Next step","Nächster Schritt","Prochaine étape","Próximo passo","Prossimo passo","下一步","次のステップ","Siguiente paso"],
-"projHead":["Projektek (példa)","Projects (example)","Projekte (Beispiel)","Projets (exemple)","Projetos (exemplo)","Progetti (esempio)","项目（示例）","プロジェクト（サンプル）","Proyectos (ejemplo)"]
-}
+"projHead":["Projektek (példa)","Projects (example)","Projekte (Beispiel)","Projets (exemple)","Projetos (exemplo)","Progetti (esempio)","项目（示例）","プロジェクト（サンプル）","Proyectos (ejemplo)"],
+"projTitle":["Projektek","Projects","Projekte","Projets","Projetos","Progetti","项目","プロジェクト","Proyectos"],
+"pState":["Jelenlegi állapot","Current state","Aktueller Stand","État actuel","Estado atual","Stato attuale","当前状态","現在の状態","Estado actual"],
+"pParts":["Fő részek","Key parts","Hauptteile","Éléments clés","Partes principais","Parti principali","主要部分","主な構成","Partes principales"],
+"pSource":["Forrás","Source","Quelle","Source","Fonte","Fonte","来源","出典","Fuente"],
+"pShow":["Részletek ▾","Show details ▾","Details ▾","Détails ▾","Detalhes ▾","Dettagli ▾","详情 ▾","詳細 ▾","Detalles ▾"],
+"pHide":["Bezárás ▴","Hide details ▴","Schließen ▴","Masquer ▴","Ocultar ▴","Chiudi ▴","收起 ▴","閉じる ▴","Ocultar ▴"],
+"pOpen":["Folyamatnézet →","Process view →","Prozessansicht →","Vue processus →","Vista de processo →","Vista processi →","流程视图 →","プロセス表示 →","Vista de procesos →"],
+"pProcs":["folyamat","processes","Prozesse","processus","processos","processi","个流程","件のプロセス","procesos"],
+"pUpd":["Frissítve","Updated","Aktualisiert","Mis à jour","Atualizado","Aggiornato","更新","更新","Actualizado"],
+"pst_active":["aktív","active","aktiv","actif","ativo","attivo","进行中","稼働中","activo"],
+"pst_paused":["szünetel","paused","pausiert","en pause","em pausa","in pausa","已暂停","一時停止","en pausa"],
+"pst_waiting":["döntésre vár","awaiting decision","wartet auf Entscheidung","en attente de décision","aguarda decisão","in attesa di decisione","待决定","判断待ち","esperando decisión"],
+"pst_blocked":["részben blokkolt","partly blocked","teilweise blockiert","partiellement bloqué","parcialmente bloqueado","parzialmente bloccato","部分受阻","一部ブロック","parcialmente bloqueado"],
+"pst_nodata":["még nincs adat","no data yet","noch keine Daten","pas encore de données","ainda sem dados","ancora nessun dato","暂无数据","データなし","sin datos aún"],
+"pAll":["Mind kinyit","Expand all","Alle öffnen","Tout ouvrir","Expandir tudo","Espandi tutto","全部展开","すべて開く","Expandir todo"],
+"pNone":["Mind bezár","Collapse all","Alle schließen","Tout fermer","Recolher tudo","Comprimi tutto","全部收起","すべて閉じる","Contraer todo"],
+"pRev":["Utoljára átnézve","Last reviewed","Zuletzt geprüft","Dernière revue","Última revisão","Ultima revisione","最近审阅","最終確認","Última revisión"],
+"pSum":["Könnyű áttekintés minden projektről; a lépések a folyamatnézetben vannak (példaadat).","A light overview of every project; the steps live in the process view (example data).","Leichte Übersicht aller Projekte; die Schritte stehen in der Prozessansicht (Beispieldaten).","Vue d’ensemble légère de chaque projet ; les étapes sont dans la vue processus (exemple).","Visão geral leve de cada projeto; os passos estão na vista de processo (exemplo).","Panoramica leggera di ogni progetto; i passaggi sono nella vista processi (esempio).","每个项目的简要概览；步骤在流程视图中（示例数据）。","各プロジェクトの概要。手順はプロセス表示にあります（サンプル）。","Resumen ligero de cada proyecto; los pasos están en la vista de procesos (ejemplo)."]}

@@ -11,11 +11,14 @@ describe("dashboard", () => {
     const { container, queryByTestId } = render(<App />);
     expect(container.querySelectorAll('[data-testid^="project-"]').length).toBeGreaterThan(1);
     expect(queryByTestId("process-view")).toBeNull(); expect(cards(container)).toBe(0);
+    expect(container.querySelector("h1")!.textContent).toBe("Projects"); expect(container.textContent).not.toMatch(/Process dashboard/);
   });
   it("clicking a project opens the process view; Back returns to the grid", () => {
     const r = render(<App />); openFirst(r);
     expect(r.getByTestId("process-view")).toBeTruthy(); expect(cards(r.container)).toBeGreaterThan(0);
     expect(r.queryByTestId("projects-view")).toBeNull();
+    expect(r.getByTestId("project-title").textContent).toBe("Example Project Alpha");
+    expect(r.container.textContent).not.toMatch(/Process dashboard/);
     fireEvent.click([...r.container.querySelectorAll("button")].find(b => /projects|projektekhez/i.test(b.textContent || ""))!);
     expect(r.queryByTestId("process-view")).toBeNull(); expect(r.getByTestId("projects-view")).toBeTruthy();
   });

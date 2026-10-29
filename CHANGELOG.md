@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## [2.0.5] - 2026-10-29
+### Changed
+- Front-page project cards ported from the earlier "Projects" Page layout: status badge with state line, what it is, next step, process count and last update, "Show details" (why, current state, key parts, next step, source) and a "Process view →" hint. Clicking a card still opens the project view. Sample data only.
+- Also from the Projects Page: short overview line with "Last reviewed" date, Expand all / Collapse all, two-column card grid on wide screens.
+- Titles: the front page is titled "Projects"; the project view shows the project name as its title. The "Process dashboard" heading is gone. New labels translated for all 9 languages.
+
 ## [2.0.4] - 2026-10-29
 ### Changed
 - Project view: slim top row (Back to projects, project name, small language and theme toggles), then process cards, then the view (graph), then Obsidian Notes at the bottom, collapsed by default with a clear toggle. README, warning/alert blocks and other sections removed from the project view. Front page unchanged.

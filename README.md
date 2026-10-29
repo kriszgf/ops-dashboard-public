@@ -1,5 +1,8 @@
 # Process Dashboard (example)
 
+<p align="center"><img src="docs/screenshots/dashboard-dark.png" alt="Ops Dashboard v2.0.8, dark mode, sample data" width="820"></p>
+<p align="center"><img src="docs/screenshots/dashboard-dark-phone.png" alt="Phone view, dark mode" width="260"></p>
+
 > **All data in this repository is fictional EXAMPLE data** (`data/sample-processes.json`). No real bots, people or systems are described.
 
 A single-page React + TypeScript (Vite) dashboard for automated processes: owner bot, schedule, status, last run, problem, category and details, plus an Obsidian notes panel. All data is static in the source; the page makes no network calls.

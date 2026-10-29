@@ -34,7 +34,7 @@ Modificare i dati di esempio: processi in `data/sample-processes.json`, progetti
 - I banner rossi e gialli portano alla scheda interessata.
 - Viste: orologio 24 ore, rete bot–processi, linee metro. Zoom, Adatta, Schermo intero (Esc).
 - Schede: «Descrizione / Comando» con altro / meno.
-- Arresta / Riavvia copiano un messaggio come `Stop: <processo> (Bot A/<id>)` da incollare nella chat del Coordinator. Non viene inviato nulla.
+- Arresta / Riavvia copiano un messaggio come `Stop: <processo> (Bot A/<id>)` da incollare nella chat del QR bot. Non viene inviato nulla.
 
 ## Perché Obsidian / Perché il lettore del vault
 Il vault Obsidian è la base di conoscenza condivisa del team: decisioni, procedure e contesto vi sono raccolti come semplici note Markdown. Il lettore del vault vi accede in sola lettura, così i bot possono cercarvi e usare ciò che è già scritto invece di chiedere di nuovo. Si risparmiano tempo ed energia, e il proprietario non deve rispiegare le cose.
@@ -75,10 +75,10 @@ tools/vault-read --json approve <id>   # owner only
 
 ## Guida per principianti: un processo passo dopo passo
 1. Esegui `npm ci && npm start` e apri http://localhost:4173.
-2. In **Vista** scegli **Rete bot–processi**. Nel filtro dei bot scegli **Coordinator**.
+2. In **Vista** scegli **Rete bot–processi**. Nel filtro dei bot scegli **QR bot**.
 3. Fai clic sul riquadro **Weekly trend scan** (in italiano i nomi dei processi restano in inglese). La scheda di dettaglio mostra: orario Monday 10:00, stato attivo · OK, ultima esecuzione 10-26 10:04.
 4. Apri **Descrizione / Comando** con **altro** per leggere l’istruzione di esempio.
-5. Premi **Arresta**. Viene copiato il testo `Stop: Weekly trend scan (Coordinator/p02)`. Incollalo nella chat del Coordinator; la pagina non invia nulla.
+5. Premi **Arresta**. Viene copiato il testo `Stop: Weekly trend scan (QR bot/p02)`. Incollalo nella chat del QR bot; la pagina non invia nulla.
 6. Cambia lingua nell’intestazione e premi **README** per leggere questa guida in quella lingua.
 
 ## Dati

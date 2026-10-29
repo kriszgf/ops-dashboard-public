@@ -18,7 +18,7 @@ export const OBS_TOTAL: number = r.obsidianRecentTotal ?? r.obsidianNotes.length
 export const OBS_BOTS: string[] = r.obsidianBots;
 export const OBS_PROCS: Record<string, "r" | "w"> = r.obsidianProcs;
 export const OBS_VAULT: string = (import.meta as any).env?.VITE_OBSIDIAN_VAULT || "SampleVault";
-export const KINDS: Record<string, "sched" | "pipeline" | "article" | "bg"> = r.kinds ?? {};
+export const KINDS: Record<string, "sched" | "pipeline" | "process" | "bg"> = r.kinds ?? {};
 export const PIPELINES: Record<string, string[]> = r.pipelines ?? {};
 export const TEXTS: Record<string, Record<string, string>> = r.texts ?? {};
 // Free-text fields are stored once; TEXTS[lang][text] holds the translation shown for that UI language.

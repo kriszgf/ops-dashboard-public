@@ -34,7 +34,7 @@ Editar los datos de ejemplo: procesos en `data/sample-processes.json`, proyectos
 - Los avisos rojos y ámbar saltan a la tarjeta afectada.
 - Vistas: reloj de 24 h, red bots–procesos, líneas de metro. Zoom, Ajustar, Pantalla completa (Esc).
 - Tarjetas: «Descripción / Comando» con más / menos.
-- Detener / Reiniciar copian un mensaje como `Stop: <proceso> (Bot A/<id>)` para pegarlo en el chat del Coordinator. No se envía nada.
+- Detener / Reiniciar copian un mensaje como `Stop: <proceso> (Bot A/<id>)` para pegarlo en el chat del QR bot. No se envía nada.
 
 ## Por qué Obsidian / Por qué el lector del vault
 El vault de Obsidian es la base de conocimiento compartida del equipo: decisiones, procedimientos y contexto se guardan allí como simples notas Markdown. El lector del vault accede a él solo en modo lectura, para que los bots puedan buscar y usar lo que ya está escrito en lugar de volver a preguntar. Así se ahorra tiempo y energía, y el propietario no tiene que volver a explicar las cosas.
@@ -75,10 +75,10 @@ tools/vault-read --json approve <id>   # owner only
 
 ## Guía para principiantes: un proceso paso a paso
 1. Ejecuta `npm ci && npm start` y abre http://localhost:4173.
-2. En **Vista**, elige **Red bots–procesos**. En el filtro de bots, elige **Coordinator**.
+2. En **Vista**, elige **Red bots–procesos**. En el filtro de bots, elige **QR bot**.
 3. Haz clic en el recuadro **Weekly trend scan** (en español los nombres de procesos siguen en inglés). La tarjeta de detalle muestra: horario Monday 10:00, estado activo · OK, última ejecución 10-26 10:04.
 4. Abre **Descripción / Comando** con **más** para leer la instrucción de ejemplo.
-5. Pulsa **Detener**. Se copia el texto `Stop: Weekly trend scan (Coordinator/p02)`. Pégalo en el chat del Coordinator; la página no envía nada.
+5. Pulsa **Detener**. Se copia el texto `Stop: Weekly trend scan (QR bot/p02)`. Pégalo en el chat del QR bot; la página no envía nada.
 6. Cambia el idioma en la cabecera y pulsa **README** para leer esta guía en ese idioma.
 
 ## Datos

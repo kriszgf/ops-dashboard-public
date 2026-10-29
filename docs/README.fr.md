@@ -30,7 +30,7 @@ Modifier les données d’exemple : processus dans `data/sample-processes.json`,
 - Les bandeaux rouges et orange mènent à la fiche concernée.
 - Vues : horloge 24 h, réseau bots–processus, lignes de métro. Zoom, Ajuster, Plein écran (Échap).
 - Fiches : « Description / Commande » avec plus / moins.
-- Arrêter / Redémarrer copient un message comme `Stop: <processus> (Bot A/<id>)` à coller dans le chat du Coordinator. Rien n’est envoyé.
+- Arrêter / Redémarrer copient un message comme `Stop: <processus> (Bot A/<id>)` à coller dans le chat du QR bot. Rien n’est envoyé.
 
 ## Pourquoi Obsidian / Pourquoi le lecteur de vault
 Le vault Obsidian est la base de connaissances partagée de l'équipe : décisions, procédures et contexte y sont conservés sous forme de notes Markdown. Le lecteur de vault y accède en lecture seule, afin que les bots puissent y chercher et utiliser ce qui est déjà écrit au lieu de redemander. Cela économise du temps et de l'énergie, et le propriétaire n'a pas à tout réexpliquer.
@@ -71,10 +71,10 @@ tools/vault-read --json approve <id>   # owner only
 
 ## Guide du débutant : un processus pas à pas
 1. Lancez `npm ci && npm start` et ouvrez http://localhost:4173.
-2. Sous **Vue**, choisissez **Réseau bots–processus**. Dans le filtre des bots, choisissez **Coordinator**.
+2. Sous **Vue**, choisissez **Réseau bots–processus**. Dans le filtre des bots, choisissez **QR bot**.
 3. Cliquez sur la case **Veille hebdo des tendances**. La fiche détaillée indique : planning Monday 10:00, statut actif · OK, dernière exécution 10-26 10:04.
 4. Ouvrez **Description / Commande** avec **plus** pour lire la consigne d’exemple.
-5. Appuyez sur **Arrêter**. Le texte `Stop: Weekly trend scan (Coordinator/p02)` est copié. Collez-le dans votre chat Coordinator ; la page elle-même n’envoie rien.
+5. Appuyez sur **Arrêter**. Le texte `Stop: Weekly trend scan (QR bot/p02)` est copié. Collez-le dans votre chat QR bot ; la page elle-même n’envoie rien.
 6. Changez de langue dans l’en-tête et appuyez sur **README** pour lire ce guide dans cette langue.
 
 ## Données

@@ -41,7 +41,7 @@ Node 18+ szükséges. Fejlesztői szerver: `npm run dev`.
 - A piros és sárga sávok az érintett kártyára ugranak.
 - Nézetek: 24 órás óra, bot–folyamat hálózat, metróvonalak. Nagyítás, Igazítás, Teljes képernyő (Esc).
 - Kártyák: „Leírás / Parancs” több / kevesebb kapcsolóval.
-- A Leállítás / Újraindítás üzenetet másol, pl. `Állítsd le: <folyamat> (Bot A/<id>)`, a Coordinator chatbe illesztéshez. Semmit nem küld el.
+- A Leállítás / Újraindítás üzenetet másol, pl. `Állítsd le: <folyamat> (Bot A/<id>)`, a QR bot chatbe illesztéshez. Semmit nem küld el.
 
 ## Miért Obsidian / Miért a vault-olvasó
 Az Obsidian-vault a csapat közös tudásbázisa: a döntések, eljárások és háttérinformációk egyszerű Markdown-jegyzetekként élnek benne. A vault-olvasó csak olvasva éri el, így a botok kereshetnek benne, és újrakérdezés helyett a már leírt tudást használják. Ez időt és energiát spórol, a tulajdonosnak pedig nem kell újra elmagyaráznia a dolgokat.
@@ -82,10 +82,10 @@ A `src/obsidian-adapter.ts` tartalmazza az `OBS_CFG`-t (`vaultHost`, `vaultName`
 
 ## Kezdő útmutató: egy folyamat lépésről lépésre
 1. Futtasd: `npm ci && npm start`, majd nyisd meg: http://localhost:4173.
-2. A **Nézet** alatt válaszd a **Bot–folyamat hálózat** nézetet. A botszűrőben válaszd a **Coordinator** botot.
+2. A **Nézet** alatt válaszd a **Bot–folyamat hálózat** nézetet. A botszűrőben válaszd a **QR bot** botot.
 3. Kattints a **Heti trendgyűjtés** dobozra. A részletkártya mutatja: ütemezés Monday 10:00, állapot aktív · OK, utolsó futás 10-26 10:04.
 4. Nyisd ki a **Leírás / Parancs** részt a **több** gombbal, és olvasd el a mintautasítást.
-5. Nyomd meg a **Leállítás** gombot. A vágólapra kerül: `Állítsd le: Heti trendgyűjtés (Coordinator/p02)`. Illeszd be a Coordinator chatbe; az oldal maga semmit nem küld.
+5. Nyomd meg a **Leállítás** gombot. A vágólapra kerül: `Állítsd le: Heti trendgyűjtés (QR bot/p02)`. Illeszd be a QR bot chatbe; az oldal maga semmit nem küld.
 6. Válts nyelvet a fejlécben, és a **README** gombbal olvasd el ezt az útmutatót azon a nyelven.
 
 ## Adatok

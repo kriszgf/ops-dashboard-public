@@ -3,19 +3,19 @@ import { PROJECT_OF, KINDS, type P } from "./data";
 import { PROJECTS } from "./Projects";
 import { Icon } from "./icons";
 export const ALL = "_all";
-export type Kind = "sched" | "pipeline" | "article" | "bg";
-// Type comes from data "kinds" (pipeline / article / bg); anything else is a scheduled process.
+export type Kind = "sched" | "pipeline" | "process" | "bg";
+// Type comes from data "kinds" (pipeline / process / bg); anything else is a scheduled process.
 export const kindOf = (id: string): Kind => KINDS[id] ?? "sched";
 export const projectKey = (id: string): string => { const k = PROJECT_OF[id]; return k && PROJECTS.some(p => p.id === k) ? k : ""; };
 export const blank = (v: string) => (!v || v === "–" || v === "—" ? "" : v);
 export type AllL = { title: string; name: string; label: string; type: string; timing: string; owner: string; status: string; all: string; nonProj: string; related: string; kinds: Record<Kind, string> };
 export const labelOf = (id: string, l: AllL) => { const k = projectKey(id); return k ? l.related.replace("{x}", PROJECTS.find(p => p.id === k)?.name ?? k) : l.nonProj; };
 const chip = (on: boolean) => ({ font: "inherit", minHeight: 36, padding: "0 12px", borderRadius: 999, border: "1px solid var(--border, #8884)", background: on ? "var(--accent)" : "transparent", color: on ? "var(--bg)" : "inherit", fontWeight: on ? 600 : 400, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 });
-const KICON: Record<Kind, any> = { sched: "clock", pipeline: "arrow", article: "guide", bg: "pulse" };
+const KICON: Record<Kind, any> = { sched: "clock", pipeline: "arrow", process: "guide", bg: "pulse" };
 export function AllProcesses({ items, l, name, status, onOpen, tx = (v: string) => v }: { tx?: (v: string) => string; items: P[]; l: AllL; name: (p: P) => string; status: (p: P) => string; onOpen?: (id: string) => void }) {
   const [lf, setLf] = useState(""); const [kf, setKf] = useState<Kind | "">("");
   const labels = [...new Set(items.map(p => labelOf(p[0], l)))];
-  const kinds = (["sched", "pipeline", "article", "bg"] as Kind[]).filter(k => items.some(p => kindOf(p[0]) === k));
+  const kinds = (["sched", "pipeline", "process", "bg"] as Kind[]).filter(k => items.some(p => kindOf(p[0]) === k));
   const rows = items.filter(p => (!lf || labelOf(p[0], l) === lf) && (!kf || kindOf(p[0]) === kf));
   const td = { padding: "8px 10px", borderTop: "1px solid var(--border, #8884)", verticalAlign: "top" as const, overflowWrap: "anywhere" as const, whiteSpace: "normal" as const };
   return (

@@ -30,7 +30,7 @@ Editar os dados de exemplo: processos em `data/sample-processes.json`, projetos 
 - As faixas vermelhas e amarelas saltam para o cartão afetado.
 - Vistas: relógio de 24 h, rede bots–processos, linhas de metro. Zoom, Ajustar, Ecrã inteiro (Esc).
 - Cartões: «Descrição / Comando» com mais / menos.
-- Parar / Reiniciar copiam uma mensagem como `Stop: <processo> (Bot A/<id>)` para colar no chat do Coordinator. Nada é enviado.
+- Parar / Reiniciar copiam uma mensagem como `Stop: <processo> (Bot A/<id>)` para colar no chat do QR bot. Nada é enviado.
 
 ## Porquê o Obsidian / Porquê o leitor do vault
 O vault do Obsidian é a base de conhecimento partilhada da equipa: decisões, procedimentos e contexto ficam lá como simples notas Markdown. O leitor do vault acede-lhe apenas em modo de leitura, para que os bots possam pesquisar e usar o que já está escrito em vez de voltar a perguntar. Isto poupa tempo e energia, e o proprietário não precisa de voltar a explicar as coisas.
@@ -71,10 +71,10 @@ tools/vault-read --json approve <id>   # owner only
 
 ## Guia para principiantes: um processo passo a passo
 1. Execute `npm ci && npm start` e abra http://localhost:4173.
-2. Em **Vista**, escolha **Rede bots–processos**. No filtro de bots, escolha **Coordinator**.
+2. Em **Vista**, escolha **Rede bots–processos**. No filtro de bots, escolha **QR bot**.
 3. Clique na caixa **Análise semanal de tendências**. O cartão de detalhe mostra: horário Monday 10:00, estado ativo · OK, última execução 10-26 10:04.
 4. Abra **Descrição / Comando** com **mais** para ler a instrução de exemplo.
-5. Prima **Parar**. O texto `Stop: Weekly trend scan (Coordinator/p02)` é copiado. Cole-o no seu chat do Coordinator; a página em si não envia nada.
+5. Prima **Parar**. O texto `Stop: Weekly trend scan (QR bot/p02)` é copiado. Cole-o no seu chat do QR bot; a página em si não envia nada.
 6. Mude o idioma no cabeçalho e prima **README** para ler este guia nesse idioma.
 
 ## Dados

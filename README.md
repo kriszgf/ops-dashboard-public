@@ -49,7 +49,7 @@ The **Non-project panel** below the projects collects processes that belong to n
 - Views: 24-hour clock, bot–process network, metro lines. Zoom, Fit, Full screen (Esc).
 - Cards: "Description / Command" with more / less.
 - Projects section: each card shows a short line; **More** (a button with `aria-expanded`) reveals what it is, why, status and next step.
-- Stop / Restart copy a message such as `Stop: <process> (Bot A/<id>)` to paste into the Coordinator chat. Nothing is sent.
+- Stop / Restart copy a message such as `Stop: <process> (Bot A/<id>)` to paste into the QR bot chat. Nothing is sent.
 
 ## Why Obsidian / Why the vault reader
 The Obsidian vault is the team's shared knowledge base: decisions, procedures and context live there as plain Markdown notes. The vault reader accesses it read-only, so bots can search it and use what is already written instead of asking again. That saves time and energy, and the owner does not have to re-explain things.
@@ -90,7 +90,7 @@ tools/vault-read count
 tools/vault-read search project plan --limit 5
 tools/vault-read read "Notes/Example.md"
 tools/vault-read recent --hours 24          # read-only: changed notes + who wrote them (v1.7.0)
-tools/vault-read audit --hours 24           # read-only: exit 1 if any change has no known writer
+tools/vault-read audit --hours 24           # read-only: exit 1 if any change has no known source
 tools/vault-read list Notes
 tools/vault-read tags project
 tools/vault-read --json search project
@@ -115,10 +115,10 @@ tools/vault-read --json approve <id>   # owner only
 
 ## Beginner guide: one process, step by step
 1. Run `npm ci && npm start` and open http://localhost:4173.
-2. Under **View**, pick **Bot–process network**. In the bot filter choose **Coordinator**.
+2. Under **View**, pick **Bot–process network**. In the bot filter choose **QR bot**.
 3. Click the **Weekly trend scan** box. The detail card shows: schedule Monday 10:00, status active · OK, last run 10-26 10:04.
 4. Open **Description / Command** with **more** to read the sample instruction.
-5. Press **Stop**. The text `Stop: Weekly trend scan (Coordinator/p02)` is copied. Paste it into your Coordinator chat; the page itself sends nothing.
+5. Press **Stop**. The text `Stop: Weekly trend scan (QR bot/p02)` is copied. Paste it into your QR bot chat; the page itself sends nothing.
 6. Switch the language in the header and press **README** to read this guide in that language.
 
 ## Data

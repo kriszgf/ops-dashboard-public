@@ -17,7 +17,7 @@ describe("dashboard", () => {
     const r = render(<App />); openFirst(r);
     expect(r.getByTestId("process-view")).toBeTruthy(); expect(cards(r.container)).toBeGreaterThan(0);
     expect(r.queryByTestId("projects-view")).toBeNull();
-    expect(r.getByTestId("project-title").textContent).toBe("Example Project Alpha");
+    expect(r.getByTestId("project-title").textContent).toBe("Scheduled sync");
     expect(r.container.textContent).not.toMatch(/Process dashboard/);
     fireEvent.click([...r.container.querySelectorAll("button")].find(b => /projects|projektekhez/i.test(b.textContent || ""))!);
     expect(r.queryByTestId("process-view")).toBeNull(); expect(r.getByTestId("projects-view")).toBeTruthy();

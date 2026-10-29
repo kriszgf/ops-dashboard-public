@@ -30,7 +30,7 @@ Beispieldaten bearbeiten: Prozesse in `data/sample-processes.json`, Projekte in 
 - Rote und gelbe Banner springen zur betroffenen Karte.
 - Ansichten: 24-Stunden-Uhr, Bot-Prozess-Netz, Metrolinien. Zoom, Einpassen, Vollbild (Esc).
 - Karten: „Beschreibung / Befehl“ mit mehr / weniger.
-- Stoppen / Neu starten kopieren eine Nachricht wie `Stop: <Prozess> (Bot A/<id>)` zum Einfügen in den Coordinator-Chat. Es wird nichts gesendet.
+- Stoppen / Neu starten kopieren eine Nachricht wie `Stop: <Prozess> (Bot A/<id>)` zum Einfügen in den QR bot-Chat. Es wird nichts gesendet.
 
 ## Warum Obsidian / Warum der Vault-Reader
 Der Obsidian-Vault ist die gemeinsame Wissensbasis des Teams: Entscheidungen, Abläufe und Kontext liegen dort als einfache Markdown-Notizen. Der Vault-Reader greift nur lesend darauf zu, sodass Bots darin suchen und bereits Aufgeschriebenes nutzen können, statt erneut zu fragen. Das spart Zeit und Energie, und der Eigentümer muss nichts noch einmal erklären.
@@ -71,10 +71,10 @@ tools/vault-read --json approve <id>   # owner only
 
 ## Einsteigeranleitung: ein Prozess Schritt für Schritt
 1. Führe `npm ci && npm start` aus und öffne http://localhost:4173.
-2. Wähle unter **Ansicht** das **Bot-Prozess-Netz**. Wähle im Bot-Filter **Coordinator**.
+2. Wähle unter **Ansicht** das **Bot-Prozess-Netz**. Wähle im Bot-Filter **QR bot**.
 3. Klicke auf das Feld **Wöchentlicher Trend-Scan**. Die Detailkarte zeigt: Zeitplan Monday 10:00, Status aktiv · OK, letzter Lauf 10-26 10:04.
 4. Öffne **Beschreibung / Befehl** mit **mehr**, um die Beispielanweisung zu lesen.
-5. Drücke **Stoppen**. Der Text `Stop: Weekly trend scan (Coordinator/p02)` wird kopiert. Füge ihn in deinen Coordinator-Chat ein; die Seite selbst sendet nichts.
+5. Drücke **Stoppen**. Der Text `Stop: Weekly trend scan (QR bot/p02)` wird kopiert. Füge ihn in deinen QR bot-Chat ein; die Seite selbst sendet nichts.
 6. Wechsle in der Kopfzeile die Sprache und drücke **README**, um diese Anleitung in der Sprache zu lesen.
 
 ## Daten

@@ -44,7 +44,7 @@ const UI: Dict = {
   apRel: ["{x} projekt", "{x} related", "{x}-bezogen", "lié à {x}", "relacionado a {x}"],
   kSched: ["ütemezett", "scheduled", "geplant", "planifié", "agendado"],
   kPipe: ["pipeline", "pipeline", "Pipeline", "pipeline", "pipeline"],
-  kArt: ["cikk", "article", "Artikel", "article", "artigo"],
+  kArt: ["folyamat", "process", "Prozess", "processus", "processo"],
   kBg: ["háttér", "background", "Hintergrund", "arrière-plan", "segundo plano"],
   nonProj: ["Projekthez nem kötött folyamatok", "Non-project related processes", "Nicht projektbezogene Prozesse", "Processus hors projet", "Processos não ligados a projetos"],
   title: ["Folyamat-dashboard", "Process dashboard", "Prozess-Dashboard", "Tableau de bord des processus", "Painel de processos"],
@@ -93,9 +93,9 @@ const UI: Dict = {
   obsVaultTxt: ["<OBSIDIAN_VAULT> (ellenőrizve a Host A obsidian.json fájljában). A Notes ennek egy almappája.", "<OBSIDIAN_VAULT> (verified in the Host A's obsidian.json). Notes is a subfolder of it.", "<OBSIDIAN_VAULT> (geprüft in der obsidian.json des Host A). Notes ist ein Unterordner davon.", "<OBSIDIAN_VAULT> (vérifié dans le fichier obsidian.json du Host A). Notes en est un sous-dossier.", "<OBSIDIAN_VAULT> (verificado no obsidian.json do Host A). Notes é uma subpasta dele."],
   obsOpenTxt: ["Obsidian app a Host A gépen, link: obsidian://open?vault=<OBSIDIAN_VAULT>", "Obsidian app on the Host A, link: obsidian://open?vault=<OBSIDIAN_VAULT>", "Obsidian-App auf dem Host A, Link: obsidian://open?vault=<OBSIDIAN_VAULT>", "App Obsidian sur le Host A, lien : obsidian://open?vault=<OBSIDIAN_VAULT>", "App Obsidian no Host A, link: obsidian://open?vault=<OBSIDIAN_VAULT>"],
   obsLast: ["Utolsó karbantartás", "Last upkeep", "Letzte Pflege", "Dernier entretien", "Última manutenção"],
-  obsLastTxt: ["10-26 21:31 – sikeres (Daily Notes upkeep, Coordinator-rutin)", "10-26 21:31 – succeeded (Daily Notes upkeep, Coordinator routine)", "10-26 21:31 – erfolgreich (Daily Notes upkeep, Coordinator-Routine)", "10-26 21:31 – réussi (Daily Notes upkeep, routine du Coordinator)", "10-26 21:31 – concluída com sucesso (Daily Notes upkeep, rotina do Coordinator)"],
+  obsLastTxt: ["10-26 21:31 – sikeres (Daily Notes upkeep, QR bot-rutin)", "10-26 21:31 – succeeded (Daily Notes upkeep, QR bot routine)", "10-26 21:31 – erfolgreich (Daily Notes upkeep, QR bot-Routine)", "10-26 21:31 – réussi (Daily Notes upkeep, routine du QR bot)", "10-26 21:31 – concluída com sucesso (Daily Notes upkeep, rotina do QR bot)"],
   obsUsers: ["Olvassa / írja", "Read / written by", "Gelesen / geschrieben von", "Lu / écrit par", "Lido / escrito por"],
-  obsUsersTxt: ["Notes / Obsidian (ír: Ops Bot, Coordinator) · Vendégcikk-pipeline (olvas, a cikkjegyzetek szerint). Más folyamatok: ismeretlen.", "Notes / Obsidian (writes: Ops Bot, Coordinator) · Guest article pipeline (reads, per article notes). Other processes: unknown.", "Notes / Obsidian (schreibt: Ops Bot, Coordinator) · Gastartikel-Pipeline (liest, laut Artikelnotizen). Andere Prozesse: unbekannt.", "Notes / Obsidian (écrit : Ops Bot, Coordinator) · Pipeline d’articles invités (lit, selon les notes d’articles). Autres processus : inconnu.", "Notes / Obsidian (escreve: Ops Bot, Coordinator) · Pipeline de artigos convidados (lê, segundo as notas). Outros processos: desconhecido."],
+  obsUsersTxt: ["Notes / Obsidian (ír: HD bot, QR bot) · Szinkron-pipeline (olvas, a szinkronjegyzetek szerint). Más folyamatok: ismeretlen.", "Notes / Obsidian (writes: HD bot, QR bot) · Sync pipeline (reads, per sync notes). Other processes: unknown.", "Notes / Obsidian (schreibt: HD bot, QR bot) · Sync-Pipeline (liest, laut Sync-Notizen). Andere Prozesse: unbekannt.", "Notes / Obsidian (écrit : HD bot, QR bot) · Pipeline de synchro (lit, selon les notes de synchro). Autres processus : inconnu.", "Notes / Obsidian (escreve: HD bot, QR bot) · Pipeline de sincronização (lê, segundo as notas). Outros processos: desconhecido."],
   cmdHead: ["Leírás / Parancs", "Description / Command", "Beschreibung / Befehl", "Description / Commande", "Descrição / Comando"],
   ownerSum: ["tulajdonos összefoglalója, nem szó szerinti utasítás; a későbbi utasítások dátummal a szövegben", "owner's summary, not verbatim; later orders dated in the text", "Zusammenfassung des Eigentümers, nicht wörtlich; spätere Anweisungen mit Datum im Text", "résumé du responsable, pas mot pour mot ; ordres ultérieurs datés dans le texte", "resumo do responsável, não literal; ordens posteriores datadas no texto"],
   more: ["több", "more", "mehr", "plus", "mais"],
@@ -108,7 +108,7 @@ const UI: Dict = {
   restartBtn: ["Újraindítás", "Újraindítás", "Újraindítás", "Újraindítás", "Újraindítás"],
   running: ["fut", "fut", "fut", "fut", "fut"],
   paused: ["szünetel", "szünetel", "szünetel", "szünetel", "szünetel"],
-  copiedShort: ["Másolva – illeszd be a Coordinator chatbe", "Másolva – illeszd be a Coordinator chatbe", "Másolva – illeszd be a Coordinator chatbe", "Másolva – illeszd be a Coordinator chatbe", "Másolva – illeszd be a Coordinator chatbe"],
+  copiedShort: ["Másolva – illeszd be a QR bot chatbe", "Másolva – illeszd be a QR bot chatbe", "Másolva – illeszd be a QR bot chatbe", "Másolva – illeszd be a QR bot chatbe", "Másolva – illeszd be a QR bot chatbe"],
   proposal: ["javaslat", "javaslat", "javaslat", "javaslat", "javaslat"],
   cat_core: ["Alap", "Alap", "Alap", "Alap", "Alap"],
   cat_sales: ["Eladás", "Eladás", "Eladás", "Eladás", "Eladás"],
@@ -124,13 +124,13 @@ const UI: Dict = {
   unknown: ["ismeretlen", "unknown", "unbekannt", "inconnu", "desconhecido"],
   obsRead: ["olvas", "reads", "liest", "lit", "lê"],
   obsWrite: ["ír", "writes", "schreibt", "écrit", "escreve"],
-  ask: ["Pontosítás a Coordinatornak", "Ask the Coordinator to clarify", "Klärung beim Coordinator anfragen", "Demander une précision au Coordinator", "Pedir esclarecimento ao Coordinator"],
-  copied: ["Másolva – illeszd be a Coordinator chatbe.", "Copied – paste it into the Coordinator chat.", "Kopiert – in den Coordinator-Chat einfügen.", "Copié – colle-le dans le chat du Coordinator.", "Copiado – cola no chat do Coordinator."],
+  ask: ["Pontosítás a Coordinatornak", "Ask the QR bot to clarify", "Klärung beim QR bot anfragen", "Demander une précision au QR bot", "Pedir esclarecimento ao QR bot"],
+  copied: ["Másolva – illeszd be a QR bot chatbe.", "Copied – paste it into the QR bot chat.", "Kopiert – in den QR bot-Chat einfügen.", "Copié – colle-le dans le chat du QR bot.", "Copiado – cola no chat do QR bot."],
   copyFail: ["A vágólap nem érhető el. Jelöld ki és másold:", "Clipboard unavailable. Select and copy:", "Zwischenablage nicht verfügbar. Markieren und kopieren:", "Presse-papiers indisponible. Sélectionne et copie :", "Área de transferência indisponível. Seleciona e copia:"],
   close: ["Bezárás", "Close", "Schließen", "Fermer", "Fechar"],
   missing: ["Hiányzó részletek", "Missing details", "Fehlende Details", "Détails manquants", "Detalhes em falta"],
   none: ["nincs", "none", "keine", "aucun", "nenhum"],
-  detailsPending: ["A részletes adatok (parancs, feltételek, számok, cikkírás, Obsidian) még ellenőrzés alatt vannak, ezért itt még nem jelennek meg.", "Detailed data (instruction, conditions, numbers, article writing, Obsidian) is still being verified, so it is not shown yet.", "Detaildaten (Auftrag, Bedingungen, Zahlen, Artikel, Obsidian) werden noch geprüft und daher noch nicht angezeigt.", "Les données détaillées (consigne, conditions, chiffres, rédaction, Obsidian) sont en cours de vérification et ne sont pas encore affichées.", "Os dados detalhados (instrução, condições, números, escrita de artigos, Obsidian) ainda estão a ser verificados e não são mostrados."],
+  detailsPending: ["A részletes adatok (parancs, feltételek, számok, feladatleírás, Obsidian) még ellenőrzés alatt vannak, ezért itt még nem jelennek meg.", "Detailed data (instruction, conditions, numbers, task writing, Obsidian) is still being verified, so it is not shown yet.", "Detaildaten (Auftrag, Bedingungen, Zahlen, Aufgaben, Obsidian) werden noch geprüft und daher noch nicht angezeigt.", "Les données détaillées (consigne, conditions, chiffres, rédaction, Obsidian) sont en cours de vérification et ne sont pas encore affichées.", "Os dados detalhados (instrução, condições, números, escrita de tarefas, Obsidian) ainda estão a ser verificados e não são mostrados."],
   thAuto: ["Auto", "Auto", "Auto", "Auto", "Auto"],
   thLight: ["Világos", "Light", "Hell", "Clair", "Claro"],
   thDark: ["Sötét", "Dark", "Dunkel", "Sombre", "Escuro"],
@@ -153,14 +153,14 @@ const ST: Dict = {
   "leállítva": ["leállítva", "stopped", "gestoppt", "arrêté", "parado"],
 };
 const WS: Dict = {
-  "Kiadás": ["Kiadás", "Publishing", "Veröffentlichung", "Publication", "Publicação"],
+  "Riportok": ["Riportok", "Publishing", "Veröffentlichung", "Publication", "Publicação"],
   "Outreach": ["Outreach", "Outreach", "Outreach", "Outreach", "Outreach"],
   "Projekt": ["Projekt", "Project", "Projekt", "Projet", "Projeto"],
   "Rendszer": ["Rendszer", "System", "System", "Système", "Sistema"],
   "Social": ["Social", "Social", "Social", "Réseaux sociaux", "Redes sociais"],
 };
 const PIPE_ID = Object.keys(PIPELINES)[0] ?? "";
-const WS_ORDER = ["Kiadás", "Outreach", "Projekt", "Rendszer", "Social"];
+const WS_ORDER = ["Riportok", "Outreach", "Projekt", "Rendszer", "Social"];
 const STATUSES = ["aktív", "szünetel", "inaktív", "blokkolt", "csak tervezett", "igény szerint"];
 
 const isStopped = (p: P) => p[10].includes("stopped") || p[10].includes("leállítva");
@@ -170,13 +170,13 @@ const problemOf = (p: P) => (pausedP(p) ? "OK" : p[11]);
 const ACTORS: string[] = Array.from(new Set(D_ALL.flatMap((p: P) => [p[8], ...p[9]]))).sort();
 const BOTS: string[] = ACTORS.filter((b: string) => !DEVICES.includes(b));
 const GAPS = BOTS.filter((b: string) => !MARKS[b]);
-// Obsidian resource links (from registry + guest-article notes). w = writes, r = reads.
+// Obsidian resource links (from registry + sync notes). w = writes, r = reads.
 // Fields still unknown per process (process-details-unknowns-2026-10-27.md).
-const FIELD: Dict = { cmd: ["parancs", "instruction", "Auftrag", "consigne", "instrução"], cond: ["feltételek / jóváhagyás", "conditions / approvals", "Bedingungen / Freigaben", "conditions / validations", "condições / aprovações"], does: ["mit csinál (számok)", "what it does (numbers)", "was es tut (Zahlen)", "ce qu’il fait (chiffres)", "o que faz (números)"], art: ["cikkírás", "article writing", "Artikelschreiben", "rédaction d’articles", "escrita de artigos"], obs: ["Obsidian", "Obsidian", "Obsidian", "Obsidian", "Obsidian"] };
-// Registry state: add a process id here when the Coordinator reports it paused (remove it on restart).
+const FIELD: Dict = { cmd: ["parancs", "instruction", "Auftrag", "consigne", "instrução"], cond: ["feltételek / jóváhagyás", "conditions / approvals", "Bedingungen / Freigaben", "conditions / validations", "condições / aprovações"], does: ["mit csinál (számok)", "what it does (numbers)", "was es tut (Zahlen)", "ce qu’il fait (chiffres)", "o que faz (números)"], art: ["feladatleírás", "task writing", "Aufgabenbeschreibung", "rédaction des tâches", "escrita de tarefas"], obs: ["Obsidian", "Obsidian", "Obsidian", "Obsidian", "Obsidian"] };
+// Registry state: add a process id here when the QR bot reports it paused (remove it on restart).
 const actText = (verb: "stop" | "restart", ids: string[], hu = false): string => (hu ? (verb === "stop" ? "Állítsd le: " : "Indítsd újra: ") : (verb === "stop" ? "Stop: " : "Restart: ")) + ids.map((id: string) => { const p = D_ALL.find((q: P) => q[0] === id); return p ? `${hu ? p[1] : p[2]} (${p[8]}/${id})` : id; }).join("; ");
-const OBS_SEC: Dict = { mem: ["Memories", "Memories", "Memories", "Memories", "Memories"], press: ["Press médiumok", "Press outlets", "Presse-Medien", "Médias Press", "Meios Press"], lessons: ["Tanulságok / Playbookok", "Lessons / Playbooks", "Lektionen / Playbooks", "Leçons / Playbooks", "Lições / Playbooks"], proj: ["Projektek és döntések", "Projects & decisions", "Projekte & Entscheidungen", "Projets et décisions", "Projetos e decisões"], agents: ["Ügynök-jegyzetek", "Agent notes", "Agenten-Notizen", "Notes d’agents", "Notas de agentes"], index: ["Index és szabályok", "Index & rules", "Index & Regeln", "Index et règles", "Índice e regras"] };
-const FIELD_HU: Record<string, string> = { cmd: "parancs", cond: "feltételek/jóváhagyás", does: "mit csinál (számok)", art: "cikkírás", obs: "Obsidian" };
+const OBS_SEC: Dict = { mem: ["Memories", "Memories", "Memories", "Memories", "Memories"], press: ["Press médiumok", "Press outlets", "Presse-Medien", "Médias Press", "Meios Press"], lessons: ["Tanulságok / Útmutatók", "Lessons / Guides", "Lektionen / Leitfäden", "Leçons / Guides", "Lições / Guias"], proj: ["Projektek és döntések", "Projects & decisions", "Projekte & Entscheidungen", "Projets et décisions", "Projetos e decisões"], agents: ["Ügynök-jegyzetek", "Agent notes", "Agenten-Notizen", "Notes d’agents", "Notas de agentes"], index: ["Index és szabályok", "Index & rules", "Index & Regeln", "Index et règles", "Índice e regras"] };
+const FIELD_HU: Record<string, string> = { cmd: "parancs", cond: "feltételek/jóváhagyás", does: "mit csinál (számok)", art: "feladatleírás", obs: "Obsidian" };
 
 // --- 9-language extension: base overrides for EN/DE/FR/PT, plus IT/ZH/JA/ES columns (fallback: English) ---
 const BASE_OV: Record<string, Record<string, string>> = baseOv as any;
@@ -755,7 +755,7 @@ export default function App() {
         </div>
         <div data-testid="global-net">{viewBlock}</div>
         <AllProcesses items={D_ALL} name={nm} tx={tx} status={(p: P) => st(p[6])} onOpen={(id: string) => { setProj(projectKey(id) || NONPROJ); jump(id); }}
-          l={{ title: t("allProc"), name: t("apName"), label: t("apLabel"), type: t("apType"), timing: t("apTiming"), owner: t("apOwner"), status: t("status"), all: t("all"), nonProj: t("apNon"), related: t("apRel"), kinds: { sched: t("kSched"), pipeline: t("kPipe"), article: t("kArt"), bg: t("kBg") } }} />
+          l={{ title: t("allProc"), name: t("apName"), label: t("apLabel"), type: t("apType"), timing: t("apTiming"), owner: t("apOwner"), status: t("status"), all: t("all"), nonProj: t("apNon"), related: t("apRel"), kinds: { sched: t("kSched"), pipeline: t("kPipe"), process: t("kArt"), bg: t("kBg") } }} />
       </div>
       ) : proj === null ? (
       <div data-testid="projects-view">

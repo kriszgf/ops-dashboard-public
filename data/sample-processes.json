@@ -11,9 +11,9 @@
    "Relatório diário de exemplo",
    "aktív",
    "daily 08:00",
-   "Bot A",
+   "XY bot",
    [
-    "Coordinator"
+    "QR bot"
    ],
    "10-26 08:00",
    "OK",
@@ -32,7 +32,7 @@
    "Análise semanal de tendências",
    "aktív",
    "Monday 10:00",
-   "Coordinator",
+   "QR bot",
    [],
    "10-26 10:04",
    "OK",
@@ -49,9 +49,9 @@
    "E-mails de saída",
    "aktív",
    "every 3 hours",
-   "Mail Bot",
+   "JP bot",
    [
-    "Coordinator"
+    "QR bot"
    ],
    "10-27 07:13",
    "OK",
@@ -71,18 +71,18 @@
   [
    "p04",
    "Értékesítési státusz",
-   "Sales status",
+   "Queue status",
    "Verkaufsstatus",
    "Statut des ventes",
    "Estado de vendas",
    "aktív",
    "daily 07:00",
-   "Sales Bot",
+   "VX bot",
    [],
    "10-27 07:00",
    "OK",
    "",
-   "Kiadás",
+   "Riportok",
    [
     7
    ]
@@ -90,20 +90,20 @@
   [
    "p05",
    "Közzététel (vázlat)",
-   "Publishing (draft)",
+   "Report export (draft)",
    "Veröffentlichung (Entwurf)",
    "Publication (brouillon)",
    "Publicação (rascunho)",
    "blokkolt",
    "–",
-   "Sales Bot",
+   "VX bot",
    [
-    "Editor Bot"
+    "RC bot"
    ],
    "10-27 06:53",
    "blokkolt",
    "Awaiting approval (sample)",
-   "Kiadás",
+   "Riportok",
    []
   ],
   [
@@ -115,7 +115,7 @@
    "Publicação social",
    "aktív",
    "11:15 and 19:15",
-   "Poster Device",
+   "FS bot",
    [],
    "10-26 19:15",
    "OK",
@@ -135,9 +135,9 @@
    "Monitorização de ranking",
    "aktív",
    "daily 10:00",
-   "Coordinator",
+   "QR bot",
    [
-    "Bot B"
+    "ZV bot"
    ],
    "10-15 20:09",
    "elavult",
@@ -156,9 +156,9 @@
    "Manutenção de notas",
    "aktív",
    "daily 21:30",
-   "Ops Bot",
+   "HD bot",
    [
-    "Coordinator"
+    "QR bot"
    ],
    "10-26",
    "OK",
@@ -177,7 +177,7 @@
    "Monitorização de notícias",
    "aktív",
    "08:00 / 20:00",
-   "Feed Bot",
+   "KM bot",
    [],
    "10-26 20:00",
    "OK",
@@ -197,7 +197,7 @@
    "Lembrete de faturas",
    "inaktív",
    "–",
-   "Finance Bot",
+   "TL bot",
    [],
    "10-10 (stopped)",
    "OK",
@@ -208,13 +208,13 @@
   [
    "p11",
    "Postafiók-triázs",
-   "Inbox triage",
+   "Message triage",
    "Posteingangs-Triage",
    "Tri de la boîte",
    "Triagem da caixa",
    "szünetel",
    "–",
-   "Inbox Bot",
+   "WN bot",
    [],
    "10-08",
    "OK",
@@ -225,13 +225,13 @@
   [
    "p12",
    "Hírlevél-vázlat",
-   "Newsletter draft",
-   "Newsletter-Entwurf",
-   "Brouillon de newsletter",
-   "Rascunho de newsletter",
+   "Digest draft",
+   "Digest-Entwurf",
+   "Brouillon de digest",
+   "Rascunho de digest",
    "igény szerint",
    "on request",
-   "Writer Bot",
+   "GB bot",
    [],
    "10-23",
    "OK",
@@ -248,7 +248,7 @@
    "Seguimento",
    "csak tervezett",
    "Wednesday 10:00",
-   "Mail Bot",
+   "JP bot",
    [],
    "–",
    "OK",
@@ -259,15 +259,15 @@
   [
    "p14",
    "Minta-pipeline",
-   "Example Pipeline",
+   "Data pipeline",
    "Beispiel-Pipeline",
    "Pipeline d’exemple",
    "Pipeline de exemplo",
    "aktív",
    "every 2 hours",
-   "Writer Bot",
+   "GB bot",
    [
-    "Coordinator"
+    "QR bot"
    ],
    "10-27 08:00",
    "OK",
@@ -290,14 +290,14 @@
   ],
   [
    "np1",
-   "Első példacikk",
-   "Example Article One",
-   "Beispielartikel eins",
-   "Article d’exemple un",
-   "Artigo de exemplo um",
+   "1. háttérfolyamat",
+   "Background process 1",
+   "Hintergrundprozess 1",
+   "Processus de fond 1",
+   "Processo em segundo plano 1",
    "nem indult",
    "–",
-   "Writer Bot",
+   "GB bot",
    [],
    "–",
    "OK",
@@ -307,14 +307,14 @@
   ],
   [
    "np2",
-   "Második példacikk",
-   "Example Article Two",
-   "Beispielartikel zwei",
-   "Article d’exemple deux",
-   "Artigo de exemplo dois",
+   "2. háttérfolyamat",
+   "Background process 2",
+   "Hintergrundprozess 2",
+   "Processus de fond 2",
+   "Processo em segundo plano 2",
    "nem indult",
    "on request",
-   "Writer Bot",
+   "GB bot",
    [],
    "–",
    "OK",
@@ -368,14 +368,14 @@
    "no"
   ],
   "p04": [
-   "Sample instruction for the Sales status process (EXAMPLE).",
+   "Sample instruction for the Queue status process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
    "no"
   ],
   "p05": [
-   "Sample instruction for the Publishing (draft) process (EXAMPLE).",
+   "Sample instruction for the Report export (draft) process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
@@ -417,14 +417,14 @@
    "no"
   ],
   "p11": [
-   "Sample instruction for the Inbox triage process (EXAMPLE).",
+   "Sample instruction for the Message triage process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
    "no"
   ],
   "p12": [
-   "Sample instruction for the Newsletter draft process (EXAMPLE).",
+   "Sample instruction for the Digest draft process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
@@ -438,21 +438,21 @@
    "no"
   ],
   "p14": [
-   "Sample instruction for the Example Pipeline process (EXAMPLE).",
+   "Sample instruction for the Data pipeline process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
    "no"
   ],
   "np1": [
-   "Sample instruction for the Example Article One process (EXAMPLE).",
+   "Sample instruction for the Background process 1 process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
    "no"
   ],
   "np2": [
-   "Sample instruction for the Example Article Two process (EXAMPLE).",
+   "Sample instruction for the Background process 2 process (EXAMPLE).",
    "Sample condition: needs the owner's approval.",
    "Sample numbers: 3 runs, 0 errors.",
    "no",
@@ -487,13 +487,13 @@
   ]
  },
  "marks": {
-  "Coordinator": {
+  "QR bot": {
    "shape": "pumpkin",
    "color": "warm"
   }
  },
  "devices": [
-  "Poster Device"
+  "FS bot"
  ],
  "obsidianNotes": [
   [
@@ -547,13 +547,13 @@
    "10-26 23:11",
    "10-26 23:11",
    "Sample agent note.",
-   "Ops Bot",
+   "HD bot",
    "Notes%2FAgents%2FNote"
   ]
  ],
  "obsidianBots": [
-  "Ops Bot",
-  "Coordinator"
+  "HD bot",
+  "QR bot"
  ],
  "obsidianProcs": {
   "p08": "w",
@@ -577,8 +577,8 @@
  },
  "kinds": {
   "p14": "pipeline",
-  "np1": "article",
-  "np2": "article",
+  "np1": "process",
+  "np2": "process",
   "p08": "bg",
   "p09": "bg"
  },
@@ -611,23 +611,23 @@
    "yes (writes)": "igen (ír)",
    "Draft not started (sample)": "A vázlat még nem indult (minta)",
    "Waiting for a sample topic": "Minta-témára vár",
-   "Poster Device": "Posztoló eszköz",
+   "FS bot": "Posztoló eszköz",
    "Sample instruction for the Daily sample report process (EXAMPLE).": "Minta-utasítás a(z) „Napi minta-riport” folyamathoz (PÉLDA).",
    "Sample instruction for the Weekly trend scan process (EXAMPLE).": "Minta-utasítás a(z) „Heti trendgyűjtés” folyamathoz (PÉLDA).",
    "Sample instruction for the Outbound mail process (EXAMPLE).": "Minta-utasítás a(z) „Kimenő levelek” folyamathoz (PÉLDA).",
-   "Sample instruction for the Sales status process (EXAMPLE).": "Minta-utasítás a(z) „Értékesítési státusz” folyamathoz (PÉLDA).",
-   "Sample instruction for the Publishing (draft) process (EXAMPLE).": "Minta-utasítás a(z) „Közzététel (vázlat)” folyamathoz (PÉLDA).",
+   "Sample instruction for the Queue status process (EXAMPLE).": "Minta-utasítás a(z) „Értékesítési státusz” folyamathoz (PÉLDA).",
+   "Sample instruction for the Report export (draft) process (EXAMPLE).": "Minta-utasítás a(z) „Közzététel (vázlat)” folyamathoz (PÉLDA).",
    "Sample instruction for the Social posting process (EXAMPLE).": "Minta-utasítás a(z) „Social posztolás” folyamathoz (PÉLDA).",
    "Sample instruction for the Rank watch process (EXAMPLE).": "Minta-utasítás a(z) „Rang-figyelés” folyamathoz (PÉLDA).",
    "Sample instruction for the Notes upkeep process (EXAMPLE).": "Minta-utasítás a(z) „Jegyzet-karbantartás” folyamathoz (PÉLDA).",
    "Sample instruction for the Feed scan process (EXAMPLE).": "Minta-utasítás a(z) „Hírcsatorna-figyelés” folyamathoz (PÉLDA).",
    "Sample instruction for the Bill reminder process (EXAMPLE).": "Minta-utasítás a(z) „Számla-emlékeztető” folyamathoz (PÉLDA).",
-   "Sample instruction for the Inbox triage process (EXAMPLE).": "Minta-utasítás a(z) „Postafiók-triázs” folyamathoz (PÉLDA).",
-   "Sample instruction for the Newsletter draft process (EXAMPLE).": "Minta-utasítás a(z) „Hírlevél-vázlat” folyamathoz (PÉLDA).",
+   "Sample instruction for the Message triage process (EXAMPLE).": "Minta-utasítás a(z) „Postafiók-triázs” folyamathoz (PÉLDA).",
+   "Sample instruction for the Digest draft process (EXAMPLE).": "Minta-utasítás a(z) „Hírlevél-vázlat” folyamathoz (PÉLDA).",
    "Sample instruction for the Follow-up process (EXAMPLE).": "Minta-utasítás a(z) „Utánkövetés” folyamathoz (PÉLDA).",
-   "Sample instruction for the Example Pipeline process (EXAMPLE).": "Minta-utasítás a(z) „Minta-pipeline” folyamathoz (PÉLDA).",
-   "Sample instruction for the Example Article One process (EXAMPLE).": "Minta-utasítás a(z) „Első példacikk” folyamathoz (PÉLDA).",
-   "Sample instruction for the Example Article Two process (EXAMPLE).": "Minta-utasítás a(z) „Második példacikk” folyamathoz (PÉLDA)."
+   "Sample instruction for the Data pipeline process (EXAMPLE).": "Minta-utasítás a(z) „Minta-pipeline” folyamathoz (PÉLDA).",
+   "Sample instruction for the Background process 1 process (EXAMPLE).": "Minta-utasítás a(z) „1. háttérfolyamat” folyamathoz (PÉLDA).",
+   "Sample instruction for the Background process 2 process (EXAMPLE).": "Minta-utasítás a(z) „2. háttérfolyamat” folyamathoz (PÉLDA)."
   },
   "DE": {
    "11:15 and 19:15": "11:15 und 19:15",
@@ -651,23 +651,23 @@
    "yes (writes)": "ja (schreibt)",
    "Draft not started (sample)": "Entwurf noch nicht begonnen (Beispiel)",
    "Waiting for a sample topic": "Wartet auf ein Beispielthema",
-   "Poster Device": "Posting-Gerät",
+   "FS bot": "Posting-Gerät",
    "Sample instruction for the Daily sample report process (EXAMPLE).": "Beispielanweisung für den Prozess „Täglicher Beispielbericht“ (BEISPIEL).",
    "Sample instruction for the Weekly trend scan process (EXAMPLE).": "Beispielanweisung für den Prozess „Wöchentlicher Trend-Scan“ (BEISPIEL).",
    "Sample instruction for the Outbound mail process (EXAMPLE).": "Beispielanweisung für den Prozess „Ausgehende Mails“ (BEISPIEL).",
-   "Sample instruction for the Sales status process (EXAMPLE).": "Beispielanweisung für den Prozess „Verkaufsstatus“ (BEISPIEL).",
-   "Sample instruction for the Publishing (draft) process (EXAMPLE).": "Beispielanweisung für den Prozess „Veröffentlichung (Entwurf)“ (BEISPIEL).",
+   "Sample instruction for the Queue status process (EXAMPLE).": "Beispielanweisung für den Prozess „Verkaufsstatus“ (BEISPIEL).",
+   "Sample instruction for the Report export (draft) process (EXAMPLE).": "Beispielanweisung für den Prozess „Veröffentlichung (Entwurf)“ (BEISPIEL).",
    "Sample instruction for the Social posting process (EXAMPLE).": "Beispielanweisung für den Prozess „Social-Posts“ (BEISPIEL).",
    "Sample instruction for the Rank watch process (EXAMPLE).": "Beispielanweisung für den Prozess „Ranking-Beobachtung“ (BEISPIEL).",
    "Sample instruction for the Notes upkeep process (EXAMPLE).": "Beispielanweisung für den Prozess „Notizpflege“ (BEISPIEL).",
    "Sample instruction for the Feed scan process (EXAMPLE).": "Beispielanweisung für den Prozess „Nachrichtenbeobachtung“ (BEISPIEL).",
    "Sample instruction for the Bill reminder process (EXAMPLE).": "Beispielanweisung für den Prozess „Rechnungserinnerung“ (BEISPIEL).",
-   "Sample instruction for the Inbox triage process (EXAMPLE).": "Beispielanweisung für den Prozess „Posteingangs-Triage“ (BEISPIEL).",
-   "Sample instruction for the Newsletter draft process (EXAMPLE).": "Beispielanweisung für den Prozess „Newsletter-Entwurf“ (BEISPIEL).",
+   "Sample instruction for the Message triage process (EXAMPLE).": "Beispielanweisung für den Prozess „Posteingangs-Triage“ (BEISPIEL).",
+   "Sample instruction for the Digest draft process (EXAMPLE).": "Beispielanweisung für den Prozess „Digest-Entwurf“ (BEISPIEL).",
    "Sample instruction for the Follow-up process (EXAMPLE).": "Beispielanweisung für den Prozess „Nachfassen“ (BEISPIEL).",
-   "Sample instruction for the Example Pipeline process (EXAMPLE).": "Beispielanweisung für den Prozess „Beispiel-Pipeline“ (BEISPIEL).",
-   "Sample instruction for the Example Article One process (EXAMPLE).": "Beispielanweisung für den Prozess „Beispielartikel eins“ (BEISPIEL).",
-   "Sample instruction for the Example Article Two process (EXAMPLE).": "Beispielanweisung für den Prozess „Beispielartikel zwei“ (BEISPIEL)."
+   "Sample instruction for the Data pipeline process (EXAMPLE).": "Beispielanweisung für den Prozess „Beispiel-Pipeline“ (BEISPIEL).",
+   "Sample instruction for the Background process 1 process (EXAMPLE).": "Beispielanweisung für den Prozess „Hintergrundprozess 1“ (BEISPIEL).",
+   "Sample instruction for the Background process 2 process (EXAMPLE).": "Beispielanweisung für den Prozess „Hintergrundprozess 2“ (BEISPIEL)."
   },
   "FR": {
    "11:15 and 19:15": "11h15 et 19h15",
@@ -691,23 +691,23 @@
    "yes (writes)": "oui (écrit)",
    "Draft not started (sample)": "Brouillon pas encore commencé (exemple)",
    "Waiting for a sample topic": "En attente d’un sujet d’exemple",
-   "Poster Device": "Appareil de publication",
+   "FS bot": "Appareil de publication",
    "Sample instruction for the Daily sample report process (EXAMPLE).": "Instruction d’exemple pour le processus « Rapport quotidien d’exemple » (EXEMPLE).",
    "Sample instruction for the Weekly trend scan process (EXAMPLE).": "Instruction d’exemple pour le processus « Veille hebdo des tendances » (EXEMPLE).",
    "Sample instruction for the Outbound mail process (EXAMPLE).": "Instruction d’exemple pour le processus « Courriels sortants » (EXEMPLE).",
-   "Sample instruction for the Sales status process (EXAMPLE).": "Instruction d’exemple pour le processus « Statut des ventes » (EXEMPLE).",
-   "Sample instruction for the Publishing (draft) process (EXAMPLE).": "Instruction d’exemple pour le processus « Publication (brouillon) » (EXEMPLE).",
+   "Sample instruction for the Queue status process (EXAMPLE).": "Instruction d’exemple pour le processus « Statut des ventes » (EXEMPLE).",
+   "Sample instruction for the Report export (draft) process (EXAMPLE).": "Instruction d’exemple pour le processus « Publication (brouillon) » (EXEMPLE).",
    "Sample instruction for the Social posting process (EXAMPLE).": "Instruction d’exemple pour le processus « Publication sociale » (EXEMPLE).",
    "Sample instruction for the Rank watch process (EXAMPLE).": "Instruction d’exemple pour le processus « Suivi du classement » (EXEMPLE).",
    "Sample instruction for the Notes upkeep process (EXAMPLE).": "Instruction d’exemple pour le processus « Entretien des notes » (EXEMPLE).",
    "Sample instruction for the Feed scan process (EXAMPLE).": "Instruction d’exemple pour le processus « Veille d’actualités » (EXEMPLE).",
    "Sample instruction for the Bill reminder process (EXAMPLE).": "Instruction d’exemple pour le processus « Rappel de factures » (EXEMPLE).",
-   "Sample instruction for the Inbox triage process (EXAMPLE).": "Instruction d’exemple pour le processus « Tri de la boîte » (EXEMPLE).",
-   "Sample instruction for the Newsletter draft process (EXAMPLE).": "Instruction d’exemple pour le processus « Brouillon de newsletter » (EXEMPLE).",
+   "Sample instruction for the Message triage process (EXAMPLE).": "Instruction d’exemple pour le processus « Tri de la boîte » (EXEMPLE).",
+   "Sample instruction for the Digest draft process (EXAMPLE).": "Instruction d’exemple pour le processus « Brouillon de digest » (EXEMPLE).",
    "Sample instruction for the Follow-up process (EXAMPLE).": "Instruction d’exemple pour le processus « Relance » (EXEMPLE).",
-   "Sample instruction for the Example Pipeline process (EXAMPLE).": "Instruction d’exemple pour le processus « Pipeline d’exemple » (EXEMPLE).",
-   "Sample instruction for the Example Article One process (EXAMPLE).": "Instruction d’exemple pour le processus « Article d’exemple un » (EXEMPLE).",
-   "Sample instruction for the Example Article Two process (EXAMPLE).": "Instruction d’exemple pour le processus « Article d’exemple deux » (EXEMPLE)."
+   "Sample instruction for the Data pipeline process (EXAMPLE).": "Instruction d’exemple pour le processus « Pipeline d’exemple » (EXEMPLE).",
+   "Sample instruction for the Background process 1 process (EXAMPLE).": "Instruction d’exemple pour le processus « Processus de fond 1 » (EXEMPLE).",
+   "Sample instruction for the Background process 2 process (EXAMPLE).": "Instruction d’exemple pour le processus « Processus de fond 2 » (EXEMPLE)."
   },
   "PT": {
    "11:15 and 19:15": "11:15 e 19:15",
@@ -731,23 +731,23 @@
    "yes (writes)": "sim (escreve)",
    "Draft not started (sample)": "Rascunho ainda não iniciado (exemplo)",
    "Waiting for a sample topic": "A aguardar um tema de exemplo",
-   "Poster Device": "Dispositivo de publicação",
+   "FS bot": "Dispositivo de publicação",
    "Sample instruction for the Daily sample report process (EXAMPLE).": "Instrução de exemplo para o processo «Relatório diário de exemplo» (EXEMPLO).",
    "Sample instruction for the Weekly trend scan process (EXAMPLE).": "Instrução de exemplo para o processo «Análise semanal de tendências» (EXEMPLO).",
    "Sample instruction for the Outbound mail process (EXAMPLE).": "Instrução de exemplo para o processo «E-mails de saída» (EXEMPLO).",
-   "Sample instruction for the Sales status process (EXAMPLE).": "Instrução de exemplo para o processo «Estado de vendas» (EXEMPLO).",
-   "Sample instruction for the Publishing (draft) process (EXAMPLE).": "Instrução de exemplo para o processo «Publicação (rascunho)» (EXEMPLO).",
+   "Sample instruction for the Queue status process (EXAMPLE).": "Instrução de exemplo para o processo «Estado de vendas» (EXEMPLO).",
+   "Sample instruction for the Report export (draft) process (EXAMPLE).": "Instrução de exemplo para o processo «Publicação (rascunho)» (EXEMPLO).",
    "Sample instruction for the Social posting process (EXAMPLE).": "Instrução de exemplo para o processo «Publicação social» (EXEMPLO).",
    "Sample instruction for the Rank watch process (EXAMPLE).": "Instrução de exemplo para o processo «Monitorização de ranking» (EXEMPLO).",
    "Sample instruction for the Notes upkeep process (EXAMPLE).": "Instrução de exemplo para o processo «Manutenção de notas» (EXEMPLO).",
    "Sample instruction for the Feed scan process (EXAMPLE).": "Instrução de exemplo para o processo «Monitorização de notícias» (EXEMPLO).",
    "Sample instruction for the Bill reminder process (EXAMPLE).": "Instrução de exemplo para o processo «Lembrete de faturas» (EXEMPLO).",
-   "Sample instruction for the Inbox triage process (EXAMPLE).": "Instrução de exemplo para o processo «Triagem da caixa» (EXEMPLO).",
-   "Sample instruction for the Newsletter draft process (EXAMPLE).": "Instrução de exemplo para o processo «Rascunho de newsletter» (EXEMPLO).",
+   "Sample instruction for the Message triage process (EXAMPLE).": "Instrução de exemplo para o processo «Triagem da caixa» (EXEMPLO).",
+   "Sample instruction for the Digest draft process (EXAMPLE).": "Instrução de exemplo para o processo «Rascunho de digest» (EXEMPLO).",
    "Sample instruction for the Follow-up process (EXAMPLE).": "Instrução de exemplo para o processo «Seguimento» (EXEMPLO).",
-   "Sample instruction for the Example Pipeline process (EXAMPLE).": "Instrução de exemplo para o processo «Pipeline de exemplo» (EXEMPLO).",
-   "Sample instruction for the Example Article One process (EXAMPLE).": "Instrução de exemplo para o processo «Artigo de exemplo um» (EXEMPLO).",
-   "Sample instruction for the Example Article Two process (EXAMPLE).": "Instrução de exemplo para o processo «Artigo de exemplo dois» (EXEMPLO)."
+   "Sample instruction for the Data pipeline process (EXAMPLE).": "Instrução de exemplo para o processo «Pipeline de exemplo» (EXEMPLO).",
+   "Sample instruction for the Background process 1 process (EXAMPLE).": "Instrução de exemplo para o processo «Processo em segundo plano 1» (EXEMPLO).",
+   "Sample instruction for the Background process 2 process (EXAMPLE).": "Instrução de exemplo para o processo «Processo em segundo plano 2» (EXEMPLO)."
   },
   "EN": {
    "11:15 and 19:15": "11:15 and 19:15",
@@ -771,23 +771,23 @@
    "yes (writes)": "yes (writes)",
    "Draft not started (sample)": "Draft not started (sample)",
    "Waiting for a sample topic": "Waiting for a sample topic",
-   "Poster Device": "Poster Device",
+   "FS bot": "FS bot",
    "Sample instruction for the Daily sample report process (EXAMPLE).": "Sample instruction for the Daily sample report process (EXAMPLE).",
    "Sample instruction for the Weekly trend scan process (EXAMPLE).": "Sample instruction for the Weekly trend scan process (EXAMPLE).",
    "Sample instruction for the Outbound mail process (EXAMPLE).": "Sample instruction for the Outbound mail process (EXAMPLE).",
-   "Sample instruction for the Sales status process (EXAMPLE).": "Sample instruction for the Sales status process (EXAMPLE).",
-   "Sample instruction for the Publishing (draft) process (EXAMPLE).": "Sample instruction for the Publishing (draft) process (EXAMPLE).",
+   "Sample instruction for the Queue status process (EXAMPLE).": "Sample instruction for the Queue status process (EXAMPLE).",
+   "Sample instruction for the Report export (draft) process (EXAMPLE).": "Sample instruction for the Report export (draft) process (EXAMPLE).",
    "Sample instruction for the Social posting process (EXAMPLE).": "Sample instruction for the Social posting process (EXAMPLE).",
    "Sample instruction for the Rank watch process (EXAMPLE).": "Sample instruction for the Rank watch process (EXAMPLE).",
    "Sample instruction for the Notes upkeep process (EXAMPLE).": "Sample instruction for the Notes upkeep process (EXAMPLE).",
    "Sample instruction for the Feed scan process (EXAMPLE).": "Sample instruction for the Feed scan process (EXAMPLE).",
    "Sample instruction for the Bill reminder process (EXAMPLE).": "Sample instruction for the Bill reminder process (EXAMPLE).",
-   "Sample instruction for the Inbox triage process (EXAMPLE).": "Sample instruction for the Inbox triage process (EXAMPLE).",
-   "Sample instruction for the Newsletter draft process (EXAMPLE).": "Sample instruction for the Newsletter draft process (EXAMPLE).",
+   "Sample instruction for the Message triage process (EXAMPLE).": "Sample instruction for the Message triage process (EXAMPLE).",
+   "Sample instruction for the Digest draft process (EXAMPLE).": "Sample instruction for the Digest draft process (EXAMPLE).",
    "Sample instruction for the Follow-up process (EXAMPLE).": "Sample instruction for the Follow-up process (EXAMPLE).",
-   "Sample instruction for the Example Pipeline process (EXAMPLE).": "Sample instruction for the Example Pipeline process (EXAMPLE).",
-   "Sample instruction for the Example Article One process (EXAMPLE).": "Sample instruction for the Example Article One process (EXAMPLE).",
-   "Sample instruction for the Example Article Two process (EXAMPLE).": "Sample instruction for the Example Article Two process (EXAMPLE)."
+   "Sample instruction for the Data pipeline process (EXAMPLE).": "Sample instruction for the Data pipeline process (EXAMPLE).",
+   "Sample instruction for the Background process 1 process (EXAMPLE).": "Sample instruction for the Background process 1 process (EXAMPLE).",
+   "Sample instruction for the Background process 2 process (EXAMPLE).": "Sample instruction for the Background process 2 process (EXAMPLE)."
   }
  }
 }

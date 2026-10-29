@@ -32,7 +32,7 @@ describe("v2.0.7 critique", () => {
   });
   it("search and status filter narrow the cards", () => {
     const { getByTestId, queryByTestId } = render(<Projects t={EN} />);
-    fireEvent.change(getByTestId("search"), { target: { value: "gamma" } });
+    fireEvent.change(getByTestId("search"), { target: { value: "running" } });
     expect(queryByTestId("project-demo-a")).toBeNull(); expect(getByTestId("project-demo-c")).toBeTruthy();
     fireEvent.change(getByTestId("search"), { target: { value: "zzz" } });
     expect(getByTestId("no-match")).toBeTruthy();

@@ -37,3 +37,15 @@ describe("expand / collapse all", () => {
     fireEvent.click(getByTestId("collapse-all")); expect([...container.querySelectorAll("dl")].every(d => d.hidden)).toBe(true);
   });
 });
+describe("empty state and guide", () => {
+  it("shows a friendly empty state when there are no projects", () => {
+    const { getByTestId, queryByTestId } = render(<Projects items={[]} />);
+    expect(getByTestId("projects-empty").textContent).toContain("data/sample-projects.json"); expect(queryByTestId("expand-all")).toBeNull();
+  });
+  it("How to use guide is collapsed by default and toggles", () => {
+    const { getByTestId } = render(<Projects l={{ ...EN_LABELS, guideTitle: "How to use", guide: ["Step one"] }} />);
+    const b = getByTestId("guide").querySelector("button")!; const ul = getByTestId("guide").querySelector("ul")!;
+    expect(b.getAttribute("aria-expanded")).toBe("false"); expect(ul.hidden).toBe(true);
+    fireEvent.click(b); expect(b.getAttribute("aria-expanded")).toBe("true"); expect(ul.hidden).toBe(false); expect(ul.textContent).toContain("Step one");
+  });
+});

@@ -433,8 +433,12 @@ export default function App() {
       {proj === null ? (
       <div data-testid="projects-view">
           <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
-        <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere" }}>{t("projTitle")}</h1>
-        <Projects onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata") } }} />
+        <div data-testid="front-topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 13 }}>
+        <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: "auto" }}>{t("projTitle")}</h1>
+        <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
+        <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
+        </div>
+        <Projects onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), guideTitle: t("gTitle"), guide: ["g1", "g2", "g3", "g4", "g5"].map(t), emptyTitle: t("pEmptyT"), empty: t("pEmpty"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata") } }} />
       </div>
       ) : (
       <div data-testid="process-view">

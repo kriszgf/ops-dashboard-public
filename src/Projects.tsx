@@ -7,7 +7,7 @@ export type PSt = "active" | "paused" | "waiting" | "blocked" | "nodata";
 export type Project = { id: string; name: string; summary: string; what: string; why: string; status: string; next: string; st?: PSt; parts?: string; src?: string; updated?: string };
 export const PROJECTS: Project[] = (raw as any).projects;
 
-export type ProjLabels = { more: string; less: string; what: string; why: string; status: string; next: string; heading: string; all?: string; none?: string; reviewed?: string; summary?: string; state?: string; parts?: string; source?: string; open?: string; procs?: string; updated?: string; st?: Partial<Record<PSt, string>> };
+export type ProjLabels = { more: string; less: string; what: string; why: string; status: string; next: string; heading: string; guideTitle?: string; guide?: string[]; emptyTitle?: string; empty?: string; all?: string; none?: string; reviewed?: string; summary?: string; state?: string; parts?: string; source?: string; open?: string; procs?: string; updated?: string; st?: Partial<Record<PSt, string>> };
 export const EN_LABELS: ProjLabels = { more: "Show details ▾", less: "Hide details ▴", what: "What it is", why: "Why", status: "Status", next: "Next step", heading: "Projects", state: "Current state", parts: "Key parts", source: "Source", open: "Process view →", procs: "processes", updated: "Updated" };
 const TONE: Record<PSt, string> = { active: "success", paused: "neutral", waiting: "accent", blocked: "warning", nodata: "neutral" };
 
@@ -51,16 +51,26 @@ export const REVIEWED: string = (raw as any).reviewed ?? "";
 export function Projects({ items = PROJECTS, l = EN_LABELS, onOpen, counts }: { items?: Project[]; l?: ProjLabels; onOpen?: (id: string) => void; counts?: Record<string, number> }) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const setAll = (v: boolean) => setOpen(Object.fromEntries(items.map(p => [p.id, v])));
+  const [guideOpen, setGuideOpen] = useState(false);
   return (
     <div>
+      {l.guideTitle && <div data-testid="guide" style={{ border: "1px solid var(--border, #8884)", borderRadius: 10, padding: "6px 12px", margin: "8px 0" }}>
+        <button type="button" aria-expanded={guideOpen} aria-controls="how-to-use" onClick={() => setGuideOpen(o => !o)} style={{ ...btnS, border: "none", padding: 0, fontWeight: 600 }}>{guideOpen ? "▾ " : "▸ "}{l.guideTitle}</button>
+        <ul id="how-to-use" hidden={!guideOpen} style={{ margin: "4px 0 6px", paddingLeft: 20, lineHeight: 1.5, fontSize: 14 }}>{(l.guide ?? []).map((g, i) => <li key={i}>{g}</li>)}</ul>
+      </div>}
+      {items.length === 0 ? <div data-testid="projects-empty" role="status" style={{ border: "1px dashed var(--border, #8884)", borderRadius: 12, padding: 20, margin: "12px 0", maxWidth: 720 }}>
+        <h3 style={{ margin: "0 0 6px", fontSize: 18 }}>{l.emptyTitle ?? "No projects yet"}</h3>
+        <p style={{ margin: 0, lineHeight: 1.5 }}>{l.empty ?? "Add a project to data/sample-projects.json, then rebuild the app."}</p>
+      </div> : <>
       {(l.summary || l.reviewed) && <div style={{ fontSize: 13, opacity: 0.8, margin: "4px 0" }}>{l.summary}{l.summary && l.reviewed ? " · " : ""}{l.reviewed ? `${l.reviewed}: ${REVIEWED}` : ""}</div>}
       {l.all && <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "8px 0" }}>
         <button type="button" data-testid="expand-all" style={btnS} onClick={() => setAll(true)}>{l.all}</button>
         <button type="button" data-testid="collapse-all" style={btnS} onClick={() => setAll(false)}>{l.none}</button>
       </div>}
-      <section aria-label={l.heading} style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", margin: "12px 0" }}>
+      <section aria-label={l.heading} style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fill, minmax(min(420px, 100%), 1fr))", margin: "12px 0" }}>
         {items.map(p => <ProjectCard key={p.id} p={p} l={l} onOpen={onOpen} count={counts?.[p.id]} open={!!open[p.id]} onToggle={() => setOpen(o => ({ ...o, [p.id]: !o[p.id] }))} />)}
       </section>
+      </>}
     </div>
   );
 }

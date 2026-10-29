@@ -63,3 +63,12 @@ describe("dashboard", () => {
     for (let i = 0; i < Math.min(n, 200); i++) { const b = container.querySelectorAll("button")[i]; if (b) expect(() => act(() => { fireEvent.click(b); })).not.toThrow(); }
   });
 });
+describe("front page toggles", () => {
+  it("has language selector and theme toggle on the Projects page", () => {
+    const { getByTestId } = render(<App />); const bar = getByTestId("front-topbar");
+    expect(bar.querySelector("select")).toBeTruthy();
+    expect([...bar.querySelectorAll("button")].map(b => b.textContent).join(" ")).toMatch(/Auto.*Light.*Dark/);
+    fireEvent.click([...bar.querySelectorAll("button")].find(b => b.textContent === "Dark")!);
+    expect(document.documentElement.dataset.theme).toBe("dark"); localStorage.clear();
+  });
+});

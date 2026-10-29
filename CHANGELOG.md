@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## [2.0.6] - 2026-10-29
+### Added
+- Projects page: small language selector and Auto/Light/Dark theme toggle top right, as in the project view.
+- Projects page: collapsible "How to use" guide (collapsed by default, aria-expanded), translated for all 9 languages.
+- Friendly empty state when there are no projects, explaining how to add one in data/sample-projects.json.
+### Fixed
+- Project grid overflowed horizontally on narrow screens (minimum column width now capped at 100%).
+### QA
+- Headless browser checks: light and dark mode on both pages, WCAG AA contrast and no clipped text (1280 px and 390 px), per-project filtering of cards and graph for every project, project-view order and Obsidian collapse.
+
 ## [2.0.5] - 2026-10-29
 ### Changed
 - Front-page project cards ported from the earlier "Projects" Page layout: status badge with state line, what it is, next step, process count and last update, "Show details" (why, current state, key parts, next step, source) and a "Process view →" hint. Clicking a card still opens the project view. Sample data only.

@@ -9,6 +9,7 @@ import newKeys from "./i18n/new-keys.json";
 import obsUi from "./i18n/obsidian-ui.json";
 import { OBS_CFG, OBS_EX, obsLink } from "./obsidian-adapter";
 import { Projects, PROJECTS } from "./Projects";
+import { Icon } from "./icons";
 import rmEN from "../README.md?raw";
 import rmHU from "../docs/README.hu.md?raw";
 import rmDE from "../docs/README.de.md?raw";
@@ -198,7 +199,10 @@ export default function App() {
   const [obsSec, setObsSec] = useState<string>("ALL");
   const [catF, setCatF] = useState<string>("ALL");
   const [toast, setToast] = useState<string>("");
-  const [proj, setProj] = useState<string | null>(null);
+  const readHash = () => { const m = typeof location !== "undefined" ? location.hash.match(/^#\/project\/(.+)$/) : null; return m ? decodeURIComponent(m[1]) : null; };
+  const [proj, setProjS] = useState<string | null>(readHash);
+  const setProj = (id: string | null) => { setProjS(id); try { if (id) history.pushState(null, "", `#/project/${encodeURIComponent(id)}`); else history.pushState(null, "", location.pathname + location.search); } catch {} };
+  useEffect(() => { const f = () => setProjS(readHash()); addEventListener("popstate", f); addEventListener("hashchange", f); return () => { removeEventListener("popstate", f); removeEventListener("hashchange", f); }; }, []);
   const D: P[] = useMemo(() => (proj ? D_ALL.filter((p: P) => PROJECT_OF[p[0]] === proj) : D_ALL), [proj]);
   const [picked, setPicked] = useState<string[]>([]);
   const [openCmd, setOpenCmd] = useState<string[]>([]);
@@ -424,7 +428,7 @@ export default function App() {
       <strong>{nm(p)}</strong> — {st(problemOf(p))} · {t("last")}: {p[10]}{p[12] ? " · " + p[12] : ""}
     </button>
   );
-  const overlay = { position: "absolute" as const, colorScheme: th.kind, background: th.bg.elevated, border: `1px solid ${th.border.default}`, borderRadius: th.radius.md, padding: "8px 12px", color: th.text.primary, fontSize: 13 };
+  const overlay = { position: "absolute" as const, colorScheme: th.kind, background: th.bg.elevated, border: `1px solid ${th.border.default}`, borderRadius: th.radius.md, padding: "8px 12px", color: th.text.primary, fontSize: 16 };
   const swatch = (c: string, round: boolean) => <span style={{ display: "inline-block", width: 12, height: 12, borderRadius: round ? 6 : 2, background: c, marginRight: 6, verticalAlign: "middle" }} />;
 
   return (
@@ -432,18 +436,18 @@ export default function App() {
       <div style={{ ...(inv && !full ? fx : {}), color: th.text.primary, colorScheme: tk, borderRadius: th.radius.lg, padding: inv ? 12 : 0 }}>
       {proj === null ? (
       <div data-testid="projects-view">
-          <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}>⚠ EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
-        <div data-testid="front-topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 13 }}>
+          <div style={{background:th.fill.warningSubtle,color:th.text.warningDeep,padding:"6px 10px",borderRadius:6,fontWeight:600,marginBottom:8}}><Icon name="blocked" style={{ marginRight: 6 }} />EXAMPLE DATA – all processes, bots and notes are fictional sample data (data/sample-processes.json).</div>
+        <div data-testid="front-topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", fontSize: 16 }}>
         <h1 style={{ margin: 0, fontSize: th.font.heading1.fontSize, lineHeight: th.font.heading1.lineHeight, fontWeight: 700, color: th.text.primary, overflowWrap: "anywhere", marginRight: "auto" }}>{t("projTitle")}</h1>
         <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
         <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
         </div>
-        <Projects onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), guideTitle: t("gTitle"), guide: ["g1", "g2", "g3", "g4", "g5"].map(t), emptyTitle: t("pEmptyT"), empty: t("pEmpty"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata") } }} />
+        <Projects t={t} onOpen={setProj} counts={D_ALL.reduce((a: Record<string, number>, p: P) => { const k = PROJECT_OF[p[0]]; if (k) a[k] = (a[k] || 0) + 1; return a; }, {})} l={{ more: t("pShow"), less: t("pHide"), what: t("pWhat"), why: t("pWhy"), status: t("pStatus"), next: t("pNext"), heading: t("projTitle"), guideTitle: t("gTitle"), guide: ["g1", "g2", "g3", "g4", "g5"].map(t), emptyTitle: t("pEmptyT"), empty: t("pEmpty"), all: t("pAll"), none: t("pNone"), reviewed: t("pRev"), summary: t("pSum"), state: t("pState"), parts: t("pParts"), source: t("pSource"), open: t("pOpen"), procs: t("pProcs"), updated: t("pUpd"), st: { active: t("pst_active"), paused: t("pst_paused"), waiting: t("pst_waiting"), blocked: t("pst_blocked"), nodata: t("pst_nodata") } }} />
       </div>
       ) : (
       <div data-testid="process-view">
-      <div data-testid="topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8, fontSize: 13 }}>
-        <Button label={lang === "HU" ? "← Vissza a projektekhez" : "← Back to projects"} onClick={() => setProj(null)} />
+      <div data-testid="topbar" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8, fontSize: 16 }}>
+        <Button onClick={() => setProj(null)}><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="back" />{t("back")}</span></Button>
         <h1 data-testid="project-title" style={{ margin: "0 auto 0 4px", fontSize: 20, fontWeight: 700, overflowWrap: "anywhere" }}>{(PROJECTS.find(x => x.id === proj) || { name: proj }).name}</h1>
         <div style={{ minWidth: 120 }}><Select options={LANGS.map((c: L) => ({ value: c, label: c + " " + LNAME[c] + (PARTIAL.includes(c) ? " ◐" : "") }))} value={lang} onChange={(v: L) => setLang(v)} /></div>
         <Segmented options={[{ value: "auto", label: t("thAuto") }, { value: "light", label: t("thLight") }, { value: "dark", label: t("thDark") }]} value={mode} onChange={(v: string) => setMode(v as "auto" | "light" | "dark")} />
@@ -452,7 +456,7 @@ export default function App() {
       <Section heading={t("cards")}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 8 }}>
           <Segmented options={[{ value: "ALL", label: t("all") }, { value: "core", label: t("cat_core") }, { value: "sales", label: t("cat_sales") }, { value: "ext", label: t("cat_ext") }]} value={catF} onChange={setCatF} />
-          <span style={{ fontSize: 12, color: th.text.secondary }}>{t("proposal")}</span>
+          <span style={{ fontSize: 16, color: th.text.secondary }}>{t("proposal")}</span>
         </div>
         <Segmented options={[{ value: "ALL", label: t("all"), count: D.length }, ...STATUSES.map((s: string) => ({ value: s, label: st(s), count: D.filter((p: P) => p[6] === s).length }))]} value={filter} onChange={setFilter} />
         <Grid columns={3}>
@@ -463,7 +467,7 @@ export default function App() {
                   {markIcon(p[8], 34)}
                   <span style={{ fontWeight: 600, color: th.text.primary, overflowWrap: "anywhere" }}>{p[8]}{DEVICES.includes(p[8]) ? " · " + t("device") : ""}</span>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 14, color: th.text.primary, alignItems: "center" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "minmax(90px, max-content) 1fr", columnGap: 16, rowGap: 6, fontSize: 16, color: th.text.primary, alignItems: "center" }}>
                   {[
                     { label: t("status"), value: <Status tone={p[6] === "aktív" ? "success" : p[6] === "blokkolt" ? "warning" : p[6] === "csak tervezett" ? "accent" : "neutral"}>{st(p[6])}</Status> },
                     { label: t("problem"), value: <Status tone={problemOf(p) === "OK" ? "success" : problemOf(p) === "leállítva" ? "danger" : "warning"}>{st(problemOf(p))}</Status> },
@@ -476,18 +480,18 @@ export default function App() {
                     <Fragment key={i}><span style={{ color: th.text.secondary }}>{r.label}</span><span style={{ overflowWrap: "anywhere" }}>{r.value}</span></Fragment>
                   ))}
                 </div>
-                <div style={{ marginTop: 6, color: th.text.primary, fontSize: 14 }}>
-                  <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 12, color: th.text.secondary }}>({t("ownerSum")})</span></div>
+                <div style={{ marginTop: 6, color: th.text.primary, fontSize: 16 }}>
+                  <div><strong>{t("cmdHead")}</strong> <span style={{ fontSize: 16, color: th.text.secondary }}>({t("ownerSum")})</span></div>
                   {(DET[p[0]] ?? [])[0] ? (
                     <div>
                       <div style={openCmd.includes(p[0]) ? { overflowWrap: "anywhere" } : { overflowWrap: "anywhere", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{DET[p[0]][0]}{DET[p[0]][1] ? " — " + DET[p[0]][1] : ""}</div>
-                      <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 13 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
+                      <button type="button" aria-expanded={openCmd.includes(p[0])} onClick={() => setOpenCmd((xs: string[]) => xs.includes(p[0]) ? xs.filter((x: string) => x !== p[0]) : [...xs, p[0]])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", fontSize: 16 }}>{openCmd.includes(p[0]) ? t("less") : t("more")}</button>
                     </div>
                   ) : <span style={{ color: th.text.warning, fontWeight: 600 }}>{t("awaiting")}</span>}
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 6 }}>
-                  <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.secondary }}>{t("cat_" + CAT[p[0]])} · {t("proposal")}</span>
-                  {isPaused(p) && <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.tertiary }}>{t("paused")}</span>}
+                  <span style={{ fontSize: 16, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.secondary }}>{t("cat_" + CAT[p[0]])} · {t("proposal")}</span>
+                  {isPaused(p) && <span style={{ fontSize: 16, padding: "2px 8px", borderRadius: 10, background: th.fill.secondary, color: th.text.tertiary }}>{t("paused")}</span>}
                   {isPaused(p) ? <Button label={t("restartBtn")} onClick={() => copyTxt(actText("restart", [p[0]], lang === "HU"), t("copiedShort"))} /> : CAT[p[0]] !== "core" && <Button label={t("stopBtn")} onClick={() => copyTxt(actText("stop", [p[0]], lang === "HU"), t("copiedShort"))} />}
                 </div>
               </Section>
@@ -553,7 +557,7 @@ export default function App() {
             <Button label={t("fit")} onClick={fit} variant="primary" />
             {(focus || tapEdge) && <Button label={t("reset")} onClick={resetAll} />}
             <Button label={full ? t("exitFull") : t("full")} onClick={() => setFull((f: boolean) => !f)} />
-            <span title={t("zoomHint")} aria-label={t("zoomHint")} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, borderRadius: 12, border: `1px solid ${th.border.strong}`, color: th.text.secondary, cursor: "help", fontSize: 13, fontWeight: 600 }}>?</span>
+            <span title={t("zoomHint")} aria-label={t("zoomHint")} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, borderRadius: 12, border: `1px solid ${th.border.strong}`, color: th.text.secondary, cursor: "help", fontSize: 16, fontWeight: 600 }}>?</span>
           </div>
           <div
             ref={boxRef}
@@ -743,7 +747,7 @@ export default function App() {
                 } catch { setCopyState("fail"); }
               };
               return (
-                <div style={{ ...overlay, right: 10, bottom: 10, width: 440, maxWidth: "calc(100% - 20px)", maxHeight: mapH - 40, overflowY: "auto", fontSize: 14 }} onPointerDown={(ev) => ev.stopPropagation()}>
+                <div style={{ ...overlay, right: 10, bottom: 10, width: 440, maxWidth: "calc(100% - 20px)", maxHeight: mapH - 40, overflowY: "auto", fontSize: 16 }} onPointerDown={(ev) => ev.stopPropagation()}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
                     <strong style={{ fontSize: 16, overflowWrap: "anywhere" }}>{head}</strong>
                     <Button label={t("close")} onClick={() => { setSel(""); setCopyState(""); }} />
@@ -764,7 +768,7 @@ export default function App() {
                   {copyState === "fail" && (
                     <div style={{ marginTop: 6 }}>
                       <div>{t("copyFail")}</div>
-                      <textarea readOnly value={msg} rows={Math.min(8, list.length * 2 + 1)} style={{ width: "100%", font: "inherit", fontSize: 13, background: th.bg.base, color: th.text.primary, colorScheme: th.kind, border: `1px solid ${th.border.default}`, borderRadius: 6, padding: 6, userSelect: "text" }} onFocus={(e) => e.currentTarget.select()} />
+                      <textarea readOnly value={msg} rows={Math.min(8, list.length * 2 + 1)} style={{ width: "100%", font: "inherit", fontSize: 16, background: th.bg.base, color: th.text.primary, colorScheme: th.kind, border: `1px solid ${th.border.default}`, borderRadius: 6, padding: 6, userSelect: "text" }} onFocus={(e) => e.currentTarget.select()} />
                     </div>
                   )}
                 </div>
@@ -775,10 +779,10 @@ export default function App() {
               <div style={{ ...overlay, top: 10, right: 10, width: 300, maxHeight: mapH - 40, overflowY: "auto" }} onPointerDown={(ev) => ev.stopPropagation()}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                   {markIcon(focus, 34)}
-                  <strong style={{ fontSize: 15, overflowWrap: "anywhere" }}>{focus} — {t("procsOf")} ({focusProcs.length})</strong>
+                  <strong style={{ fontSize: 16, overflowWrap: "anywhere" }}>{focus} — {t("procsOf")} ({focusProcs.length})</strong>
                 </div>
                 {focusProcs.map((p: P) => (
-                  <button key={p[0]} onClick={() => jump(p[0])} style={{ display: "flex", gap: 8, alignItems: "flex-start", width: "100%", background: "transparent", border: "none", padding: "6px 0", textAlign: "left", cursor: "pointer", color: th.text.primary, font: "inherit", fontSize: 14 }}>
+                  <button key={p[0]} onClick={() => jump(p[0])} style={{ display: "flex", gap: 8, alignItems: "flex-start", width: "100%", background: "transparent", border: "none", padding: "6px 0", textAlign: "left", cursor: "pointer", color: th.text.primary, font: "inherit", fontSize: 16 }}>
                     <span style={{ width: 12, height: 12, borderRadius: 6, background: colorOf(p), marginTop: 4, flex: "none" }} />
                     <span style={{ whiteSpace: "normal", overflowWrap: "anywhere" }}>{nm(p)} · {st(p[6])}{p[8] !== focus ? " · " + t("legLinked") : ""}</span>
                   </button>
@@ -798,30 +802,30 @@ export default function App() {
           { label: t("obsUsers"), value: t("obsUsersTxt") },
         ]} />
         <div data-testid="obs-status" style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 8 }}>
-          <span style={{ color: th.text.success }}>● {OX[lang].status}</span>
-          <span style={{ color: th.text.secondary, fontSize: 13 }}>{OX[lang].checked} {obsChecked} · {Object.keys(OBS_EX).length} {OX[lang].excerpts} · source: {OBS_CFG.source}</span>
+          <span style={{ color: th.text.success, display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="active" size={16} />{OX[lang].status}</span>
+          <span style={{ color: th.text.secondary, fontSize: 16 }}>{OX[lang].checked} {obsChecked} · {Object.keys(OBS_EX).length} {OX[lang].excerpts} · source: {OBS_CFG.source}</span>
           <Button label={OX[lang].refresh} onClick={() => setObsChecked(new Date().toTimeString().slice(0, 8))} />
           <Button label={OX[lang].setup} onClick={() => setObsSetup(!obsSetup)} />
         </div>
         {obsSetup && <ol data-testid="obs-setup" style={{ margin: "8px 0", paddingLeft: 20 }}>{OX[lang].steps.map((x: string, i: number) => <li key={i}>{x.replace("{v}", OBS_CFG.vaultName).replace("{h}", OBS_CFG.vaultHost)}</li>)}</ol>}
         <div style={{ marginTop: 12, color: th.text.primary }}>
           <div style={{ fontWeight: 600, fontSize: 16 }}>{t("obsRecent")}</div>
-          <div style={{ color: th.text.secondary, fontSize: 13, margin: "2px 0 8px" }}>{t("obsSnap")}: {OBS_SNAP} · {t("obsRecentCap").replace("{n}", String(OBS_NOTES.length)).replace("{t}", String(OBS_TOTAL))}</div>
+          <div style={{ color: th.text.secondary, fontSize: 16, margin: "2px 0 8px" }}>{t("obsSnap")}: {OBS_SNAP} · {t("obsRecentCap").replace("{n}", String(OBS_NOTES.length)).replace("{t}", String(OBS_TOTAL))}</div>
           <Segmented options={[{ value: "ALL", label: t("all"), count: OBS_NOTES.length }, ...Object.keys(OBS_SEC).map((k: string) => ({ value: k, label: OBS_SEC[k][li], count: OBS_NOTES.filter((n: ON) => n[1] === k).length }))]} value={obsSec} onChange={setObsSec} />
           <div style={{ marginTop: 8, maxHeight: 420, overflowY: "auto", border: `1px solid ${th.border.subtle}`, borderRadius: th.radius.md }}>
             {OBS_NOTES.filter((n: ON) => obsSec === "ALL" || n[1] === obsSec).map((n: ON, i: number) => (
               <div key={n[6]} style={{ padding: "8px 12px", borderTop: i ? `1px solid ${th.border.subtle}` : "none" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "baseline", justifyContent: "space-between" }}>
                   <strong style={{ overflowWrap: "anywhere" }}>{n[0]}</strong>
-                  <span style={{ display: "flex", gap: 10, fontSize: 13 }}>
-                    <button data-testid="obs-ex" onClick={() => setObsEx(obsEx === n[6] ? "" : n[6])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>{t("obsOpenNote")}</button>
+                  <span style={{ display: "flex", gap: 10, fontSize: 16 }}>
+                    <button data-testid="obs-ex" onClick={() => setObsEx(obsEx === n[6] ? "" : n[6])} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 16 }}>{t("obsOpenNote")}</button>
                     <a data-testid="obs-app" href={obsLink(decodeURIComponent(n[6]))} target="_blank" rel="noopener noreferrer" style={{ color: th.text.accent }}>{OX[lang].appLink}</a>
-                    <button onClick={() => copyTxt(decodeURIComponent(n[6]), OX[lang].copied)} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}>{OX[lang].copyPath}</button>
+                    <button onClick={() => copyTxt(decodeURIComponent(n[6]), OX[lang].copied)} style={{ background: "none", border: "none", padding: 0, color: th.text.accent, cursor: "pointer", textDecoration: "underline", fontSize: 16 }}>{OX[lang].copyPath}</button>
                   </span>
                 </div>
-                <div style={{ fontSize: 13, color: th.text.secondary }}>{OBS_SEC[n[1]][li]} · {t("obsAdded")} {n[2]} · {t("obsChanged")} {n[3]}  · {t("obsBy")}: {n[5] === "U" ? t("unknown") : n[5] === "G" ? "bot (frontmatter)" : n[5]}</div>
-                <div style={{ fontSize: 14, overflowWrap: "anywhere" }}>{n[4] === "P" ? t("obsP").replace("{n}", n[0]) : n[4] === "M" ? t("obsM") : n[4]}</div>
-                {obsEx === n[6] && <div data-testid="obs-ex-body" style={{ marginTop: 6, padding: 8, background: th.fill.secondary, borderRadius: th.radius.md, fontSize: 13 }}><div style={{ color: th.text.secondary }}>{OX[lang].excerpt}</div><pre style={{ whiteSpace: "pre-wrap", margin: 0, fontFamily: "inherit" }}>{n[4] === "M" ? OX[lang].titleOnly : (OBS_EX[decodeURIComponent(n[6])] ?? OX[lang].noEx)}</pre></div>}
+                <div style={{ fontSize: 16, color: th.text.secondary }}>{OBS_SEC[n[1]][li]} · {t("obsAdded")} {n[2]} · {t("obsChanged")} {n[3]}  · {t("obsBy")}: {n[5] === "U" ? t("unknown") : n[5] === "G" ? "bot (frontmatter)" : n[5]}</div>
+                <div style={{ fontSize: 16, overflowWrap: "anywhere" }}>{n[4] === "P" ? t("obsP").replace("{n}", n[0]) : n[4] === "M" ? t("obsM") : n[4]}</div>
+                {obsEx === n[6] && <div data-testid="obs-ex-body" style={{ marginTop: 6, padding: 8, background: th.fill.secondary, borderRadius: th.radius.md, fontSize: 16 }}><div style={{ color: th.text.secondary }}>{OX[lang].excerpt}</div><pre style={{ whiteSpace: "pre-wrap", margin: 0, fontFamily: "inherit" }}>{n[4] === "M" ? OX[lang].titleOnly : (OBS_EX[decodeURIComponent(n[6])] ?? OX[lang].noEx)}</pre></div>}
               </div>
             ))}
           </div>
@@ -829,7 +833,7 @@ export default function App() {
       </Section>
       </div>
       )}
-      <footer data-testid="app-version" style={{ marginTop: 16, fontSize: 12, color: th.text.tertiary, textAlign: "center" }}>ops-dashboard v{__APP_VERSION__} · CHANGELOG.md</footer>
+      <footer data-testid="app-version" style={{ marginTop: 24, paddingTop: 12, borderTop: `1px solid ${th.border.default}`, color: th.text.tertiary, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "4px 16px" }}><span>ops-dashboard v{__APP_VERSION__}</span><span>{t("foot")}</span><span>{t("footHelp")}</span><span>{t("footLic")}</span></footer>
       </div>
       {toast !== "" && <div role="status" style={{ position: "fixed", left: 16, right: 16, bottom: 16, zIndex: 10000, margin: "0 auto", maxWidth: 560, background: th.bg.elevated, color: th.text.primary, border: `1px solid ${th.border.strong}`, borderRadius: th.radius.md, padding: "10px 14px", overflowWrap: "anywhere", userSelect: "text" }}>{toast}</div>}
     </Page>

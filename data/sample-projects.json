@@ -1,5 +1,5 @@
 {
- "_comment": "EXAMPLE DATA ONLY – fictional projects. Replace with your own; never commit real data.",
+ "_comment": "EXAMPLE DATA ONLY – fictional projects. Replace with your own; never commit real data. hours = sample hours per week, cost = sample EUR per month.",
  "projects": [
   {
    "id": "demo-a",
@@ -12,7 +12,11 @@
    "st": "active",
    "parts": "Sample note collector; draft builder; weekly send step.",
    "src": "data/sample-projects.json (example)",
-   "updated": "2026-01-01"
+   "updated": "2026-01-01",
+   "owner": "Sample Bot A",
+   "lastActive": "2026-01-01 09:30",
+   "hours": 3,
+   "cost": 12
   },
   {
    "id": "demo-b",
@@ -25,7 +29,14 @@
    "st": "paused",
    "parts": "Sample nightly checker; alert step; example log.",
    "src": "data/sample-projects.json (example)",
-   "updated": "2026-01-01"
+   "updated": "2026-01-01",
+   "owner": "Sample Bot B",
+   "lastActive": "2025-12-28 22:10",
+   "hours": 1,
+   "cost": 4,
+   "decision": "Approve a sample time limit for the nightly check (example).",
+   "prio": 1,
+   "due": "2026-01-02"
   },
   {
    "id": "demo-c",
@@ -38,7 +49,14 @@
    "st": "waiting",
    "parts": "Sample source texts; translation step; review queue.",
    "src": "data/sample-projects.json (example)",
-   "updated": "2026-01-01"
+   "updated": "2026-01-01",
+   "owner": "Sample Bot C",
+   "lastActive": "2025-12-30 14:00",
+   "hours": 0,
+   "cost": 0,
+   "decision": "Pick the sample languages to start with (example).",
+   "prio": 2,
+   "due": "2026-01-05"
   }
  ],
  "reviewed": "2026-01-01"

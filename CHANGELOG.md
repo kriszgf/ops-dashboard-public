@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 Entries before 2.0.0 come from the earlier private development history (commit hashes in brackets refer to that history and are not part of this repository).
 
+## 2.0.7 – 2026-10-29
+- Critique v2.0.6 (12 points): "Your decision needed" bar on top, sorted by priority then due date; one-sentence daily summary; status = line icon + word + colour; owner bot, last active, sample time and cost on every card; shareable project links (#/project/<id>); search and status filter; visible guide hint; richer footer (version, sample-data note, help, licence).
+- Minimum 16px text, buttons and selects inherit the font; 36px touch targets; responsive process-card grid (no overflow at 390px).
+- Plainer Hungarian labels (Lépések megnyitása, elakadt, rád vár, Összes kinyitása/bezárása); back button translated in all 9 languages.
+- New original inline SVG line icon set (src/icons.tsx, MIT); emoji and text-arrow icons replaced.
+
 ## [2.0.6] - 2026-10-29
 ### Added
 - Projects page: small language selector and Auto/Light/Dark theme toggle top right, as in the project view.

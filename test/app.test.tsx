@@ -36,7 +36,7 @@ describe("dashboard", () => {
     const { getByTestId } = openFirst(render(<App />)); const v = getByTestId("process-view");
     const heads = [...v.querySelectorAll("h2,h3,button,summary")].map(e => e.textContent || "");
     const iCards = heads.findIndex(h => /process cards|Folyamatkártyák|cards/i.test(h));
-    const card = v.querySelector('[id^="card-"]')!; const svg = v.querySelector("svg")!;
+    const card = v.querySelector('[id^="card-"]')!; const svg = v.querySelector("svg:not([data-icon])")!;
     const obs = [...v.querySelectorAll("h2")].find(e => /Obsidian Notes/.test(e.textContent || ""))!;
     expect(card && svg && obs).toBeTruthy(); void iCards;
     expect(card.compareDocumentPosition(svg) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -54,7 +54,7 @@ describe("dashboard", () => {
       expect(shown.length).toBeGreaterThan(0);
       for (const pid of shown) expect(data.projectOf[pid]).toBe(id);
       expect(shown.length).toBe(Object.values(data.projectOf).filter(x => x === id).length);
-      cleanup();
+      cleanup(); history.replaceState(null, "", "/");
     }
   });
   it("every button click runs without throwing", () => {

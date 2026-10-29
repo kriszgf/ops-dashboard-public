@@ -7,14 +7,15 @@ const EN_T = (k: string) => ((nk as any)[k]?.[1] ?? k) as string;
 export type T = (k: string) => string;
 // EXAMPLE DATA: edit data/sample-projects.json to change the projects shown here.
 // Card layout ported from the earlier "Projects" Page (status badge + state line, what, details, process-view link).
-export type PSt = "active" | "paused" | "waiting" | "blocked" | "nodata";
-export type Project = { id: string; name: string; summary: string; what: string; why: string; status: string; next: string; st?: PSt; parts?: string; src?: string; updated?: string; owner?: string; lastActive?: string; hours?: number; cost?: number; decision?: string; prio?: 1 | 2 | 3; due?: string };
+export type PSt = "active" | "paused" | "waiting" | "blocked" | "nodata" | "notused";
+export type WebStatus = { url: string; live: boolean; code?: number; checkedAt: string };
+export type Project = { id: string; name: string; summary: string; what: string; why: string; status: string; next: string; st?: PSt; parts?: string; src?: string; updated?: string; owner?: string; lastActive?: string; hours?: number; cost?: number; decision?: string; webStatus?: WebStatus; prio?: 1 | 2 | 3; due?: string };
 export const PROJECTS: Project[] = (raw as any).projects;
 
 export type ProjLabels = { more: string; less: string; what: string; why: string; status: string; next: string; heading: string; guideTitle?: string; guide?: string[]; emptyTitle?: string; empty?: string; all?: string; none?: string; reviewed?: string; summary?: string; state?: string; parts?: string; source?: string; open?: string; procs?: string; updated?: string; st?: Partial<Record<PSt, string>> };
 export const EN_LABELS: ProjLabels = { more: "Show details", less: "Hide details", what: "What it is", why: "Why", status: "Status", next: "Next step", heading: "Projects", state: "Current state", parts: "Key parts", source: "Source", open: "Process view", procs: "processes", updated: "Updated" };
-const TONE: Record<PSt, string> = { active: "success", paused: "neutral", waiting: "accent", blocked: "warning", nodata: "neutral" };
-const ICON: Record<PSt, any> = { active: "active", paused: "paused", waiting: "waiting", blocked: "blocked", nodata: "nodata" };
+const TONE: Record<PSt, string> = { active: "success", paused: "neutral", waiting: "accent", blocked: "warning", nodata: "neutral", notused: "neutral" };
+const ICON: Record<PSt, any> = { active: "active", paused: "paused", waiting: "waiting", blocked: "blocked", nodata: "nodata", notused: "stopped" };
 export const href = (id: string) => `#/project/${encodeURIComponent(id)}`;
 const meta = { display: "inline-flex", alignItems: "center", gap: 6 } as const;
 
@@ -26,19 +27,20 @@ export function ProjectCard({ p, l = EN_LABELS, t = EN_T, onOpen, count, open: o
   const detailsId = `project-details-${p.id}`;
   const st: PSt = p.st ?? "nodata";
   const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
+  const uk = (v?: string) => (!v || v === "unknown" ? t("unk") : v);
   return (
     <article data-testid={`project-${p.id}`} role={onOpen ? "button" : undefined} tabIndex={onOpen ? 0 : undefined} onClick={onOpen ? () => onOpen(p.id) : undefined} onKeyDown={onOpen ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(p.id); } } : undefined}
       style={{ cursor: onOpen ? "pointer" : undefined, border: "1px solid var(--border, #8884)", borderRadius: 12, padding: 16, overflowWrap: "anywhere", display: "flex", flexDirection: "column", gap: 8, background: "var(--surface, transparent)" }}>
       <h3 style={{ margin: 0, fontSize: 18 }}>{p.name}</h3>
       <div data-testid="project-state" style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", fontSize: 16 }}>
-        <Status tone={TONE[st]} icon={ICON[st]}>{l.st?.[st] ?? st}</Status><span>{p.status}</span>
+        <Status tone={TONE[st]} icon={ICON[st]}>{l.st?.[st] ?? st}</Status>{p.webStatus && <a data-testid="web-status" href={p.webStatus.url} target="_blank" rel="noreferrer" onClick={stop} title={`${p.webStatus.url} · HTTP ${p.webStatus.code ?? "–"} · ${t("webChecked")}: ${p.webStatus.checkedAt}`} style={{ textDecoration: "none" }}><Status tone={p.webStatus.live ? "success" : "danger"} icon={p.webStatus.live ? "live" : "offline"}>{t("website")}: {t(p.webStatus.live ? "webLive" : "webOff")}</Status></a>}<span>{p.status}</span>
       </div>
       <div>{p.what}</div>
       <div><strong>{l.next}:</strong> {p.next}</div>
       {p.decision && <div data-testid="card-decision" style={{ ...meta, color: "var(--accent)", fontWeight: 600 }}><Icon name="decision" glow />{t("decT")}: {p.decision}</div>}
       <div data-testid="card-meta" style={{ display: "flex", flexWrap: "wrap", gap: "4px 16px", color: "var(--muted)" }}>
-        {p.owner && <span style={meta}><Icon name="bot" />{t("owner")}: {p.owner}</span>}
-        {p.lastActive && <span style={meta}><Icon name="pulse" />{t("lastAct")}: {p.lastActive}</span>}
+        <span style={meta}><Icon name="bot" />{t("owner")}: {uk(p.owner)}</span>
+        <span data-testid="last-active" style={meta}><Icon name="pulse" />{t("lastAct")}: {uk(p.lastActive)}</span>
         {p.hours != null && <span style={meta}><Icon name="clock" />{t("time")}: ≈ {p.hours} {t("perWk")} ({t("sample")})</span>}
         {p.cost != null && <span style={meta}><Icon name="cost" />{t("cost")}: ≈ {p.cost} {t("perMo")} ({t("sample")})</span>}
         <span>{count != null ? `${count} ${l.procs} · ` : ""}{p.updated ? `${l.updated}: ${p.updated}` : ""}</span>
@@ -87,7 +89,7 @@ export function DecisionBar({ items, t, onOpen }: { items: Project[]; t: T; onOp
     </section>
   );
 }
-const STS: PSt[] = ["active", "paused", "waiting", "blocked", "nodata"];
+const STS: PSt[] = ["active", "paused", "waiting", "blocked", "notused", "nodata"];
 export function Projects({ items = PROJECTS, l = EN_LABELS, t = EN_T, onOpen, counts }: { items?: Project[]; l?: ProjLabels; t?: T; onOpen?: (id: string) => void; counts?: Record<string, number> }) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [q, setQ] = useState("");

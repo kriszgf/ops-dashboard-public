@@ -16,7 +16,13 @@
    "owner": "Sample Bot A",
    "lastActive": "2026-01-01 09:30",
    "hours": 3,
-   "cost": 12
+   "cost": 12,
+   "webStatus": {
+    "url": "https://example.com",
+    "live": true,
+    "code": 200,
+    "checkedAt": "2026-01-01 08:00 (sample)"
+   }
   },
   {
    "id": "demo-b",

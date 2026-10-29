@@ -691,5 +691,71 @@
   "打开",
   "開く",
   "Abrir"
+ ],
+ "pst_notused": [
+  "nincs használatban",
+  "not in use",
+  "nicht in Gebrauch",
+  "pas utilisé",
+  "fora de uso",
+  "non in uso",
+  "未使用",
+  "未使用",
+  "sin uso"
+ ],
+ "unk": [
+  "ismeretlen",
+  "unknown",
+  "unbekannt",
+  "inconnu",
+  "desconhecido",
+  "sconosciuto",
+  "未知",
+  "不明",
+  "desconocido"
+ ],
+ "website": [
+  "Weboldal",
+  "Website",
+  "Website",
+  "Site web",
+  "Site",
+  "Sito web",
+  "网站",
+  "ウェブサイト",
+  "Sitio web"
+ ],
+ "webLive": [
+  "elérhető",
+  "live",
+  "online",
+  "en ligne",
+  "no ar",
+  "online",
+  "在线",
+  "稼働中",
+  "en línea"
+ ],
+ "webOff": [
+  "nem elérhető",
+  "offline",
+  "offline",
+  "hors ligne",
+  "fora do ar",
+  "offline",
+  "离线",
+  "オフライン",
+  "sin conexión"
+ ],
+ "webChecked": [
+  "Ellenőrizve",
+  "Checked",
+  "Geprüft",
+  "Vérifié",
+  "Verificado",
+  "Verificato",
+  "检查时间",
+  "確認日時",
+  "Comprobado"
  ]
 }

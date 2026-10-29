@@ -51,4 +51,10 @@ describe("v2.0.7 critique", () => {
       const a = (nk as any)[k]; expect(a.length).toBe(9); a.forEach((v: string) => { expect(v.trim()).not.toBe(""); expect(v).not.toMatch(/\p{Extended_Pictographic}/u); });
     }
   });
+  it("every card shows a visible last-active line, unknown when missing; webStatus renders a badge", () => {
+    const items = [{ ...PROJECTS[0] }, { ...PROJECTS[1], lastActive: undefined, webStatus: { url: "https://example.org", live: false, checkedAt: "2026-01-01 08:00" } }];
+    const { getAllByTestId } = render(<Projects t={EN} items={items} />);
+    const la = getAllByTestId("last-active"); expect(la.length).toBe(2); expect(la[1].textContent).toContain(EN("unk"));
+    const ws = getAllByTestId("web-status"); expect(ws.length).toBe(2); expect(ws[1].textContent).toContain(EN("webOff")); expect(ws[0].getAttribute("href")).toBe("https://example.com");
+  });
 });
